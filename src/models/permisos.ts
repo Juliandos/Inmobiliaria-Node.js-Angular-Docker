@@ -58,6 +58,16 @@ export class permisos extends Model<permisosAttributes, permisosCreationAttribut
       type: DataTypes.STRING(50),
       allowNull: false,
       unique: "nombre"
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('NOW')
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('NOW')
     }
   }, {
     sequelize,

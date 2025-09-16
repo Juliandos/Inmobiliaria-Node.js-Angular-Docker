@@ -51,6 +51,16 @@ export class roles_permisos extends Model<roles_permisosAttributes, roles_permis
         model: 'permisos',
         key: 'id'
       }
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('NOW')
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('NOW')
     }
   }, {
     sequelize,

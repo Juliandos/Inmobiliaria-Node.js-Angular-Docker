@@ -47,6 +47,16 @@ export class imagenes_propiedad extends Model<imagenes_propiedadAttributes, imag
     url: {
       type: DataTypes.STRING(255),
       allowNull: false
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('NOW')
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('NOW')
     }
   }, {
     sequelize,
