@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { PermisosService, Permiso } from 'src/app/services/permisos.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-permisos',
@@ -8,26 +7,6 @@ import { PermisosService, Permiso } from 'src/app/services/permisos.service';
   templateUrl: './permisos.component.html',
   styleUrl: './permisos.component.scss'
 })
-export class PermisosComponent implements OnInit {
-  permisos: Permiso[] = [];
-  loading = true;
-  error = '';
+export class PermisosComponent {
 
-  constructor(private permisosService: PermisosService) {}
-
-  ngOnInit(): void {
-    this.permisosService.getPermisos().subscribe({
-      next: (data) => {
-        this.permisos = data;
-        this.loading = false;
-        console.log(this.permisos);
-        
-      },
-      error: (err) => {
-        this.error = 'No se pudieron cargar los permisos';
-        console.error(err);
-        this.loading = false;
-      }
-    });
-  }
 }
