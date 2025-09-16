@@ -79,6 +79,16 @@ export class usuarios extends Model<usuariosAttributes, usuariosCreationAttribut
         model: 'roles',
         key: 'id'
       }
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('NOW')
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('NOW')
     }
   }, {
     sequelize,
