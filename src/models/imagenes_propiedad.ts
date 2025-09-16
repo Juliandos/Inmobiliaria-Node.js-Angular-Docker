@@ -6,21 +6,21 @@ export interface imagenes_propiedadAttributes {
   id: number;
   propiedad_id?: number;
   url: string;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type imagenes_propiedadPk = "id";
 export type imagenes_propiedadId = imagenes_propiedad[imagenes_propiedadPk];
-export type imagenes_propiedadOptionalAttributes = "id" | "propiedad_id" | "created_at" | "updated_at";
+export type imagenes_propiedadOptionalAttributes = "id" | "propiedad_id" | "createdAt" | "updatedAt";
 export type imagenes_propiedadCreationAttributes = Optional<imagenes_propiedadAttributes, imagenes_propiedadOptionalAttributes>;
 
 export class imagenes_propiedad extends Model<imagenes_propiedadAttributes, imagenes_propiedadCreationAttributes> implements imagenes_propiedadAttributes {
   id!: number;
   propiedad_id?: number;
   url!: string;
-  created_at!: Date;
-  updated_at!: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
 
   // imagenes_propiedad belongsTo propiedades via propiedad_id
   propiedad!: propiedades;
@@ -48,15 +48,15 @@ export class imagenes_propiedad extends Model<imagenes_propiedadAttributes, imag
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('NOW')
+      defaultValue: Sequelize.Sequelize.fn('NOW')
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('NOW')
+      defaultValue: Sequelize.Sequelize.fn('NOW')
     }
   }, {
     sequelize,

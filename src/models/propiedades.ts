@@ -14,13 +14,13 @@ export interface propiedadesAttributes {
   parqueadero?: number;
   tipo_id?: number;
   usuario_id?: number;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type propiedadesPk = "id";
 export type propiedadesId = propiedades[propiedadesPk];
-export type propiedadesOptionalAttributes = "id" | "descripcion" | "precio" | "habitaciones" | "banos" | "parqueadero" | "tipo_id" | "usuario_id" | "created_at" | "updated_at";
+export type propiedadesOptionalAttributes = "id" | "descripcion" | "precio" | "habitaciones" | "banos" | "parqueadero" | "tipo_id" | "usuario_id" | "createdAt" | "updatedAt";
 export type propiedadesCreationAttributes = Optional<propiedadesAttributes, propiedadesOptionalAttributes>;
 
 export class propiedades extends Model<propiedadesAttributes, propiedadesCreationAttributes> implements propiedadesAttributes {
@@ -33,8 +33,8 @@ export class propiedades extends Model<propiedadesAttributes, propiedadesCreatio
   parqueadero?: number;
   tipo_id?: number;
   usuario_id?: number;
-  created_at!: Date;
-  updated_at!: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
 
   // propiedades hasMany imagenes_propiedad via propiedad_id
   imagenes_propiedads!: imagenes_propiedad[];
@@ -110,15 +110,15 @@ export class propiedades extends Model<propiedadesAttributes, propiedadesCreatio
         key: 'id'
       }
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('NOW')
+      defaultValue: Sequelize.Sequelize.fn('NOW')
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('NOW')
+      defaultValue: Sequelize.Sequelize.fn('NOW')
     }
   }, {
     sequelize,

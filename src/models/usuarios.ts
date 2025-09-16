@@ -11,13 +11,13 @@ export interface usuariosAttributes {
   password: string;
   rol_id?: number;
   refreshToken?: string;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type usuariosPk = "id";
 export type usuariosId = usuarios[usuariosPk];
-export type usuariosOptionalAttributes = "id" | "nombre" | "apellido" | "rol_id" | "created_at" | "updated_at";
+export type usuariosOptionalAttributes = "id" | "nombre" | "apellido" | "rol_id" | "refreshToken" | "createdAt" | "updatedAt";
 export type usuariosCreationAttributes = Optional<usuariosAttributes, usuariosOptionalAttributes>;
 
 export class usuarios extends Model<usuariosAttributes, usuariosCreationAttributes> implements usuariosAttributes {
@@ -28,8 +28,8 @@ export class usuarios extends Model<usuariosAttributes, usuariosCreationAttribut
   password!: string;
   rol_id?: number;
   refreshToken?: string;
-  created_at!: Date;
-  updated_at!: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
 
   // usuarios belongsTo roles via rol_id
   rol!: roles;
@@ -83,18 +83,19 @@ export class usuarios extends Model<usuariosAttributes, usuariosCreationAttribut
       }
     },
     refreshToken: {
-      type: DataTypes.STRING(255),
-      allowNull: true
+      type: DataTypes.STRING(225),
+      allowNull: true,
+      unique: "refreshToken_UNIQUE"
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('NOW')
+      defaultValue: Sequelize.Sequelize.fn('NOW')
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('NOW')
+      defaultValue: Sequelize.Sequelize.fn('NOW')
     }
   }, {
     sequelize,
@@ -115,6 +116,14 @@ export class usuarios extends Model<usuariosAttributes, usuariosCreationAttribut
         using: "BTREE",
         fields: [
           { name: "email" },
+        ]
+      },
+      {
+        name: "refreshToken_UNIQUE",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "refreshToken" },
         ]
       },
       {
