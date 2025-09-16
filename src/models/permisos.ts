@@ -6,20 +6,20 @@ import type { roles_permisos, roles_permisosId } from './roles_permisos';
 export interface permisosAttributes {
   id: number;
   nombre: string;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type permisosPk = "id";
 export type permisosId = permisos[permisosPk];
-export type permisosOptionalAttributes = "id" | "created_at" | "updated_at";
+export type permisosOptionalAttributes = "id" | "createdAt" | "updatedAt";
 export type permisosCreationAttributes = Optional<permisosAttributes, permisosOptionalAttributes>;
 
 export class permisos extends Model<permisosAttributes, permisosCreationAttributes> implements permisosAttributes {
   id!: number;
   nombre!: string;
-  created_at!: Date;
-  updated_at!: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
 
   // permisos belongsToMany roles via permiso_id and rol_id
   rol_id_roles!: roles[];
@@ -59,15 +59,15 @@ export class permisos extends Model<permisosAttributes, permisosCreationAttribut
       allowNull: false,
       unique: "nombre"
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('NOW')
+      defaultValue: Sequelize.Sequelize.fn('NOW')
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('NOW')
+      defaultValue: Sequelize.Sequelize.fn('NOW')
     }
   }, {
     sequelize,

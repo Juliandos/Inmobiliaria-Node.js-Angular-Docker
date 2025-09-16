@@ -5,20 +5,20 @@ import type { propiedades, propiedadesId } from './propiedades';
 export interface tipos_propiedadAttributes {
   id: number;
   nombre: string;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type tipos_propiedadPk = "id";
 export type tipos_propiedadId = tipos_propiedad[tipos_propiedadPk];
-export type tipos_propiedadOptionalAttributes = "id" | "created_at" | "updated_at";
+export type tipos_propiedadOptionalAttributes = "id" | "createdAt" | "updatedAt";
 export type tipos_propiedadCreationAttributes = Optional<tipos_propiedadAttributes, tipos_propiedadOptionalAttributes>;
 
 export class tipos_propiedad extends Model<tipos_propiedadAttributes, tipos_propiedadCreationAttributes> implements tipos_propiedadAttributes {
   id!: number;
   nombre!: string;
-  created_at!: Date;
-  updated_at!: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
 
   // tipos_propiedad hasMany propiedades via tipo_id
   propiedades!: propiedades[];
@@ -45,15 +45,15 @@ export class tipos_propiedad extends Model<tipos_propiedadAttributes, tipos_prop
       type: DataTypes.STRING(50),
       allowNull: false
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('NOW')
+      defaultValue: Sequelize.Sequelize.fn('NOW')
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('NOW')
+      defaultValue: Sequelize.Sequelize.fn('NOW')
     }
   }, {
     sequelize,

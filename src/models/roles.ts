@@ -7,20 +7,20 @@ import type { usuarios, usuariosId } from './usuarios';
 export interface rolesAttributes {
   id: number;
   nombre: string;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type rolesPk = "id";
 export type rolesId = roles[rolesPk];
-export type rolesOptionalAttributes = "id" | "created_at" | "updated_at";
+export type rolesOptionalAttributes = "id" | "createdAt" | "updatedAt";
 export type rolesCreationAttributes = Optional<rolesAttributes, rolesOptionalAttributes>;
 
 export class roles extends Model<rolesAttributes, rolesCreationAttributes> implements rolesAttributes {
   id!: number;
   nombre!: string;
-  created_at!: Date;
-  updated_at!: Date;
+  createdAt!: Date;
+  updatedAt!: Date;
 
   // roles belongsToMany permisos via rol_id and permiso_id
   permiso_id_permisos!: permisos[];
@@ -69,18 +69,17 @@ export class roles extends Model<rolesAttributes, rolesCreationAttributes> imple
     },
     nombre: {
       type: DataTypes.STRING(50),
-      allowNull: false,
-      unique: "nombre"
+      allowNull: false
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('NOW')
+      defaultValue: Sequelize.Sequelize.fn('NOW')
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: Sequelize.literal('NOW')
+      defaultValue: Sequelize.Sequelize.fn('NOW')
     }
   }, {
     sequelize,
@@ -93,14 +92,6 @@ export class roles extends Model<rolesAttributes, rolesCreationAttributes> imple
         using: "BTREE",
         fields: [
           { name: "id" },
-        ]
-      },
-      {
-        name: "nombre",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "nombre" },
         ]
       },
     ]
