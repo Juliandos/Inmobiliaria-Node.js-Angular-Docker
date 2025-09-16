@@ -16,5 +16,22 @@
   "bugs": {
     "url": "https://github.com/Juliandos/Inmobiliaria-Node.js-Angular-Docker/issues"
   },
-  "homepage": "https://github.com/Juliandos/Inmobiliaria-Node.js-Angular-Docker#readme"
+  "homepage": "https://github.com/Juliandos/Inmobiliaria-Node.js-Angular-Docker#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.5",
+    "sequelize": "^6.37.7",
+    "sequelize-auto": "^0.8.8",
+    "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.3",
+    "tsx": "^4.20.5"
+  }
 }
