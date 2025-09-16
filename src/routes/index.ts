@@ -30,6 +30,7 @@ readdirSync(PATH_ROUTER).filter((fileName) => {
   const cleanName = cleanFileName(fileName);
   if (cleanName !== "index") {
     import(`./${cleanName}`).then((moduleRouter) => {
+      
       router.use(`/${cleanName}`, moduleRouter.router);
     });
   }

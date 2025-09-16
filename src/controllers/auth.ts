@@ -5,7 +5,7 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from "../utils/jwt";
-import { models } from "../db/database"; // Asegúrate de exportar initModels() como models
+import { models } from "../db/database";
 import { handleHttp } from "../utils/error.handle";
 
 const saltRounds = 10;
