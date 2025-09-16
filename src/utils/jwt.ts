@@ -8,9 +8,9 @@ export function generateAccessToken(payload: object, expiresIn: string | number 
   return jwt.sign(payload, JWT_SECRET, options);
 }
 
-export function generateRefreshToken(payload: object, expiresIn: string | number = "7d") {
+export function generateRefreshToken(payload: { id: number }, expiresIn: string | number = "7d") {
   const options: SignOptions = { expiresIn: expiresIn as any };
-  return jwt.sign(payload, JWT_REFRESH_SECRET, options);
+  return jwt.sign({ id: payload.id }, JWT_REFRESH_SECRET, options);
 }
 
 export function verifyAccessToken(token: string) {
