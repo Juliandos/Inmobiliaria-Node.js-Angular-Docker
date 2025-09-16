@@ -10,6 +10,7 @@ export interface usuariosAttributes {
   apellido?: string;
   password: string;
   rol_id?: number;
+  refreshToken?: string;
   created_at: Date;
   updated_at: Date;
 }
@@ -26,6 +27,7 @@ export class usuarios extends Model<usuariosAttributes, usuariosCreationAttribut
   apellido?: string;
   password!: string;
   rol_id?: number;
+  refreshToken?: string;
   created_at!: Date;
   updated_at!: Date;
 
@@ -79,6 +81,10 @@ export class usuarios extends Model<usuariosAttributes, usuariosCreationAttribut
         model: 'roles',
         key: 'id'
       }
+    },
+    refreshToken: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     },
     created_at: {
       type: DataTypes.DATE,
