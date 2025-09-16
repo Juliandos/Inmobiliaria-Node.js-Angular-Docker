@@ -26,7 +26,7 @@ export const navItems: INavData[] = [
     iconComponent: { name: 'cil-pencil' }
   },
   {
-    name: 'Components',
+    name: 'Control de Usuario',
     title: true
   },
   {
@@ -35,11 +35,15 @@ export const navItems: INavData[] = [
     iconComponent: { name: 'cil-puzzle' },
     children: [
       {
-        name: 'prueba',
-        url: '/profile',
+        name: 'Permisos',
+        url: '/profile/permisos',
         icon: 'nav-icon-bullet'
       }
     ]
+  },
+  {
+    name: 'Components',
+    title: true
   },
   {
     name: 'Base',
