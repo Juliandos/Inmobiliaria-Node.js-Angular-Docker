@@ -53,20 +53,21 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
+    
     if (!email || !password)
       return res.status(400).json({ message: "email y password requeridos" });
-
+    
     const user = await models.usuarios.findOne({
       where: { email },
       include: [{ model: models.roles, as: "rol", attributes: ["id", "nombre"] }],
     });
-
+    
     if (!user) return res.status(401).json({ message: "Credenciales inválidas" });
-
-    if (!user.password)
+    
+    if (!user.dataValues.password)
       return res.status(400).json({ message: "Usuario sin contraseña, usa OAuth2" });
-
-    const ok = await bcrypt.compare(password, user.password);
+    
+    const ok = await bcrypt.compare(password, user.dataValues.password);
     if (!ok) return res.status(401).json({ message: "Credenciales inválidas" });
 
     const accessToken = generateAccessToken({ id: user.id, email: user.email });
