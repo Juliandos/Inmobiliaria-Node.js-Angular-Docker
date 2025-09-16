@@ -29,10 +29,10 @@ export const register = async (req: Request, res: Response) => {
       rol_id,
     });
 
-    const accessToken = generateAccessToken({ id: user.id, email: user.email });
-    const refreshToken = generateRefreshToken({ id: user.id });
+    const accessToken = generateAccessToken({ id: user.dataValues.id, email: user.dataValues.email });
+    const refreshToken = generateRefreshToken({ id: user.dataValues.id });
 
-    user.refreshToken = refreshToken;
+    user.set('refreshToken', refreshToken);
     await user.save();
 
     const userData = await models.usuarios.findByPk(user.id, {
@@ -70,10 +70,10 @@ export const login = async (req: Request, res: Response) => {
     const ok = await bcrypt.compare(password, user.dataValues.password);
     if (!ok) return res.status(401).json({ message: "Credenciales inválidas" });
 
-    const accessToken = generateAccessToken({ id: user.id, email: user.email });
-    const refreshToken = generateRefreshToken({ id: user.id });
+    const accessToken = generateAccessToken({ id: user.dataValues.id, email: user.dataValues.email });
+    const refreshToken = generateRefreshToken({ id: user.dataValues.id });
 
-    user.refreshToken = refreshToken;
+    user.set('refreshToken', refreshToken);
     await user.save();
 
     return res.json({ accessToken, refreshToken, user });
@@ -90,16 +90,18 @@ export const refresh = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "refreshToken es requerido" });
 
     const payload = verifyRefreshToken(refreshToken) as any;
+    
     const user = await models.usuarios.findByPk(payload.id, {
       include: [{ model: models.roles, as: "rol", attributes: ["id", "nombre"] }],
     });
-
+    
     if (!user) return res.status(401).json({ message: "Usuario no encontrado" });
-    if (user.refreshToken !== refreshToken)
+    console.log("Payload: ", payload, refreshToken, );
+    if (user.dataValues.refreshToken !== refreshToken)
       return res.status(401).json({ message: "Refresh token inválido" });
 
-    const accessToken = generateAccessToken({ id: user.id, email: user.email });
-    const newRefreshToken = generateRefreshToken({ id: user.id });
+    const accessToken = generateAccessToken({ id: user.dataValues.id, email: user.dataValues.email });
+    const newRefreshToken = generateRefreshToken({ id: user.dataValues.id });
     user.refreshToken = newRefreshToken;
     await user.save();
 
