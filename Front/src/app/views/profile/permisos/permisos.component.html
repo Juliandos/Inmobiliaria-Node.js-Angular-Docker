@@ -1,21 +1,24 @@
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
-<p>permisos works!</p>
+<h2>Permisos</h2>
+
+<mat-form-field appearance="outline" class="mb-3 w-100">
+  <mat-label>Filtrar permisos</mat-label>
+  <input matInput [formControl]="filterControl" placeholder="Buscar por nombre o id" />
+</mat-form-field>
+
+<table mat-table [dataSource]="filteredPermisos" class="mat-elevation-z8 w-100">
+
+  <!-- ID Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>ID</th>
+    <td mat-cell *matCellDef="let permiso">{{ permiso.id }}</td>
+  </ng-container>
+
+  <!-- Nombre Column -->
+  <ng-container matColumnDef="nombre">
+    <th mat-header-cell *matHeaderCellDef>Nombre</th>
+    <td mat-cell *matCellDef="let permiso">{{ permiso.nombre }}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
