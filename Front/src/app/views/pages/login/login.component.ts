@@ -8,7 +8,7 @@ import {
   ButtonDirective 
 } from '@coreui/angular';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
@@ -20,7 +20,7 @@ import { AuthService } from '../../../services/auth.service';
     ContainerComponent, RowComponent, ColComponent, CardGroupComponent,
     TextColorDirective, CardComponent, CardBodyComponent, FormDirective,
     InputGroupComponent, InputGroupTextDirective, IconDirective,
-    FormControlDirective, ButtonDirective, NgStyle, FormsModule
+    FormControlDirective, ButtonDirective, NgStyle, FormsModule, RouterLink
   ]
 })
 export class LoginComponent {
@@ -30,26 +30,21 @@ export class LoginComponent {
   error = '';
 
   constructor(private authService: AuthService, private router: Router) {}
-  // console.log("prueba");
   
   onSubmit(event: Event) {
     event.preventDefault();
-    console.log('📤 Formulario enviado'); // <- Confirma que entra aquí
     this.error = '';
     this.loading = true;
 
     this.authService.login(this.email, this.password).subscribe({
       next: (res) => {
-        console.log('📥 Respuesta en componente:', res); // <- Si llega aquí
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        console.error('❌ Error de login:', err);
         this.error = err.error?.message || 'Error de autenticación';
         this.loading = false;
       },
       complete: () => {
-        console.log('🔚 Petición completada');
         this.loading = false;
       }
     });

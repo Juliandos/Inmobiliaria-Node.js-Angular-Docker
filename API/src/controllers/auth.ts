@@ -13,8 +13,8 @@ const saltRounds = 10;
 // REGISTER
 export const register = async (req: Request, res: Response) => {
   try {
-    const { nombre, email, password, rol_id } = req.body;
-    if (!nombre || !email || !password) {
+    const { nombre, apellido,  email, password, rol_id } = req.body;
+    if (!nombre || !email || !password || !apellido) {
       return res.status(400).json({ message: "nombre, email y password requeridos" });
     }
 
@@ -24,6 +24,7 @@ export const register = async (req: Request, res: Response) => {
     const hashed = await bcrypt.hash(password, saltRounds);
     const user = await models.usuarios.create({
       nombre,
+      apellido,
       email,
       password: hashed,
       rol_id,

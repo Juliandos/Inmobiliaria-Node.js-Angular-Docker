@@ -23,10 +23,11 @@ import {
   ThemeDirective
 } from '@coreui/angular';
 import { NgStyle, NgTemplateOutlet } from '@angular/common';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { IconDirective } from '@coreui/icons-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { delay, filter, map, tap } from 'rxjs/operators';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-default-header',
@@ -52,7 +53,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
     return this.colorModes.find(mode=> mode.name === currentMode)?.icon ?? 'cilSun';
   });
 
-  constructor() {
+  constructor(private authService: AuthService, private router: Router) {
     super();
     this.#colorModeService.localStorageItemName.set('coreui-free-angular-admin-template-theme-default');
     this.#colorModeService.eventName.set('ColorSchemeChange');
@@ -147,4 +148,14 @@ export class DefaultHeaderComponent extends HeaderComponent {
     { id: 4, title: 'Angular Version', value: 100, color: 'success' }
   ];
 
+
+  logout() {
+    // Borra sesión local y redirige al login
+    this.authService.logoutLocal(); 
+    this.router.navigate(['/login']);
+
+    // Si quieres, también puedes llamar al backend:
+    // const userId = ??? // necesitas el id del usuario logueado
+    // this.authService.logoutBackend(userId).subscribe(() => this.authService.logoutLocal());
+  }
 }
