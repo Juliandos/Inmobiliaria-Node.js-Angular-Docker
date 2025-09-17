@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from '../../services/auth.gard';
 
 export const routes: Routes = [
   {
@@ -14,6 +15,7 @@ export const routes: Routes = [
       },
       {
         path: 'permisos',
+        canActivate: [AuthGuard],
         loadComponent: () =>
           import('./permisos/permisos.component').then(
             (m) => m.PermisosComponent
@@ -24,6 +26,7 @@ export const routes: Routes = [
       },
       {
         path: 'propiedades',
+        canActivate: [AuthGuard],
         loadComponent: () =>
           import('./propiedades/propiedades.component').then(
             (m) => m.PropiedadesComponent
@@ -34,6 +37,7 @@ export const routes: Routes = [
       },
       {
         path: 'roles',
+        canActivate: [AuthGuard],
         loadComponent: () =>
           import('./roles/roles.component').then((m) => m.RolesComponent),
         data: {
@@ -42,6 +46,7 @@ export const routes: Routes = [
       },
       {
         path: 'usuariosv',
+        canActivate: [AuthGuard],
         loadComponent: () =>
           import('./usuarios/usuarios.component').then(
             (m) => m.UsuariosComponent
@@ -52,6 +57,7 @@ export const routes: Routes = [
       },
       {
         path: 'imagen-propiedad',
+        canActivate: [AuthGuard],
         loadComponent: () =>
           import('./imagen-propiedad/imagen-propiedad.component').then(
             (m) => m.ImagenPropiedadComponent
@@ -62,6 +68,7 @@ export const routes: Routes = [
       },
       {
         path: 'rol-permiso',
+        canActivate: [AuthGuard],
         loadComponent: () =>
           import('./rol-permiso/rol-permiso.component').then(
             (m) => m.RolPermisoComponent
@@ -72,6 +79,7 @@ export const routes: Routes = [
       },
       {
         path: 'tipos-propiedad',
+        canActivate: [AuthGuard],
         loadComponent: () =>
           import('./tipos-propiedad/tipos-propiedad.component').then((m) => m.TiposPropiedadComponent),
         data: {

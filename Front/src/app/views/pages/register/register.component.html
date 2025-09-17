@@ -4,33 +4,80 @@
       <c-col lg="7" md="9" xl="6">
         <c-card class="mx-4">
           <c-card-body class="p-4">
-            <form cForm>
+            <form cForm [formGroup]="registerForm" (ngSubmit)="onSubmit()">
               <h1>Register</h1>
               <p class="text-body-secondary">Create your account</p>
+
+              <!-- Nombre -->
               <c-input-group class="mb-3">
                 <span cInputGroupText>
                   <svg cIcon name="cilUser"></svg>
                 </span>
-                <input autoComplete="name" cFormControl placeholder="Username" />
+                <input
+                  cFormControl
+                  placeholder="Nombre"
+                  formControlName="nombre"
+                  autocomplete="name"
+                />
               </c-input-group>
-              <c-input-group class="mb-3">
-                <span cInputGroupText>&#64;</span>
-                <input autoComplete="email" cFormControl placeholder="Email" />
-              </c-input-group>
+              <small class="text-danger" *ngIf="registerForm.get('nombre')?.touched && registerForm.get('nombre')?.invalid">
+                Nombre debe tener al menos 3 caracteres.
+              </small>
+
+              <!-- Apellido -->
               <c-input-group class="mb-3">
                 <span cInputGroupText>
-                  <svg cIcon name="cilLockLocked"></svg>
+                  <svg cIcon name="cilUser"></svg>
                 </span>
-                <input autoComplete="new-password" cFormControl placeholder="Password" type="password" />
+                <input
+                  cFormControl
+                  placeholder="Apellido"
+                  formControlName="apellido"
+                  autocomplete="family-name"
+                />
               </c-input-group>
+              <small class="text-danger" *ngIf="registerForm.get('apellido')?.touched && registerForm.get('apellido')?.invalid">
+                Apellido debe tener al menos 3 caracteres.
+              </small>
+
+              <!-- Email -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>&#64;</span>
+                <input
+                  cFormControl
+                  placeholder="Email"
+                  formControlName="email"
+                  autocomplete="email"
+                />
+              </c-input-group>
+              <small class="text-danger" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+                Ingresa un email válido.
+              </small>
+
+              <!-- Password -->
               <c-input-group class="mb-4">
                 <span cInputGroupText>
                   <svg cIcon name="cilLockLocked"></svg>
                 </span>
-                <input autoComplete="new-password" cFormControl placeholder="Repeat password" type="password" />
+                <input
+                  cFormControl
+                  placeholder="Password"
+                  type="password"
+                  formControlName="password"
+                  autocomplete="new-password"
+                />
               </c-input-group>
+              <small class="text-danger" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+                Password debe tener al menos 6 caracteres.
+              </small>
+
+              <!-- Error general -->
+              <small class="text-danger d-block mb-2" *ngIf="errorMsg">{{ errorMsg }}</small>
+
               <div class="d-grid">
-                <button cButton color="success">Create Account</button>
+                <button cButton color="success" type="submit" [disabled]="registerForm.invalid || loading">
+                  {{ loading ? 'Creating...' : 'Create Account' }}
+                </button>
               </div>
             </form>
           </c-card-body>
