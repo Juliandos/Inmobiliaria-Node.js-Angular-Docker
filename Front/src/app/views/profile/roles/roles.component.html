@@ -1,1 +1,139 @@
-<p>roles works!</p>
+<!-- Header con botón de crear -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Gestión de Roles</h2>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="toggleCreateForm()"
+    class="d-flex align-items-center">
+    <mat-icon class="me-2">add</mat-icon>
+    {{ showCreateForm ? 'Cancelar' : 'Nuevo Rol' }}
+  </button>
+</div>
+
+<!-- Formulario de creación -->
+<mat-card *ngIf="showCreateForm" class="mb-4">
+  <mat-card-header>
+    <mat-card-title>Crear Nuevo Rol</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="pt-3">
+    <form [formGroup]="createForm" (ngSubmit)="onCreateRol()">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Nombre del Rol</mat-label>
+        <input matInput formControlName="nombre" placeholder="Administrador">
+        <mat-error *ngIf="createForm.get('nombre')?.hasError('required')">
+          El nombre es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <div class="d-flex gap-2">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          [disabled]="createForm.invalid">
+          <mat-icon class="me-2">save</mat-icon>
+          Crear Rol
+        </button>
+        <button 
+          mat-button 
+          type="button" 
+          (click)="toggleCreateForm()">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<!-- Formulario de edición -->
+<mat-card *ngIf="showEditForm" class="mb-4">
+  <mat-card-header>
+    <mat-card-title>Editar Rol</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="pt-3">
+    <form [formGroup]="editForm" (ngSubmit)="onUpdateRol()">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Nombre del Rol</mat-label>
+        <input matInput formControlName="nombre">
+        <mat-error *ngIf="editForm.get('nombre')?.hasError('required')">
+          El nombre es requerido
+        </mat-error>
+      </mat-form-field>
+
+      <div class="d-flex gap-2">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          [disabled]="editForm.invalid">
+          <mat-icon class="me-2">update</mat-icon>
+          Actualizar Rol
+        </button>
+        <button 
+          mat-button 
+          type="button" 
+          (click)="cancelEdit()">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<!-- Campo de filtro -->
+<mat-form-field appearance="outline" class="mb-3 w-100">
+  <mat-label>Filtrar roles</mat-label>
+  <input matInput [formControl]="filterControl" placeholder="Buscar por nombre o ID">
+  <mat-icon matPrefix>search</mat-icon>
+</mat-form-field>
+
+<!-- Tabla de roles -->
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="filteredRoles" class="w-100">
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef class="fw-bold">ID</th>
+      <td mat-cell *matCellDef="let rol">{{ rol.id }}</td>
+    </ng-container>
+
+    <!-- Nombre Column -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef class="fw-bold">Nombre</th>
+      <td mat-cell *matCellDef="let rol">{{ rol.nombre }}</td>
+    </ng-container>
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef class="fw-bold">Acciones</th>
+      <td mat-cell *matCellDef="let rol">
+        <div class="d-flex gap-1">
+          <button 
+            mat-icon-button 
+            color="primary" 
+            (click)="onEditRol(rol)"
+            matTooltip="Editar rol">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button 
+            mat-icon-button 
+            color="warn" 
+            (click)="onDeleteRol(rol.id)"
+            matTooltip="Eliminar rol">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <!-- Mensaje cuando no hay datos -->
+  <div *ngIf="filteredRoles.length === 0" class="text-center p-4">
+    <mat-icon class="text-muted" style="font-size: 48px;">group</mat-icon>
+    <p class="text-muted mt-2">No se encontraron roles</p>
+  </div>
+</div>
