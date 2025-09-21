@@ -1,1 +1,262 @@
-<p>usuarios works!</p>
+<!-- Header con botón de crear -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Gestión de Usuarios</h2>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="toggleCreateForm()"
+    class="d-flex align-items-center">
+    <mat-icon class="me-2">add</mat-icon>
+    {{ showCreateForm ? 'Cancelar' : 'Nuevo Usuario' }}
+  </button>
+</div>
+
+<!-- Formulario de creación -->
+<mat-card *ngIf="showCreateForm" class="mb-4">
+  <mat-card-header>
+    <mat-card-title>Crear Nuevo Usuario</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="pt-3">
+    <form [formGroup]="createForm" (ngSubmit)="onCreateUsuario()">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="usuario@ejemplo.com">
+            <mat-error *ngIf="createForm.get('email')?.hasError('required')">
+              El email es requerido
+            </mat-error>
+            <mat-error *ngIf="createForm.get('email')?.hasError('email')">
+              Formato de email inválido
+            </mat-error>
+          </mat-form-field>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre" placeholder="Juan">
+            <mat-error *ngIf="createForm.get('nombre')?.hasError('required')">
+              El nombre es requerido
+            </mat-error>
+          </mat-form-field>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Apellido</mat-label>
+            <input matInput formControlName="apellido" placeholder="Pérez">
+            <mat-error *ngIf="createForm.get('apellido')?.hasError('required')">
+              El apellido es requerido
+            </mat-error>
+          </mat-form-field>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Contraseña</mat-label>
+            <input matInput formControlName="password" type="password" placeholder="Mínimo 6 caracteres">
+            <mat-error *ngIf="createForm.get('password')?.hasError('required')">
+              La contraseña es requerida
+            </mat-error>
+            <mat-error *ngIf="createForm.get('password')?.hasError('minlength')">
+              Mínimo 6 caracteres
+            </mat-error>
+          </mat-form-field>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Rol</mat-label>
+            <mat-select formControlName="rol_id">
+              <mat-option *ngFor="let rol of roles" [value]="rol.id">
+                {{ rol.nombre }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="createForm.get('rol_id')?.hasError('required')">
+              El rol es requerido
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <div class="d-flex gap-2">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          [disabled]="createForm.invalid">
+          <mat-icon class="me-2">save</mat-icon>
+          Crear Usuario
+        </button>
+        <button 
+          mat-button 
+          type="button" 
+          (click)="toggleCreateForm()">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<!-- Formulario de edición -->
+<mat-card *ngIf="showEditForm" class="mb-4">
+  <mat-card-header>
+    <mat-card-title>Editar Usuario</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="pt-3">
+    <form [formGroup]="editForm" (ngSubmit)="onUpdateUsuario()">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email">
+            <mat-error *ngIf="editForm.get('email')?.hasError('required')">
+              El email es requerido
+            </mat-error>
+            <mat-error *ngIf="editForm.get('email')?.hasError('email')">
+              Formato de email inválido
+            </mat-error>
+          </mat-form-field>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre">
+            <mat-error *ngIf="editForm.get('nombre')?.hasError('required')">
+              El nombre es requerido
+            </mat-error>
+          </mat-form-field>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Apellido</mat-label>
+            <input matInput formControlName="apellido">
+            <mat-error *ngIf="editForm.get('apellido')?.hasError('required')">
+              El apellido es requerido
+            </mat-error>
+          </mat-form-field>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Nueva Contraseña</mat-label>
+            <input matInput formControlName="password" type="password" placeholder="Dejar vacío para no cambiar">
+            <mat-hint>Dejar vacío para mantener la contraseña actual</mat-hint>
+          </mat-form-field>
+        </div>
+        
+        <div class="col-md-6 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Rol</mat-label>
+            <mat-select formControlName="rol_id">
+              <mat-option *ngFor="let rol of roles" [value]="rol.id">
+                {{ rol.nombre }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="editForm.get('rol_id')?.hasError('required')">
+              El rol es requerido
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      
+      <div class="d-flex gap-2">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          [disabled]="editForm.invalid">
+          <mat-icon class="me-2">update</mat-icon>
+          Actualizar Usuario
+        </button>
+        <button 
+          mat-button 
+          type="button" 
+          (click)="cancelEdit()">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<!-- Campo de filtro -->
+<mat-form-field appearance="outline" class="mb-3 w-100">
+  <mat-label>Filtrar usuarios</mat-label>
+  <input matInput [formControl]="filterControl" placeholder="Buscar por nombre, apellido, email o ID">
+  <mat-icon matPrefix>search</mat-icon>
+</mat-form-field>
+
+<!-- Tabla de usuarios -->
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="filteredUsuarios" class="w-100">
+    
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef class="fw-bold">ID</th>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.id }}</td>
+    </ng-container>
+
+    <!-- Email Column -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef class="fw-bold">Email</th>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.email }}</td>
+    </ng-container>
+
+    <!-- Nombre Column -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef class="fw-bold">Nombre</th>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.nombre }}</td>
+    </ng-container>
+
+    <!-- Apellido Column -->
+    <ng-container matColumnDef="apellido">
+      <th mat-header-cell *matHeaderCellDef class="fw-bold">Apellido</th>
+      <td mat-cell *matCellDef="let usuario">{{ usuario.apellido }}</td>
+    </ng-container>
+
+    <!-- Rol Column -->
+    <ng-container matColumnDef="rol_id">
+      <th mat-header-cell *matHeaderCellDef class="fw-bold">Rol</th>
+      <td mat-cell *matCellDef="let usuario">
+        <span class="badge bg-primary">{{ getRolNameFromUser(usuario) }}</span>
+      </td>
+    </ng-container>
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef class="fw-bold">Acciones</th>
+      <td mat-cell *matCellDef="let usuario">
+        <div class="d-flex gap-1">
+          <button 
+            mat-icon-button 
+            color="primary" 
+            (click)="onEditUsuario(usuario)"
+            matTooltip="Editar usuario">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button 
+            mat-icon-button 
+            color="warn" 
+            (click)="onDeleteUsuario(usuario.id)"
+            matTooltip="Eliminar usuario">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <!-- Mensaje cuando no hay datos -->
+  <div *ngIf="filteredUsuarios.length === 0" class="text-center p-4">
+    <mat-icon class="text-muted" style="font-size: 48px;">people_outline</mat-icon>
+    <p class="text-muted mt-2">No se encontraron usuarios</p>
+  </div>
+</div>
