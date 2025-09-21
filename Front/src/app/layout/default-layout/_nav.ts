@@ -38,6 +38,21 @@ export const navItems: INavData[] = [
         name: 'Permisos',
         url: '/profile/permisos',
         icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Usuarios',
+        url: '/profile/usuarios',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Roles',
+        url: '/profile/roles',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Propiedades',
+        url: '/profile/propiedades',
+        icon: 'nav-icon-bullet'
       }
     ]
   },

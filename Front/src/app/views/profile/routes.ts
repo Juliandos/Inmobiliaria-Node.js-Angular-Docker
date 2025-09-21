@@ -45,7 +45,7 @@ export const routes: Routes = [
         },
       },
       {
-        path: 'usuariosv',
+        path: 'usuarios',
         canActivate: [AuthGuard],
         loadComponent: () =>
           import('./usuarios/usuarios.component').then(
