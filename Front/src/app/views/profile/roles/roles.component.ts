@@ -26,7 +26,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
-    MatSnackBar,
     MatCardModule,
     MatTooltipModule,
     MatSelectModule

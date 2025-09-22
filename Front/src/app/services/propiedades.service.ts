@@ -10,20 +10,39 @@ export interface Propiedad {
   habitaciones?: number;
   banos?: number;
   parqueadero?: number;
+  tipo_id?: number;
+  usuario_id?: number;
   tipo?: { id: number; nombre: string };
-  usuario?: { id: number; nombre: string };
+  usuario?: { id: number; nombre: string; apellido: string };
   imagenes_propiedads?: { id: number; url: string }[];
 }
 
-export interface CreatePropiedadRequest extends Omit<Propiedad, 'id'|'tipo'|'usuario'|'imagenes_propiedads'> {
+export interface CreatePropiedadRequest {
+  titulo: string;
+  descripcion?: string;
+  precio?: number;
+  habitaciones?: number;
+  banos?: number;
+  parqueadero?: number;
   tipo_id?: number;
   usuario_id?: number;
 }
-export type UpdatePropiedadRequest = Partial<CreatePropiedadRequest>;
+
+export interface UpdatePropiedadRequest {
+  titulo?: string;
+  descripcion?: string;
+  precio?: number;
+  habitaciones?: number;
+  banos?: number;
+  parqueadero?: number;
+  tipo_id?: number;
+  usuario_id?: number;
+}
 
 @Injectable({ providedIn: 'root' })
 export class PropiedadesService {
   private apiUrl = 'http://localhost:3001/propiedades';
+  
   constructor(private http: HttpClient) {}
 
   private getAuthHeaders(): HttpHeaders {
