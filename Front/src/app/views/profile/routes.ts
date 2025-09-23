@@ -85,6 +85,15 @@ export const routes: Routes = [
         data: {
           title: 'Tipos - Propiedad',
         },
+      },
+      {
+        path: 'modulos',
+        canActivate: [AuthGuard],
+        loadComponent: () =>
+          import('./modulos/modulos.component').then((m) => m.ModulosComponent),
+        data: {
+          title: 'Módulos',
+        },
       }
     ],
   },
