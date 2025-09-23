@@ -1,27 +1,26 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 import type { permisos, permisosId } from './permisos';
-import type { usuarios, usuariosId } from './usuarios';
 
-export interface rolesAttributes {
+export interface modulosAttributes {
   id: number;
   nombre: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export type rolesPk = "id";
-export type rolesId = roles[rolesPk];
-export type rolesOptionalAttributes = "id" | "createdAt" | "updatedAt";
-export type rolesCreationAttributes = Optional<rolesAttributes, rolesOptionalAttributes>;
+export type modulosPk = "id";
+export type modulosId = modulos[modulosPk];
+export type modulosOptionalAttributes = "id" | "createdAt" | "updatedAt";
+export type modulosCreationAttributes = Optional<modulosAttributes, modulosOptionalAttributes>;
 
-export class roles extends Model<rolesAttributes, rolesCreationAttributes> implements rolesAttributes {
+export class modulos extends Model<modulosAttributes, modulosCreationAttributes> implements modulosAttributes {
   id!: number;
   nombre!: string;
   createdAt!: Date;
   updatedAt!: Date;
 
-  // roles hasMany permisos via rol_id
+  // modulos hasMany permisos via modulo_id
   permisos!: permisos[];
   getPermisos!: Sequelize.HasManyGetAssociationsMixin<permisos>;
   setPermisos!: Sequelize.HasManySetAssociationsMixin<permisos, permisosId>;
@@ -33,21 +32,9 @@ export class roles extends Model<rolesAttributes, rolesCreationAttributes> imple
   hasPermiso!: Sequelize.HasManyHasAssociationMixin<permisos, permisosId>;
   hasPermisos!: Sequelize.HasManyHasAssociationsMixin<permisos, permisosId>;
   countPermisos!: Sequelize.HasManyCountAssociationsMixin;
-  // roles hasMany usuarios via rol_id
-  usuarios!: usuarios[];
-  getUsuarios!: Sequelize.HasManyGetAssociationsMixin<usuarios>;
-  setUsuarios!: Sequelize.HasManySetAssociationsMixin<usuarios, usuariosId>;
-  addUsuario!: Sequelize.HasManyAddAssociationMixin<usuarios, usuariosId>;
-  addUsuarios!: Sequelize.HasManyAddAssociationsMixin<usuarios, usuariosId>;
-  createUsuario!: Sequelize.HasManyCreateAssociationMixin<usuarios>;
-  removeUsuario!: Sequelize.HasManyRemoveAssociationMixin<usuarios, usuariosId>;
-  removeUsuarios!: Sequelize.HasManyRemoveAssociationsMixin<usuarios, usuariosId>;
-  hasUsuario!: Sequelize.HasManyHasAssociationMixin<usuarios, usuariosId>;
-  hasUsuarios!: Sequelize.HasManyHasAssociationsMixin<usuarios, usuariosId>;
-  countUsuarios!: Sequelize.HasManyCountAssociationsMixin;
 
-  static initModel(sequelize: Sequelize.Sequelize): typeof roles {
-    return roles.init({
+  static initModel(sequelize: Sequelize.Sequelize): typeof modulos {
+    return modulos.init({
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -61,7 +48,7 @@ export class roles extends Model<rolesAttributes, rolesCreationAttributes> imple
     }
   }, {
     sequelize,
-    tableName: 'roles',
+    tableName: 'modulos',
     timestamps: true,
     indexes: [
       {

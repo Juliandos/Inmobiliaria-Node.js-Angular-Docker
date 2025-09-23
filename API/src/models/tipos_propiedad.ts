@@ -44,16 +44,6 @@ export class tipos_propiedad extends Model<tipos_propiedadAttributes, tipos_prop
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.Sequelize.fn('NOW')
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.Sequelize.fn('NOW')
     }
   }, {
     sequelize,

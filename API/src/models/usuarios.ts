@@ -9,15 +9,15 @@ export interface usuariosAttributes {
   nombre?: string;
   apellido?: string;
   password: string;
-  rol_id?: number;
   refreshToken?: string;
+  rol_id?: number;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export type usuariosPk = "id";
 export type usuariosId = usuarios[usuariosPk];
-export type usuariosOptionalAttributes = "id" | "nombre" | "apellido" | "rol_id" | "refreshToken" | "createdAt" | "updatedAt";
+export type usuariosOptionalAttributes = "id" | "nombre" | "apellido" | "refreshToken" | "rol_id" | "createdAt" | "updatedAt";
 export type usuariosCreationAttributes = Optional<usuariosAttributes, usuariosOptionalAttributes>;
 
 export class usuarios extends Model<usuariosAttributes, usuariosCreationAttributes> implements usuariosAttributes {
@@ -26,8 +26,8 @@ export class usuarios extends Model<usuariosAttributes, usuariosCreationAttribut
   nombre?: string;
   apellido?: string;
   password!: string;
-  rol_id?: number;
   refreshToken?: string;
+  rol_id?: number;
   createdAt!: Date;
   updatedAt!: Date;
 
@@ -74,6 +74,11 @@ export class usuarios extends Model<usuariosAttributes, usuariosCreationAttribut
       type: DataTypes.STRING(255),
       allowNull: false
     },
+    refreshToken: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      unique: "refreshToken"
+    },
     rol_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -81,21 +86,6 @@ export class usuarios extends Model<usuariosAttributes, usuariosCreationAttribut
         model: 'roles',
         key: 'id'
       }
-    },
-    refreshToken: {
-      type: DataTypes.STRING(225),
-      allowNull: true,
-      unique: "refreshToken_UNIQUE"
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.Sequelize.fn('NOW')
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.Sequelize.fn('NOW')
     }
   }, {
     sequelize,
@@ -119,7 +109,7 @@ export class usuarios extends Model<usuariosAttributes, usuariosCreationAttribut
         ]
       },
       {
-        name: "refreshToken_UNIQUE",
+        name: "refreshToken",
         unique: true,
         using: "BTREE",
         fields: [
