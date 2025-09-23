@@ -16,7 +16,7 @@ export interface ImagenPropiedad {
 
 export interface CreateImagenPropiedadRequest {
   propiedad_id: number;
-  url: string;
+  imagenes: File[]; // ahora un array de archivos
 }
 
 export interface UpdateImagenPropiedadRequest {
@@ -63,17 +63,24 @@ export class ImagenesPropiedadService {
     );
   }
 
-  // ✅ Crear una imagen
-  createImagenPropiedad(data: CreateImagenPropiedadRequest): Observable<ImagenPropiedad> {
-    return this.http.post<ImagenPropiedad>(this.apiUrl, data, { 
-      headers: this.getAuthHeaders() 
-    }).pipe(
-      catchError(err => {
-        console.error('Error creando imagen:', err);
-        return throwError(() => err);
-      })
-    );
-  }
+  // ✅ Crear una imagen (ahora con archivos)
+ createImagenPropiedad(data: CreateImagenPropiedadRequest): Observable<ImagenPropiedad> {
+  const formData = new FormData();
+  formData.append('propiedad_id', data.propiedad_id.toString());
+
+  data.imagenes.forEach(file => {
+    formData.append('imagen', file); // el nombre 'imagen' coincide con upload.array("imagen")
+  });
+
+  return this.http.post<ImagenPropiedad>(this.apiUrl, formData, {
+    headers: this.getAuthHeaders() // No agregues 'Content-Type': el navegador lo hará
+  }).pipe(
+    catchError(err => {
+      console.error('Error creando imagen:', err);
+      return throwError(() => err);
+    })
+  );
+}
 
   // ✅ Actualizar una imagen
   updateImagenPropiedad(id: number, data: UpdateImagenPropiedadRequest): Observable<ImagenPropiedad> {
