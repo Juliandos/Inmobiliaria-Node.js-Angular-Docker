@@ -65,7 +65,6 @@ export class ImagenPropiedadComponent implements OnInit {
   get filteredImagenes(): ImagenPropiedad[] {
     const filter = this.filterControl.value?.toLowerCase() || '';
     return this.imagenes.filter(img =>
-      img.id.toString().includes(filter) ||
       img.propiedad?.titulo.toLowerCase().includes(filter)
     );
   }
