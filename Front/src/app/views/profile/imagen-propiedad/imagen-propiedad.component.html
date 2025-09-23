@@ -1,79 +1,82 @@
-<!-- Header con botón de crear -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h2>Gestión de Imágenes de Propiedades</h2>
-  <button 
-    mat-raised-button 
-    color="primary" 
-    (click)="toggleCreateForm()"
-    [disabled]="loading"
-    class="d-flex align-items-center">
-    <mat-icon class="me-2">add</mat-icon>
-    {{ showCreateForm ? 'Cancelar' : 'Nueva Imagen' }}
-  </button>
-</div>
+<!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Gestión de Imágenes de Propiedades</h2>
+    <button 
+      mat-raised-button 
+      color="primary"
+      (click)="startCreate()"
+      [disabled]="loading"
+      class="d-flex align-items-center">
+      <mat-icon class="me-2">add</mat-icon>
+      {{ showCreateForm ? 'Cancelar' : 'Nueva Imagen' }}
+    </button>
+  </div>
 
-<!-- Loading indicator -->
-<div *ngIf="loading" class="text-center mb-4">
-  <mat-icon class="spin">refresh</mat-icon>
-  Cargando datos...
-</div>
+  <!-- LOADING -->
+  <div *ngIf="loading" class="text-center mb-4">
+    <mat-icon class="spin">refresh</mat-icon>
+    Cargando datos...
+  </div>
 
-<!-- Formulario de creación -->
-<mat-card *ngIf="showCreateForm" class="mb-4">
-  <mat-card-header>
-    <mat-card-title>Agregar Nueva Imagen</mat-card-title>
-  </mat-card-header>
-  <mat-card-content class="pt-3">
-    <form [formGroup]="createForm" (ngSubmit)="onCreateImagen()">
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Propiedad</mat-label>
-            <mat-select formControlName="propiedad_id">
-              <mat-option *ngFor="let propiedad of propiedades" [value]="propiedad.id">
-                {{ propiedad.titulo }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="createForm.get('propiedad_id')?.hasError('required')">
-              La propiedad es requerida
-            </mat-error>
-          </mat-form-field>
+<!-- FORMULARIO CREACIÓN -->
+  <mat-card *ngIf="showCreateForm" class="mb-4">
+    <mat-card-header>
+      <mat-card-title>Agregar Nueva Imagen</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="pt-3">
+      <form [formGroup]="createForm" (ngSubmit)="onCreateImagen()">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Propiedad</mat-label>
+              <mat-select formControlName="propiedad_id">
+                <mat-option *ngFor="let propiedad of propiedades" [value]="propiedad.id">
+                  {{ propiedad.titulo }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="createForm.get('propiedad_id')?.hasError('required')">
+                La propiedad es requerida
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <!-- Botón para disparar el input de archivos -->
+            <button mat-stroked-button color="primary" type="button" (click)="fileInput.click()">
+              Seleccionar Imágenes
+            </button>
+            <input
+              type="file"
+              #fileInput
+              (change)="onFileSelected($event)"
+              multiple
+              hidden
+            />
+            <div class="mt-2 small text-muted" *ngIf="selectedFiles?.length">
+              {{ selectedFiles.length }} archivo(s) seleccionado(s)
+            </div>
+          </div>
         </div>
-        
-        <div class="col-md-6 mb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>URL de la Imagen</mat-label>
-            <input matInput formControlName="url" placeholder="https://ejemplo.com/imagen.jpg">
-            <mat-hint>Debe ser una URL válida que comience con http:// o https://</mat-hint>
-            <mat-error *ngIf="createForm.get('url')?.hasError('required')">
-              La URL es requerida
-            </mat-error>
-            <mat-error *ngIf="createForm.get('url')?.hasError('pattern')">
-              La URL debe comenzar con http:// o https://
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
 
-      <div class="d-flex gap-2">
-        <button 
-          mat-raised-button 
-          color="primary" 
-          type="submit"
-          [disabled]="createForm.invalid">
-          <mat-icon class="me-2">save</mat-icon>
-          Agregar Imagen
-        </button>
-        <button 
-          mat-button 
-          type="button" 
-          (click)="toggleCreateForm()">
-          Cancelar
-        </button>
-      </div>
-    </form>
-  </mat-card-content>
-</mat-card>
+        <div class="d-flex gap-2">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit"
+            [disabled]="createForm.invalid || !selectedFiles.length">
+            <mat-icon class="me-2">save</mat-icon>
+            Agregar Imagen
+          </button>
+          <button 
+            mat-button 
+            type="button" 
+            (click)="toggleCreateForm()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
 
 <!-- Formulario de edición -->
 <mat-card *ngIf="showEditForm" class="mb-4">
