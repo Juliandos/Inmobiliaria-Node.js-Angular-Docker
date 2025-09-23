@@ -94,7 +94,6 @@ export class PropiedadesComponent implements OnInit {
     this.propiedadesService.getPropiedades().subscribe({
       next: (data) => {
         this.propiedades = data;
-        console.log('Propiedades cargadas:', data);
       },
       error: (err) => {
         console.error('Error cargando propiedades:', err);
@@ -107,7 +106,6 @@ export class PropiedadesComponent implements OnInit {
     this.tiposService.getTipos().subscribe({
       next: (data) => {
         this.tipos = data;
-        console.log('Tipos cargados:', data);
       },
       error: (err) => {
         console.error('Error cargando tipos:', err);
@@ -120,7 +118,6 @@ export class PropiedadesComponent implements OnInit {
     this.usuariosService.getUsuarios().subscribe({
       next: (data) => {
         this.usuarios = data;
-        console.log('Usuarios cargados:', data);
       },
       error: (err) => {
         console.error('Error cargando usuarios:', err);

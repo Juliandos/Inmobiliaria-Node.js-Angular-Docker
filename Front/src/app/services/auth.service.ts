@@ -14,7 +14,6 @@ export class AuthService {
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
       tap((res) => {
-        console.log('✅ Respuesta del login:', res);
         localStorage.setItem('accessToken', res.accessToken);
         localStorage.setItem('refreshToken', res.refreshToken);
         localStorage.setItem('email', res.user.email);
@@ -32,7 +31,6 @@ export class AuthService {
       rol_id,
     }).pipe(
       tap((res) => {
-        console.log('✅ Usuario registrado:', res);
         localStorage.setItem('accessToken', res.accessToken);
         localStorage.setItem('refreshToken', res.refreshToken);
         localStorage.setItem('email', res.user.email);
@@ -45,7 +43,6 @@ export class AuthService {
     const refreshToken = localStorage.getItem('refreshToken');
     return this.http.post<any>(`${this.apiUrl}/refresh`, { refreshToken }).pipe(
       tap((res) => {
-        console.log('🔄 Token refrescado:', res);
         localStorage.setItem('accessToken', res.accessToken);
         localStorage.setItem('refreshToken', res.refreshToken);
       })

@@ -87,7 +87,6 @@ export class UsuariosComponent implements OnInit {
     this.usuariosService.getUsuarios().subscribe({
       next: (data) => {
         this.usuarios = data;
-        console.log('Usuarios cargados:', data);
       },
       error: (err) => {
         console.error('Error cargando usuarios:', err);
@@ -100,7 +99,6 @@ export class UsuariosComponent implements OnInit {
     this.rolesService.getRoles().subscribe({
       next: (data) => {
         this.roles = data;
-        console.log('Roles cargados:', data);
         
         // Establecer el primer rol como predeterminado si existe
         if (this.roles.length > 0) {

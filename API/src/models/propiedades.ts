@@ -76,7 +76,7 @@ export class propiedades extends Model<propiedadesAttributes, propiedadesCreatio
       allowNull: true
     },
     precio: {
-      type: DataTypes.DECIMAL(10,2),
+      type: DataTypes.DECIMAL(12,2),
       allowNull: true
     },
     habitaciones: {
