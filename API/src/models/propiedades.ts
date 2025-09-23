@@ -109,16 +109,6 @@ export class propiedades extends Model<propiedadesAttributes, propiedadesCreatio
         model: 'usuarios',
         key: 'id'
       }
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.Sequelize.fn('NOW')
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: Sequelize.Sequelize.fn('NOW')
     }
   }, {
     sequelize,

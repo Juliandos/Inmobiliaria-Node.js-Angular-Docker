@@ -1,50 +1,48 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
+import type { modulos, modulosId } from './modulos';
 import type { roles, rolesId } from './roles';
-import type { roles_permisos, roles_permisosId } from './roles_permisos';
 
 export interface permisosAttributes {
   id: number;
   nombre: string;
+  c: number;
+  r: number;
+  u: number;
+  d: number;
+  rol_id: number;
+  modulo_id: number;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export type permisosPk = "id";
 export type permisosId = permisos[permisosPk];
-export type permisosOptionalAttributes = "id" | "createdAt" | "updatedAt";
+export type permisosOptionalAttributes = "id" | "c" | "r" | "u" | "d" | "createdAt" | "updatedAt";
 export type permisosCreationAttributes = Optional<permisosAttributes, permisosOptionalAttributes>;
 
 export class permisos extends Model<permisosAttributes, permisosCreationAttributes> implements permisosAttributes {
   id!: number;
   nombre!: string;
+  c!: number;
+  r!: number;
+  u!: number;
+  d!: number;
+  rol_id!: number;
+  modulo_id!: number;
   createdAt!: Date;
   updatedAt!: Date;
 
-  // permisos belongsToMany roles via permiso_id and rol_id
-  rol_id_roles!: roles[];
-  getRol_id_roles!: Sequelize.BelongsToManyGetAssociationsMixin<roles>;
-  setRol_id_roles!: Sequelize.BelongsToManySetAssociationsMixin<roles, rolesId>;
-  addRol_id_role!: Sequelize.BelongsToManyAddAssociationMixin<roles, rolesId>;
-  addRol_id_roles!: Sequelize.BelongsToManyAddAssociationsMixin<roles, rolesId>;
-  createRol_id_role!: Sequelize.BelongsToManyCreateAssociationMixin<roles>;
-  removeRol_id_role!: Sequelize.BelongsToManyRemoveAssociationMixin<roles, rolesId>;
-  removeRol_id_roles!: Sequelize.BelongsToManyRemoveAssociationsMixin<roles, rolesId>;
-  hasRol_id_role!: Sequelize.BelongsToManyHasAssociationMixin<roles, rolesId>;
-  hasRol_id_roles!: Sequelize.BelongsToManyHasAssociationsMixin<roles, rolesId>;
-  countRol_id_roles!: Sequelize.BelongsToManyCountAssociationsMixin;
-  // permisos hasMany roles_permisos via permiso_id
-  roles_permisos!: roles_permisos[];
-  getRoles_permisos!: Sequelize.HasManyGetAssociationsMixin<roles_permisos>;
-  setRoles_permisos!: Sequelize.HasManySetAssociationsMixin<roles_permisos, roles_permisosId>;
-  addRoles_permiso!: Sequelize.HasManyAddAssociationMixin<roles_permisos, roles_permisosId>;
-  addRoles_permisos!: Sequelize.HasManyAddAssociationsMixin<roles_permisos, roles_permisosId>;
-  createRoles_permiso!: Sequelize.HasManyCreateAssociationMixin<roles_permisos>;
-  removeRoles_permiso!: Sequelize.HasManyRemoveAssociationMixin<roles_permisos, roles_permisosId>;
-  removeRoles_permisos!: Sequelize.HasManyRemoveAssociationsMixin<roles_permisos, roles_permisosId>;
-  hasRoles_permiso!: Sequelize.HasManyHasAssociationMixin<roles_permisos, roles_permisosId>;
-  hasRoles_permisos!: Sequelize.HasManyHasAssociationsMixin<roles_permisos, roles_permisosId>;
-  countRoles_permisos!: Sequelize.HasManyCountAssociationsMixin;
+  // permisos belongsTo modulos via modulo_id
+  modulo!: modulos;
+  getModulo!: Sequelize.BelongsToGetAssociationMixin<modulos>;
+  setModulo!: Sequelize.BelongsToSetAssociationMixin<modulos, modulosId>;
+  createModulo!: Sequelize.BelongsToCreateAssociationMixin<modulos>;
+  // permisos belongsTo roles via rol_id
+  rol!: roles;
+  getRol!: Sequelize.BelongsToGetAssociationMixin<roles>;
+  setRol!: Sequelize.BelongsToSetAssociationMixin<roles, rolesId>;
+  createRol!: Sequelize.BelongsToCreateAssociationMixin<roles>;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof permisos {
     return permisos.init({
@@ -55,19 +53,44 @@ export class permisos extends Model<permisosAttributes, permisosCreationAttribut
       primaryKey: true
     },
     nombre: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-      unique: "nombre"
+      type: DataTypes.STRING(100),
+      allowNull: false
     },
-    createdAt: {
-      type: DataTypes.DATE,
+    c: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: Sequelize.Sequelize.fn('NOW')
+      defaultValue: 0
     },
-    updatedAt: {
-      type: DataTypes.DATE,
+    r: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: Sequelize.Sequelize.fn('NOW')
+      defaultValue: 0
+    },
+    u: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: 0
+    },
+    d: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: 0
+    },
+    rol_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'roles',
+        key: 'id'
+      }
+    },
+    modulo_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'modulos',
+        key: 'id'
+      }
     }
   }, {
     sequelize,
@@ -83,11 +106,19 @@ export class permisos extends Model<permisosAttributes, permisosCreationAttribut
         ]
       },
       {
-        name: "nombre",
+        name: "unique_rol_modulo",
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "nombre" },
+          { name: "rol_id" },
+          { name: "modulo_id" },
+        ]
+      },
+      {
+        name: "modulo_id",
+        using: "BTREE",
+        fields: [
+          { name: "modulo_id" },
         ]
       },
     ]
