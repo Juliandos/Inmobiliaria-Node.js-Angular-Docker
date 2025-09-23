@@ -12,7 +12,6 @@ const getPropiedades = async (req: Request, res: Response) => {
         { model: models.imagenes_propiedad, as: "imagenes_propiedads" },
       ],
     });
-    console.log("Propiedades: ", propiedades);
     
     return res.json(propiedades.map((p) => p.toJSON()));
   } catch (e) {
