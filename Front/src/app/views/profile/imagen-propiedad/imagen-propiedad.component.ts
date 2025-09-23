@@ -39,22 +39,20 @@ export class ImagenPropiedadComponent implements OnInit {
 
   imagenes: ImagenPropiedad[] = [];
   propiedades: Propiedad[] = [];
-  displayedColumns = ['id', 'imagen', 'url', 'propiedad', 'acciones'];
+  displayedColumns = ['id', 'imagen', 'propiedad', 'acciones'];
   filterControl = new FormControl('');
+  selectedFiles: File[] = [];
 
-  // Formularios
   createForm = new FormGroup({
-    propiedad_id: new FormControl('', [Validators.required]),
-    url: new FormControl('', [Validators.required, Validators.pattern(/^https?:\/\/.+/)])
+    propiedad_id: new FormControl('', [Validators.required])
   });
 
   editForm = new FormGroup({
     id: new FormControl(''),
     propiedad_id: new FormControl('', [Validators.required]),
-    url: new FormControl('', [Validators.required, Validators.pattern(/^https?:\/\/.+/)])
+    url: new FormControl('', [Validators.required])
   });
 
-  // Estado
   showCreateForm = false;
   showEditForm = false;
   editingImagenId: number | null = null;
@@ -68,7 +66,6 @@ export class ImagenPropiedadComponent implements OnInit {
     const filter = this.filterControl.value?.toLowerCase() || '';
     return this.imagenes.filter(img =>
       img.id.toString().includes(filter) ||
-      img.url.toLowerCase().includes(filter) ||
       img.propiedad?.titulo.toLowerCase().includes(filter)
     );
   }
@@ -80,42 +77,70 @@ export class ImagenPropiedadComponent implements OnInit {
         this.imagenesPropiedadService.getImagenesPropiedad().toPromise(),
         this.propiedadesService.getPropiedades().toPromise()
       ]);
-
       this.imagenes = imagenes || [];
       this.propiedades = propiedades || [];
-    } catch (error) {
-      console.error('Error cargando datos:', error);
+    } catch (err) {
+      console.error(err);
       this.showSnackBar('Error cargando datos');
     } finally {
       this.loading = false;
     }
   }
 
-  // ✅ CREAR IMAGEN
+  startCreate() {
+    if (this.showCreateForm) {
+      this.toggleCreateForm(); // cierra
+    } else {
+      // Inicializa el formulario y abre
+      this.createForm.reset();
+      this.selectedFiles = [];
+      this.toggleCreateForm();
+    }
+  }
+
+  onFileSelected(event: Event) {
+    const files = (event.target as HTMLInputElement).files;
+    this.selectedFiles = files ? Array.from(files) : [];
+  }
+
   onCreateImagen(): void {
-    if (this.createForm.valid) {
+    if (this.createForm.valid && this.selectedFiles.length > 0) {
       const newImagen: CreateImagenPropiedadRequest = {
         propiedad_id: Number(this.createForm.value.propiedad_id!),
-        url: this.createForm.value.url!
+        imagenes: this.selectedFiles
       };
 
       this.imagenesPropiedadService.createImagenPropiedad(newImagen).subscribe({
         next: (imagen) => {
           this.imagenes.push(imagen);
           this.createForm.reset();
+          this.selectedFiles = [];
           this.showCreateForm = false;
           this.showSnackBar('Imagen creada exitosamente');
         },
         error: (err) => {
-          console.error('Error creando imagen:', err);
-          const message = err.error?.message || 'Error creando imagen';
-          this.showSnackBar(message);
+          console.error(err);
+          this.showSnackBar(err.error?.message || 'Error creando imagen');
         }
       });
+    } else {
+      this.showSnackBar('Seleccione archivos e ID de propiedad');
     }
   }
 
-  // ✅ PREPARAR EDICIÓN
+  // Reemplaza la imagen con un placeholder si falla la carga
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = '../../../assets/logo IHO.jpg'; // 👈 Usa una imagen placeholder en tu proyecto
+  }
+
+  // Abre la imagen en una nueva pestaña del navegador
+  openImageInNewTab(url: string): void {
+    if (url) {
+      window.open(url, '_blank');
+    }
+  }
+
   onEditImagen(imagen: ImagenPropiedad): void {
     this.editingImagenId = imagen.id;
     this.editForm.patchValue({
@@ -127,7 +152,6 @@ export class ImagenPropiedadComponent implements OnInit {
     this.showCreateForm = false;
   }
 
-  // ✅ ACTUALIZAR IMAGEN
   onUpdateImagen(): void {
     if (this.editForm.valid && this.editingImagenId) {
       const updateData: UpdateImagenPropiedadRequest = {
@@ -136,46 +160,36 @@ export class ImagenPropiedadComponent implements OnInit {
       };
 
       this.imagenesPropiedadService.updateImagenPropiedad(this.editingImagenId, updateData).subscribe({
-        next: (updatedImagen) => {
-          const index = this.imagenes.findIndex(img => img.id === this.editingImagenId);
-          if (index !== -1) {
-            this.imagenes[index] = updatedImagen;
-          }
+        next: (updated) => {
+          const idx = this.imagenes.findIndex(img => img.id === this.editingImagenId);
+          if (idx !== -1) this.imagenes[idx] = updated;
           this.cancelEdit();
           this.showSnackBar('Imagen actualizada exitosamente');
         },
         error: (err) => {
-          console.error('Error actualizando imagen:', err);
-          const message = err.error?.message || 'Error actualizando imagen';
-          this.showSnackBar(message);
+          console.error(err);
+          this.showSnackBar('Error actualizando imagen');
         }
       });
     }
   }
 
-  // ✅ ELIMINAR IMAGEN
   onDeleteImagen(id: number): void {
-    if (confirm('¿Estás seguro de que quieres eliminar esta imagen?')) {
+    if (confirm('¿Eliminar imagen?')) {
       this.imagenesPropiedadService.deleteImagenPropiedad(id).subscribe({
         next: () => {
           this.imagenes = this.imagenes.filter(img => img.id !== id);
-          this.showSnackBar('Imagen eliminada exitosamente');
+          this.showSnackBar('Imagen eliminada');
         },
-        error: (err) => {
-          console.error('Error eliminando imagen:', err);
-          this.showSnackBar('Error eliminando imagen');
-        }
+        error: () => this.showSnackBar('Error eliminando imagen')
       });
     }
   }
 
-  // ✅ UTILIDADES
   toggleCreateForm(): void {
     this.showCreateForm = !this.showCreateForm;
     this.showEditForm = false;
-    if (this.showCreateForm) {
-      this.createForm.reset();
-    }
+    if (this.showCreateForm) this.createForm.reset();
   }
 
   cancelEdit(): void {
@@ -184,38 +198,13 @@ export class ImagenPropiedadComponent implements OnInit {
     this.editForm.reset();
   }
 
-  private showSnackBar(message: string): void {
+  showSnackBar(message: string): void {
     this.snackBar.open(message, 'Cerrar', {
-      duration: 3000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top'
+      duration: 3000, horizontalPosition: 'right', verticalPosition: 'top'
     });
   }
 
-  // ✅ UTILIDADES DE TEMPLATE
-  onImageError(event: Event): void {
-    const target = event.target as HTMLImageElement;
-    if (target) {
-      target.style.display = 'none';
-    }
-  }
-
-  openImageInNewTab(url: string): void {
-    window.open(url, '_blank');
-  }
-
-  getPropiedadName(propiedadId?: number): string {
-    if (!propiedadId) return 'Sin propiedad';
-    const propiedad = this.propiedades.find(p => p.id === propiedadId);
-    return propiedad ? propiedad.titulo : `Propiedad ${propiedadId}`;
-  }
-
-  getPropiedadNameFromImagen(imagen: ImagenPropiedad): string {
-    // Primero intentar obtener de la relación incluida
-    if (imagen.propiedad?.titulo) {
-      return imagen.propiedad.titulo;
-    }
-    // Si no, buscar en la lista local
-    return this.getPropiedadName(imagen.propiedad_id);
+  getPropiedadNameFromImagen(img: ImagenPropiedad): string {
+    return img.propiedad?.titulo || `Propiedad ${img.propiedad_id}`;
   }
 }
