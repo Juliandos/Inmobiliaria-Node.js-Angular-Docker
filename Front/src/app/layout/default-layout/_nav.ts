@@ -53,6 +53,16 @@ export const navItems: INavData[] = [
         name: 'Propiedades',
         url: '/profile/propiedades',
         icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Módulos',
+        url: '/profile/modulos',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Imagenes Propiedades',
+        url: '/profile/imagen-propiedad',
+        icon: 'nav-icon-bullet'
       }
     ]
   },
