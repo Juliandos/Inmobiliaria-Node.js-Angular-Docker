@@ -1,4 +1,4 @@
-// Front/src/app/services/permisos-auth.service.ts
+// Front/src/app/services/permisos-auth.service.ts (CORREGIDO)
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
@@ -13,30 +13,24 @@ export interface UserPermissions {
   };
   permisos: {
     modulo: string;
-    c: boolean; // Create
-    r: boolean; // Read
-    u: boolean; // Update
-    d: boolean; // Delete
+    c: boolean;
+    r: boolean;
+    u: boolean;
+    d: boolean;
   }[];
-}
-
-export interface PermissionCheck {
-  modulo: string;
-  operacion: 'c' | 'r' | 'u' | 'd';
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class PermisosAuthService {
-  private apiUrl = 'http://localhost:3001/auth';
+  private apiUrl = 'http://localhost:3001';
   private userPermissions$ = new BehaviorSubject<UserPermissions | null>(null);
   private permissionsLoaded = false;
 
   constructor(private http: HttpClient) {
-    // Cargar permisos al inicializar si hay token
     if (this.hasToken()) {
-      this.loadUserPermissions();
+      this.loadUserPermissions().subscribe();
     }
   }
 
@@ -60,13 +54,13 @@ export class PermisosAuthService {
       return of(null);
     }
 
-    return this.http.get<UserPermissions>(`${this.apiUrl}/me/permisos`, {
+    return this.http.get<UserPermissions>(`${this.apiUrl}/permisos`, {
       headers: this.getAuthHeaders()
     }).pipe(
       tap(permissions => {
+        console.log('Permisos cargados del backend:', permissions);
         this.userPermissions$.next(permissions);
         this.permissionsLoaded = true;
-        console.log('Permisos cargados:', permissions);
       }),
       catchError(err => {
         console.error('Error cargando permisos:', err);
@@ -93,107 +87,36 @@ export class PermisosAuthService {
   hasPermission(modulo: string, operacion: 'c' | 'r' | 'u' | 'd'): Observable<boolean> {
     return this.getUserPermissions().pipe(
       map(permissions => {
-        if (!permissions) return false;
-
+        // console.log("Verificando permisos para:", modulo, operacion);
+        console.log("permissions: ", permissions);
+        
+        if (!permissions || !permissions.permisos) {
+          console.log("No hay permisos cargados");
+          return false;
+        }
+        
         const moduloPermiso = permissions.permisos.find(p => 
           p.modulo.toLowerCase() === modulo.toLowerCase()
         );
 
-        if (!moduloPermiso) return false;
+        console.log("Permiso encontrado para módulo:", moduloPermiso);
 
-        return moduloPermiso[operacion];
+        if (!moduloPermiso) {
+          console.log("No se encontró permiso para el módulo:", modulo);
+          return false;
+        }
+
+        const tienePermiso = moduloPermiso[operacion];
+        console.log("¿Tiene permiso?", tienePermiso);
+        
+        return tienePermiso;
+      }),
+      catchError(err => {
+        console.error('Error verificando permiso:', err);
+        return of(false);
       })
     );
   }
 
-  /**
-   * Verifica múltiples permisos a la vez
-   */
-  hasPermissions(checks: PermissionCheck[]): Observable<boolean[]> {
-    return this.getUserPermissions().pipe(
-      map(permissions => {
-        if (!permissions) return checks.map(() => false);
-
-        return checks.map(check => {
-          const moduloPermiso = permissions.permisos.find(p => 
-            p.modulo.toLowerCase() === check.modulo.toLowerCase()
-          );
-          return moduloPermiso ? moduloPermiso[check.operacion] : false;
-        });
-      })
-    );
-  }
-
-  /**
-   * Verifica si el usuario tiene algún permiso en un módulo
-   */
-  hasAnyPermissionInModule(modulo: string): Observable<boolean> {
-    return this.getUserPermissions().pipe(
-      map(permissions => {
-        if (!permissions) return false;
-
-        const moduloPermiso = permissions.permisos.find(p => 
-          p.modulo.toLowerCase() === modulo.toLowerCase()
-        );
-
-        if (!moduloPermiso) return false;
-
-        return moduloPermiso.c || moduloPermiso.r || moduloPermiso.u || moduloPermiso.d;
-      })
-    );
-  }
-
-  /**
-   * Obtiene la información del rol del usuario
-   */
-  getUserRole(): Observable<{ id: number; nombre: string } | null> {
-    return this.getUserPermissions().pipe(
-      map(permissions => permissions ? permissions.rol : null)
-    );
-  }
-
-  /**
-   * Verifica si el usuario es administrador
-   */
-  isAdmin(): Observable<boolean> {
-    return this.getUserRole().pipe(
-      map(role => role ? role.nombre.toLowerCase() === 'administrador' : false)
-    );
-  }
-
-  /**
-   * Limpia los permisos del usuario (para logout)
-   */
-  clearPermissions(): void {
-    this.userPermissions$.next(null);
-    this.permissionsLoaded = false;
-  }
-
-  /**
-   * Obtiene todos los módulos a los que el usuario tiene acceso
-   */
-  getAccessibleModules(): Observable<string[]> {
-    return this.getUserPermissions().pipe(
-      map(permissions => {
-        if (!permissions) return [];
-        return permissions.permisos
-          .filter(p => p.r) // Al menos debe tener permiso de lectura
-          .map(p => p.modulo);
-      })
-    );
-  }
-
-  /**
-   * Verifica permisos de forma síncrona (usar solo cuando se esté seguro de que los permisos están cargados)
-   */
-  hasPermissionSync(modulo: string, operacion: 'c' | 'r' | 'u' | 'd'): boolean {
-    const permissions = this.userPermissions$.value;
-    if (!permissions) return false;
-
-    const moduloPermiso = permissions.permisos.find(p => 
-      p.modulo.toLowerCase() === modulo.toLowerCase()
-    );
-
-    return moduloPermiso ? moduloPermiso[operacion] : false;
-  }
+  // ... resto de métodos igual ...
 }

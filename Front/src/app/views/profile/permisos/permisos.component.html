@@ -1,25 +1,29 @@
-<!-- Front/src/app/views/profile/permisos/permisos.component.html (ACTUALIZADO) -->
+<!-- Front/src/app/views/profile/permisos/permisos.component.html (CORREGIDO) -->
+
 <!-- Header con botón de crear -->
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h2>Gestión de Permisos</h2>
-  <button 
-    mat-raised-button 
-    color="primary" 
-    (click)="toggleCreateForm()"
-    [disabled]="loading"
-    class="d-flex align-items-center"
-    hasPermission="permisos"
-    hasPermissionOperation="c">
-    <mat-icon class="me-2">add</mat-icon>
-    {{ showCreateForm ? 'Cancelar' : 'Nuevo Permiso' }}
-  </button>
+  
+  <!-- Botón de crear con permiso -->
+  <ng-container *hasPermission="'permisos'; operation: 'c'">
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="toggleCreateForm()"
+      [disabled]="loading"
+      class="d-flex align-items-center">
+      <mat-icon class="me-2">add</mat-icon>
+      {{ showCreateForm ? 'Cancelar' : 'Nuevo Permiso' }}
+    </button>
+  </ng-container>
 
   <!-- Mensaje cuando no tiene permisos para crear -->
-  <div *hasPermission="'permisos'; operation: 'c'; showWhenDenied: true" 
-       class="alert alert-info d-flex align-items-center">
-    <mat-icon class="me-2">info</mat-icon>
-    No tienes permisos para crear nuevos permisos
-  </div>
+  <ng-container *hasPermission="'permisos'; operation: 'c'; showWhenDenied: true">
+    <div class="alert alert-info d-flex align-items-center">
+      <mat-icon class="me-2">info</mat-icon>
+      No tienes permisos para crear nuevos permisos
+    </div>
+  </ng-container>
 </div>
 
 <!-- Loading indicator -->
@@ -29,190 +33,190 @@
 </div>
 
 <!-- Formulario de creación -->
-<mat-card *ngIf="showCreateForm" class="mb-4" 
-          hasPermission="permisos"
-          hasPermissionOperation="c">
-  <mat-card-header>
-    <mat-card-title>Crear Nuevo Permiso</mat-card-title>
-  </mat-card-header>
-  <mat-card-content class="pt-3">
-    <form [formGroup]="createForm" (ngSubmit)="onCreatePermiso()">
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Nombre del Permiso</mat-label>
-            <input matInput formControlName="nombre" placeholder="Ej: Gestión de usuarios">
-            <mat-error *ngIf="createForm.get('nombre')?.hasError('required')">
-              El nombre es requerido
-            </mat-error>
-          </mat-form-field>
-        </div>
-        
-        <div class="col-md-3 mb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Rol</mat-label>
-            <mat-select formControlName="rol_id">
-              <mat-option *ngFor="let rol of roles" [value]="rol.id">
-                {{ rol.nombre }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="createForm.get('rol_id')?.hasError('required')">
-              El rol es requerido
-            </mat-error>
-          </mat-form-field>
-        </div>
+<ng-container *hasPermission="'permisos'; operation: 'c'">
+  <mat-card *ngIf="showCreateForm" class="mb-4">
+    <mat-card-header>
+      <mat-card-title>Crear Nuevo Permiso</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="pt-3">
+      <form [formGroup]="createForm" (ngSubmit)="onCreatePermiso()">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Nombre del Permiso</mat-label>
+              <input matInput formControlName="nombre" placeholder="Ej: Gestión de usuarios">
+              <mat-error *ngIf="createForm.get('nombre')?.hasError('required')">
+                El nombre es requerido
+              </mat-error>
+            </mat-form-field>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Rol</mat-label>
+              <mat-select formControlName="rol_id">
+                <mat-option *ngFor="let rol of roles" [value]="rol.id">
+                  {{ rol.nombre }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="createForm.get('rol_id')?.hasError('required')">
+                El rol es requerido
+              </mat-error>
+            </mat-form-field>
+          </div>
 
-        <div class="col-md-3 mb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Módulo</mat-label>
-            <mat-select formControlName="modulo_id">
-              <mat-option *ngFor="let modulo of modulos" [value]="modulo.id">
-                {{ modulo.nombre }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="createForm.get('modulo_id')?.hasError('required')">
-              El módulo es requerido
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-12 mb-3">
-          <label class="form-label fw-bold">Permisos CRUD:</label>
-          <div class="d-flex flex-wrap gap-3 mt-2">
-            <mat-checkbox formControlName="c" color="primary">
-              <mat-icon class="me-1" style="font-size: 18px;">add</mat-icon>
-              Crear
-            </mat-checkbox>
-            <mat-checkbox formControlName="r" color="accent">
-              <mat-icon class="me-1" style="font-size: 18px;">visibility</mat-icon>
-              Leer
-            </mat-checkbox>
-            <mat-checkbox formControlName="u" color="warn">
-              <mat-icon class="me-1" style="font-size: 18px;">edit</mat-icon>
-              Actualizar
-            </mat-checkbox>
-            <mat-checkbox formControlName="d">
-              <mat-icon class="me-1" style="font-size: 18px;">delete</mat-icon>
-              Eliminar
-            </mat-checkbox>
+          <div class="col-md-3 mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Módulo</mat-label>
+              <mat-select formControlName="modulo_id">
+                <mat-option *ngFor="let modulo of modulos" [value]="modulo.id">
+                  {{ modulo.nombre }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="createForm.get('modulo_id')?.hasError('required')">
+                El módulo es requerido
+              </mat-error>
+            </mat-form-field>
           </div>
         </div>
-      </div>
 
-      <div class="d-flex gap-2">
-        <button 
-          mat-raised-button 
-          color="primary" 
-          type="submit"
-          [disabled]="createForm.invalid">
-          <mat-icon class="me-2">save</mat-icon>
-          Crear Permiso
-        </button>
-        <button 
-          mat-button 
-          type="button" 
-          (click)="toggleCreateForm()">
-          Cancelar
-        </button>
-      </div>
-    </form>
-  </mat-card-content>
-</mat-card>
+        <div class="row">
+          <div class="col-12 mb-3">
+            <label class="form-label fw-bold">Permisos CRUD:</label>
+            <div class="d-flex flex-wrap gap-3 mt-2">
+              <mat-checkbox formControlName="c" color="primary">
+                <mat-icon class="me-1" style="font-size: 18px;">add</mat-icon>
+                Crear
+              </mat-checkbox>
+              <mat-checkbox formControlName="r" color="accent">
+                <mat-icon class="me-1" style="font-size: 18px;">visibility</mat-icon>
+                Leer
+              </mat-checkbox>
+              <mat-checkbox formControlName="u" color="warn">
+                <mat-icon class="me-1" style="font-size: 18px;">edit</mat-icon>
+                Actualizar
+              </mat-checkbox>
+              <mat-checkbox formControlName="d">
+                <mat-icon class="me-1" style="font-size: 18px;">delete</mat-icon>
+                Eliminar
+              </mat-checkbox>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit"
+            [disabled]="createForm.invalid">
+            <mat-icon class="me-2">save</mat-icon>
+            Crear Permiso
+          </button>
+          <button 
+            mat-button 
+            type="button" 
+            (click)="toggleCreateForm()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</ng-container>
 
 <!-- Formulario de edición -->
-<mat-card *ngIf="showEditForm" class="mb-4"
-          hasPermission="permisos"
-          hasPermissionOperation="u">
-  <mat-card-header>
-    <mat-card-title>Editar Permiso</mat-card-title>
-  </mat-card-header>
-  <mat-card-content class="pt-3">
-    <form [formGroup]="editForm" (ngSubmit)="onUpdatePermiso()">
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Nombre del Permiso</mat-label>
-            <input matInput formControlName="nombre">
-            <mat-error *ngIf="editForm.get('nombre')?.hasError('required')">
-              El nombre es requerido
-            </mat-error>
-          </mat-form-field>
-        </div>
-        
-        <div class="col-md-3 mb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Rol</mat-label>
-            <mat-select formControlName="rol_id">
-              <mat-option *ngFor="let rol of roles" [value]="rol.id">
-                {{ rol.nombre }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="editForm.get('rol_id')?.hasError('required')">
-              El rol es requerido
-            </mat-error>
-          </mat-form-field>
-        </div>
+<ng-container *hasPermission="'permisos'; operation: 'u'">
+  <mat-card *ngIf="showEditForm" class="mb-4">
+    <mat-card-header>
+      <mat-card-title>Editar Permiso</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="pt-3">
+      <form [formGroup]="editForm" (ngSubmit)="onUpdatePermiso()">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Nombre del Permiso</mat-label>
+              <input matInput formControlName="nombre">
+              <mat-error *ngIf="editForm.get('nombre')?.hasError('required')">
+                El nombre es requerido
+              </mat-error>
+            </mat-form-field>
+          </div>
+          
+          <div class="col-md-3 mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Rol</mat-label>
+              <mat-select formControlName="rol_id">
+                <mat-option *ngFor="let rol of roles" [value]="rol.id">
+                  {{ rol.nombre }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="editForm.get('rol_id')?.hasError('required')">
+                El rol es requerido
+              </mat-error>
+            </mat-form-field>
+          </div>
 
-        <div class="col-md-3 mb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Módulo</mat-label>
-            <mat-select formControlName="modulo_id">
-              <mat-option *ngFor="let modulo of modulos" [value]="modulo.id">
-                {{ modulo.nombre }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="editForm.get('modulo_id')?.hasError('required')">
-              El módulo es requerido
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-12 mb-3">
-          <label class="form-label fw-bold">Permisos CRUD:</label>
-          <div class="d-flex flex-wrap gap-3 mt-2">
-            <mat-checkbox formControlName="c" color="primary">
-              <mat-icon class="me-1" style="font-size: 18px;">add</mat-icon>
-              Crear
-            </mat-checkbox>
-            <mat-checkbox formControlName="r" color="accent">
-              <mat-icon class="me-1" style="font-size: 18px;">visibility</mat-icon>
-              Leer
-            </mat-checkbox>
-            <mat-checkbox formControlName="u" color="warn">
-              <mat-icon class="me-1" style="font-size: 18px;">edit</mat-icon>
-              Actualizar
-            </mat-checkbox>
-            <mat-checkbox formControlName="d">
-              <mat-icon class="me-1" style="font-size: 18px;">delete</mat-icon>
-              Eliminar
-            </mat-checkbox>
+          <div class="col-md-3 mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Módulo</mat-label>
+              <mat-select formControlName="modulo_id">
+                <mat-option *ngFor="let modulo of modulos" [value]="modulo.id">
+                  {{ modulo.nombre }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="editForm.get('modulo_id')?.hasError('required')">
+                El módulo es requerido
+              </mat-error>
+            </mat-form-field>
           </div>
         </div>
-      </div>
 
-      <div class="d-flex gap-2">
-        <button 
-          mat-raised-button 
-          color="primary" 
-          type="submit"
-          [disabled]="editForm.invalid">
-          <mat-icon class="me-2">update</mat-icon>
-          Actualizar Permiso
-        </button>
-        <button 
-          mat-button 
-          type="button" 
-          (click)="cancelEdit()">
-          Cancelar
-        </button>
-      </div>
-    </form>
-  </mat-card-content>
-</mat-card>
+        <div class="row">
+          <div class="col-12 mb-3">
+            <label class="form-label fw-bold">Permisos CRUD:</label>
+            <div class="d-flex flex-wrap gap-3 mt-2">
+              <mat-checkbox formControlName="c" color="primary">
+                <mat-icon class="me-1" style="font-size: 18px;">add</mat-icon>
+                Crear
+              </mat-checkbox>
+              <mat-checkbox formControlName="r" color="accent">
+                <mat-icon class="me-1" style="font-size: 18px;">visibility</mat-icon>
+                Leer
+              </mat-checkbox>
+              <mat-checkbox formControlName="u" color="warn">
+                <mat-icon class="me-1" style="font-size: 18px;">edit</mat-icon>
+                Actualizar
+              </mat-checkbox>
+              <mat-checkbox formControlName="d">
+                <mat-icon class="me-1" style="font-size: 18px;">delete</mat-icon>
+                Eliminar
+              </mat-checkbox>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit"
+            [disabled]="editForm.invalid">
+            <mat-icon class="me-2">update</mat-icon>
+            Actualizar Permiso
+          </button>
+          <button 
+            mat-button 
+            type="button" 
+            (click)="cancelEdit()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</ng-container>
 
 <!-- Campo de filtro -->
 <mat-form-field appearance="outline" class="mb-3 w-100">
@@ -221,7 +225,7 @@
   <mat-icon matPrefix>search</mat-icon>
 </mat-form-field>
 
-<!-- Tabla de permisos -->
+<!-- Tabla de permisos - COLUMNAS COMPLETAS -->
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="filteredPermisos" class="w-100">
 
@@ -241,7 +245,7 @@
     <ng-container matColumnDef="rol">
       <th mat-header-cell *matHeaderCellDef class="fw-bold">Rol</th>
       <td mat-cell *matCellDef="let permiso">
-        <span class="badge bg-primary">{{ permiso.rol?.nombre || 'N/A' }}</span>
+        <span class="badge bg-primary">{{ getRolName(permiso) }}</span>
       </td>
     </ng-container>
 
@@ -249,7 +253,7 @@
     <ng-container matColumnDef="modulo">
       <th mat-header-cell *matHeaderCellDef class="fw-bold">Módulo</th>
       <td mat-cell *matCellDef="let permiso">
-        <span class="badge bg-secondary">{{ permiso.modulo?.nombre || 'N/A' }}</span>
+        <span class="badge bg-secondary">{{ getModuloName(permiso) }}</span>
       </td>
     </ng-container>
 
@@ -257,14 +261,13 @@
     <ng-container matColumnDef="permisos">
       <th mat-header-cell *matHeaderCellDef class="fw-bold">Permisos</th>
       <td mat-cell *matCellDef="let permiso">
-        <div class="d-flex flex-wrap gap-1">
+        <mat-chip-set>
           <mat-chip 
             *ngFor="let action of getPermisosChips(permiso)"
-            [color]="getChipColor(action)"
-            class="small-chip">
+            [color]="getChipColor(action)">
             {{ action }}
           </mat-chip>
-        </div>
+        </mat-chip-set>
       </td>
     </ng-container>
 
@@ -273,27 +276,27 @@
       <th mat-header-cell *matHeaderCellDef class="fw-bold">Acciones</th>
       <td mat-cell *matCellDef="let permiso">
         <div class="d-flex gap-1">
-          <!-- Botón de editar con directiva de permisos -->
-          <button 
-            mat-icon-button 
-            color="primary" 
-            (click)="onEditPermiso(permiso)"
-            matTooltip="Editar permiso"
-            disableIfNoPermission="permisos"
-            disableIfNoPermissionOperation="u">
-            <mat-icon>edit</mat-icon>
-          </button>
+          <!-- Botón de editar -->
+          <ng-container *hasPermission="'permisos'; operation: 'u'">
+            <button 
+              mat-icon-button 
+              color="primary" 
+              (click)="onEditPermiso(permiso)"
+              matTooltip="Editar permiso">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </ng-container>
           
-          <!-- Botón de eliminar con directiva de permisos -->
-          <button 
-            mat-icon-button 
-            color="warn" 
-            (click)="onDeletePermiso(permiso.id)"
-            matTooltip="Eliminar permiso"
-            disableIfNoPermission="permisos"
-            disableIfNoPermissionOperation="d">
-            <mat-icon>delete</mat-icon>
-          </button>
+          <!-- Botón de eliminar -->
+          <ng-container *hasPermission="'permisos'; operation: 'd'">
+            <button 
+              mat-icon-button 
+              color="warn" 
+              (click)="onDeletePermiso(permiso.id)"
+              matTooltip="Eliminar permiso">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </ng-container>
         </div>
       </td>
     </ng-container>
@@ -306,15 +309,45 @@
   <div *ngIf="filteredPermisos.length === 0 && !loading" class="text-center p-4">
     <mat-icon class="text-muted" style="font-size: 48px;">security</mat-icon>
     <p class="text-muted mt-2">No se encontraron permisos</p>
-    <button 
-      *ngIf="!showCreateForm"
-      mat-raised-button 
-      color="primary" 
-      (click)="toggleCreateForm()"
-      hasPermission="permisos"
-      hasPermissionOperation="c">
-      <mat-icon class="me-2">add</mat-icon>
-      Crear primer permiso
-    </button>
+    
+    <ng-container *hasPermission="'permisos'; operation: 'c'">
+      <button 
+        *ngIf="!showCreateForm"
+        mat-raised-button 
+        color="primary" 
+        (click)="toggleCreateForm()">
+        <mat-icon class="me-2">add</mat-icon>
+        Crear primer permiso
+      </button>
+    </ng-container>
   </div>
 </div>
+
+<!-- Información adicional -->
+<mat-card class="mt-4" *ngIf="permisos.length > 0">
+  <mat-card-content>
+    <h4 class="mb-3">
+      <mat-icon class="me-2">info</mat-icon>
+      Control de Acceso
+    </h4>
+    <div class="row">
+      <div class="col-md-6">
+        <ul class="mb-0">
+          <li><strong>Crear (C):</strong> Permite crear nuevos registros</li>
+          <li><strong>Leer (R):</strong> Permite ver y consultar datos</li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <ul class="mb-0">
+          <li><strong>Actualizar (U):</strong> Permite modificar registros</li>
+          <li><strong>Eliminar (D):</strong> Permite borrar registros existentes</li>
+        </ul>
+      </div>
+    </div>
+    <div class="alert alert-warning mt-3">
+      <mat-icon class="me-2">warning</mat-icon>
+      <strong>Nota:</strong> Los cambios en permisos se reflejan inmediatamente en el sistema. 
+      Asegúrate de asignar los permisos correctos según el rol del usuario.
+    </div>
+  </mat-card-content>
+</mat-card>

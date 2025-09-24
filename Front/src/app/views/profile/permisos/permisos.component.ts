@@ -1,11 +1,8 @@
-// Ejemplo de cómo actualizar el componente de permisos para usar los guards y directivas
-// Front/src/app/views/profile/permisos/permisos.component.ts (ACTUALIZADO)
-
 import { Component, OnInit, inject } from '@angular/core';
 import { PermisosService, Permiso, CreatePermisoRequest, UpdatePermisoRequest } from '../../../services/permisos.service';
 import { RolesService, Rol } from '../../../services/roles.service';
-import { PermisosAuthService } from '../../../services/permisos-auth.service'; // ✅ NUEVO
-import { HasPermissionDirective } from '../../../directives/has-permission-auth.directive'; // ✅ NUEVO
+import { PermisosAuthService } from '../../../services/permisos-auth.service';
+import { HasPermissionDirective } from '../../../directives/has-permission-auth.directive';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
@@ -18,6 +15,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatChipsModule } from '@angular/material/chips'; // ✅ AÑADIDO
 
 @Component({
   selector: 'app-permisos',
@@ -37,14 +35,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatCardModule,
     MatCheckboxModule,
     MatTooltipModule,
-    HasPermissionDirective // ✅ AGREGAR DIRECTIVA
+    MatChipsModule, // ✅ AÑADIDO
+    HasPermissionDirective
   ]
 })
 export class PermisosComponent implements OnInit {
   private permisosService = inject(PermisosService);
   private rolesService = inject(RolesService);
   private snackBar = inject(MatSnackBar);
-  private permisosAuthService = inject(PermisosAuthService); // ✅ NUEVO
+  private permisosAuthService = inject(PermisosAuthService);
 
   permisos: Permiso[] = [];
   roles: Rol[] = [];
@@ -52,7 +51,7 @@ export class PermisosComponent implements OnInit {
   displayedColumns = ['id', 'nombre', 'rol', 'modulo', 'permisos', 'acciones'];
   filterControl = new FormControl('');
 
-  // Permisos del usuario actual ✅ NUEVO
+  // Permisos del usuario actual
   canCreate = false;
   canUpdate = false;
   canDelete = false;
@@ -85,11 +84,11 @@ export class PermisosComponent implements OnInit {
   loading = false;
 
   ngOnInit(): void {
-    this.loadUserPermissions(); // ✅ NUEVO
+    this.loadUserPermissions();
     this.loadData();
   }
 
-  // ✅ NUEVO: Cargar permisos del usuario
+  // Cargar permisos del usuario
   private loadUserPermissions(): void {
     this.permisosAuthService.hasPermission('permisos', 'c').subscribe(can => this.canCreate = can);
     this.permisosAuthService.hasPermission('permisos', 'u').subscribe(can => this.canUpdate = can);
@@ -124,7 +123,7 @@ export class PermisosComponent implements OnInit {
     });
   }
 
-  // ✅ CREAR PERMISO (verificar permisos)
+  // CREAR PERMISO
   onCreatePermiso(): void {
     if (!this.canCreate) {
       this.showSnackBar('No tienes permisos para crear');
@@ -158,7 +157,7 @@ export class PermisosComponent implements OnInit {
     }
   }
 
-  // ✅ EDITAR PERMISO (verificar permisos)
+  // EDITAR PERMISO
   onEditPermiso(permiso: Permiso): void {
     if (!this.canUpdate) {
       this.showSnackBar('No tienes permisos para editar');
@@ -180,7 +179,7 @@ export class PermisosComponent implements OnInit {
     this.showCreateForm = false;
   }
 
-  // ✅ ACTUALIZAR PERMISO
+  // ACTUALIZAR PERMISO
   onUpdatePermiso(): void {
     if (!this.canUpdate) {
       this.showSnackBar('No tienes permisos para actualizar');
@@ -215,7 +214,7 @@ export class PermisosComponent implements OnInit {
     }
   }
 
-  // ✅ ELIMINAR PERMISO (verificar permisos)
+  // ELIMINAR PERMISO
   onDeletePermiso(id: number): void {
     if (!this.canDelete) {
       this.showSnackBar('No tienes permisos para eliminar');
@@ -236,7 +235,7 @@ export class PermisosComponent implements OnInit {
     }
   }
 
-  // ✅ UTILIDADES
+  // UTILIDADES
   toggleCreateForm(): void {
     if (!this.canCreate) {
       this.showSnackBar('No tienes permisos para crear');
@@ -265,7 +264,31 @@ export class PermisosComponent implements OnInit {
     });
   }
 
-  // ✅ UTILIDADES DE TEMPLATE
+  // ✅ MÉTODOS FALTANTES PARA EL TEMPLATE
+  
+  // Obtener array de permisos activos para mostrar como chips
+  getPermisosChips(permiso: Permiso): string[] {
+    const permisos: string[] = [];
+    if (permiso.c) permisos.push('Crear');
+    if (permiso.r) permisos.push('Leer');
+    if (permiso.u) permisos.push('Actualizar');
+    if (permiso.d) permisos.push('Eliminar');
+    return permisos;
+  }
+
+
+  // Obtener color del chip según el tipo de permiso
+  getChipColor(action: string): 'primary' | 'accent' | 'warn' | undefined {
+    switch (action.toLowerCase()) {
+      case 'crear': return 'primary';
+      case 'leer': return 'accent';
+      case 'actualizar': return 'warn';
+      case 'eliminar': return 'warn';
+      default: return undefined;
+    }
+  }
+
+  // UTILIDADES DE TEMPLATE (existentes)
   getRolName(permiso: Permiso): string {
     return permiso.rol?.nombre || 'Sin rol';
   }
