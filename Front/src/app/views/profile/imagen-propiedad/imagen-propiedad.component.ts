@@ -193,8 +193,6 @@ export class ImagenPropiedadComponent implements OnInit {
         return;
       }
 
-      console.log('Enviando datos de actualización:', updateData);
-
       this.imagenesPropiedadService.updateImagenPropiedad(this.editingImagenId, updateData).subscribe({
         next: (updated) => {
           const idx = this.imagenes.findIndex(img => img.id === this.editingImagenId);

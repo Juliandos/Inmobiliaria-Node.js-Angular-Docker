@@ -1,0 +1,8 @@
+
+// Eleva los snackbars por encima de cards y tablas
+.mat-snack-bar-container {
+  z-index: 2000 !important; // mayor que .mat-elevation-z8 (z-index:8)
+}
+.mat-mdc-snack-bar-container {
+  z-index: 2000 !important; // por encima de CoreUI (usualmente < 1050)
+}

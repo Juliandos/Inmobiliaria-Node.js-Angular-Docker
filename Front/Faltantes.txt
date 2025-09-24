@@ -1,0 +1,2 @@
+1. notificacion, snackbar
+2. paginación tabla

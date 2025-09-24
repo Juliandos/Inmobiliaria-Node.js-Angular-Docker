@@ -13,7 +13,7 @@ const router = Router();
 // Rutas CRUD para imágenes de propiedad
 router.get("/", getImagenesPropiedad);         // Listar todas
 router.get("/:id", getImagenPropiedad);        // Obtener una por ID
-router.post("/", upload.array("imagen", 5), createImagenPropiedad);       // Crear
+router.post("/", upload.array("imagen", 10), createImagenPropiedad);       // Crear
 router.put("/:id", upload.array("imagen", 5), updateImagenPropiedad);     // Actualizar
 router.delete("/:id", deleteImagenPropiedad);  // Eliminar
 
