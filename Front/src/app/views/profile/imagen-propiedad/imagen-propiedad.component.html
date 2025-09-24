@@ -1,87 +1,91 @@
 <!-- HEADER -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Gestión de Imágenes de Propiedades</h2>
-    <button 
-      mat-raised-button 
-      color="primary"
-      (click)="startCreate()"
-      [disabled]="loading"
-      class="d-flex align-items-center">
-      <mat-icon class="me-2">add</mat-icon>
-      {{ showCreateForm ? 'Cancelar' : 'Nueva Imagen' }}
-    </button>
-  </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Gestión de Imágenes de Propiedades</h2>
+  <button 
+    mat-raised-button 
+    color="primary"
+    (click)="startCreate()"
+    [disabled]="loading"
+    class="d-flex align-items-center">
+    <mat-icon class="me-2">add</mat-icon>
+    {{ showCreateForm ? 'Cancelar' : 'Nueva Imagen' }}
+  </button>
+</div>
 
-  <!-- LOADING -->
-  <div *ngIf="loading" class="text-center mb-4">
-    <mat-icon class="spin">refresh</mat-icon>
-    Cargando datos...
-  </div>
+<!-- LOADING -->
+<div *ngIf="loading" class="text-center mb-4">
+  <mat-icon class="spin">refresh</mat-icon>
+  Cargando datos...
+</div>
 
 <!-- FORMULARIO CREACIÓN -->
-  <mat-card *ngIf="showCreateForm" class="mb-4">
-    <mat-card-header>
-      <mat-card-title>Agregar Nueva Imagen</mat-card-title>
-    </mat-card-header>
-    <mat-card-content class="pt-3">
-      <form [formGroup]="createForm" (ngSubmit)="onCreateImagen()">
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Propiedad</mat-label>
-              <mat-select formControlName="propiedad_id">
-                <mat-option *ngFor="let propiedad of propiedades" [value]="propiedad.id">
-                  {{ propiedad.titulo }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="createForm.get('propiedad_id')?.hasError('required')">
-                La propiedad es requerida
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <div class="col-md-6 mb-3">
-            <!-- Botón para disparar el input de archivos -->
-            <button mat-stroked-button color="primary" type="button" (click)="fileInput.click()">
-              Seleccionar Imágenes
-            </button>
-            <input
-              type="file"
-              #fileInput
-              (change)="onFileSelected($event)"
-              multiple
-              hidden
-            />
-            <div class="mt-2 small text-muted" *ngIf="selectedFiles?.length">
-              {{ selectedFiles.length }} archivo(s) seleccionado(s)
-            </div>
-          </div>
+<mat-card *ngIf="showCreateForm" class="mb-4">
+  <mat-card-header>
+    <mat-card-title>Agregar Nueva Imagen</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="pt-3">
+    <form [formGroup]="createForm" (ngSubmit)="onCreateImagen()">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Propiedad</mat-label>
+            <mat-select formControlName="propiedad_id">
+              <mat-option *ngFor="let propiedad of propiedades" [value]="propiedad.id">
+                {{ propiedad.titulo }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="createForm.get('propiedad_id')?.hasError('required')">
+              La propiedad es requerida
+            </mat-error>
+          </mat-form-field>
         </div>
 
-        <div class="d-flex gap-2">
-          <button 
-            mat-raised-button 
-            color="primary" 
-            type="submit"
-            [disabled]="createForm.invalid || !selectedFiles.length">
-            <mat-icon class="me-2">save</mat-icon>
-            Agregar Imagen
+        <div class="col-md-6 mb-3">
+          <!-- Botón para disparar el input de archivos -->
+          <button mat-stroked-button color="primary" type="button" (click)="fileInput.click()">
+            Seleccionar Imágenes
           </button>
-          <button 
-            mat-button 
-            type="button" 
-            (click)="toggleCreateForm()">
-            Cancelar
-          </button>
+          <input
+            type="file"
+            #fileInput
+            (change)="onFileSelected($event)"
+            multiple
+            accept="image/*"
+            hidden
+          />
+          <div class="mt-2 small text-muted" *ngIf="selectedFiles?.length">
+            {{ selectedFiles.length }} archivo(s) seleccionado(s)
+          </div>
         </div>
-      </form>
-    </mat-card-content>
-  </mat-card>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          [disabled]="createForm.invalid || !selectedFiles.length">
+          <mat-icon class="me-2">save</mat-icon>
+          Agregar Imagen
+        </button>
+        <button 
+          mat-button 
+          type="button" 
+          (click)="toggleCreateForm()">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
 
 <!-- Formulario de edición -->
 <mat-card *ngIf="showEditForm" class="mb-4">
   <mat-card-header>
     <mat-card-title>Editar Imagen</mat-card-title>
+    <mat-card-subtitle>
+      Puedes actualizar subiendo un nuevo archivo o ingresando una URL
+    </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content class="pt-3">
     <form [formGroup]="editForm" (ngSubmit)="onUpdateImagen()">
@@ -101,16 +105,67 @@
         </div>
         
         <div class="col-md-6 mb-3">
+          <!-- Selector de modo de edición -->
+          <div class="mb-2">
+            <button 
+              mat-stroked-button
+              [class]="editMode === 'file' ? 'mat-primary' : ''"
+              (click)="editMode = 'file'"
+              type="button"
+              class="me-2">
+              <mat-icon class="me-1">upload</mat-icon>
+              Archivo
+            </button>
+            <button 
+              mat-stroked-button
+              [class]="editMode === 'url' ? 'mat-primary' : ''"
+              (click)="editMode = 'url'"
+              type="button">
+              <mat-icon class="me-1">link</mat-icon>
+              URL
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Modo archivo -->
+        <div class="col-md-12 mb-3" *ngIf="editMode === 'file'">
+          <div class="d-flex align-items-center gap-2">
+            <button mat-stroked-button color="primary" type="button" (click)="editFileInput.click()">
+              <mat-icon class="me-1">cloud_upload</mat-icon>
+              Seleccionar Nueva Imagen
+            </button>
+            <input
+              type="file"
+              #editFileInput
+              (change)="onEditFileSelected($event)"
+              accept="image/*"
+              hidden
+            />
+            <span class="text-muted small" *ngIf="selectedEditFile">
+              {{ selectedEditFile.name }}
+            </span>
+          </div>
+          <div class="mt-2 small text-info">
+            <mat-icon style="font-size: 16px;" class="me-1">info</mat-icon>
+            La imagen anterior será reemplazada automáticamente
+          </div>
+        </div>
+
+        <!-- Modo URL -->
+        <div class="col-md-12 mb-3" *ngIf="editMode === 'url'">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>URL de la Imagen</mat-label>
-            <input matInput formControlName="url">
+            <mat-label>URL de la Nueva Imagen</mat-label>
+            <input matInput formControlName="url" placeholder="https://ejemplo.com/imagen.jpg">
             <mat-error *ngIf="editForm.get('url')?.hasError('required')">
-              La URL es requerida
-            </mat-error>
-            <mat-error *ngIf="editForm.get('url')?.hasError('pattern')">
-              La URL debe comenzar con http:// o https://
+              La URL es requerida cuando no se selecciona archivo
             </mat-error>
           </mat-form-field>
+          <div class="mt-1 small text-warning">
+            <mat-icon style="font-size: 16px;" class="me-1">warning</mat-icon>
+            Si la imagen anterior está en Cloudinary, será eliminada automáticamente
+          </div>
         </div>
       </div>
 
@@ -119,7 +174,9 @@
           mat-raised-button 
           color="primary" 
           type="submit"
-          [disabled]="editForm.invalid">
+          [disabled]="editForm.get('propiedad_id')?.invalid || 
+                     (editMode === 'file' && !selectedEditFile) || 
+                     (editMode === 'url' && !editForm.get('url')?.value?.trim())">
           <mat-icon class="me-2">update</mat-icon>
           Actualizar Imagen
         </button>
@@ -170,6 +227,14 @@
             matTooltip="Abrir imagen">
             open_in_new
           </mat-icon>
+          <!-- Badge para indicar si es de Cloudinary -->
+          <span 
+            *ngIf="imagen.url.includes('cloudinary')" 
+            class="badge bg-success position-absolute bottom-0 start-0"
+            style="font-size: 10px;"
+            matTooltip="Imagen alojada en Cloudinary">
+            Cloud
+          </span>
         </div>
       </td>
     </ng-container>
@@ -215,7 +280,7 @@
             mat-icon-button 
             color="warn" 
             (click)="onDeleteImagen(imagen.id)"
-            matTooltip="Eliminar imagen">
+            matTooltip="Eliminar imagen (también de Cloudinary)">
             <mat-icon>delete</mat-icon>
           </button>
         </div>

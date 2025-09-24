@@ -22,6 +22,7 @@ export interface CreateImagenPropiedadRequest {
 export interface UpdateImagenPropiedadRequest {
   propiedad_id?: number;
   url?: string;
+  imagen?: File; // archivo opcional para actualización
 }
 
 @Injectable({
@@ -64,28 +65,45 @@ export class ImagenesPropiedadService {
   }
 
   // ✅ Crear una imagen (ahora con archivos)
- createImagenPropiedad(data: CreateImagenPropiedadRequest): Observable<ImagenPropiedad> {
-  const formData = new FormData();
-  formData.append('propiedad_id', data.propiedad_id.toString());
+  createImagenPropiedad(data: CreateImagenPropiedadRequest): Observable<ImagenPropiedad> {
+    const formData = new FormData();
+    formData.append('propiedad_id', data.propiedad_id.toString());
 
-  data.imagenes.forEach(file => {
-    formData.append('imagen', file); // el nombre 'imagen' coincide con upload.array("imagen")
-  });
+    data.imagenes.forEach(file => {
+      formData.append('imagen', file); // el nombre 'imagen' coincide con upload.array("imagen")
+    });
 
-  return this.http.post<ImagenPropiedad>(this.apiUrl, formData, {
-    headers: this.getAuthHeaders() // No agregues 'Content-Type': el navegador lo hará
-  }).pipe(
-    catchError(err => {
-      console.error('Error creando imagen:', err);
-      return throwError(() => err);
-    })
-  );
-}
+    return this.http.post<ImagenPropiedad>(this.apiUrl, formData, {
+      headers: this.getAuthHeaders() // No agregues 'Content-Type': el navegador lo hará
+    }).pipe(
+      catchError(err => {
+        console.error('Error creando imagen:', err);
+        return throwError(() => err);
+      })
+    );
+  }
 
-  // ✅ Actualizar una imagen
+  // ✅ Actualizar una imagen (con soporte para archivo o URL)
   updateImagenPropiedad(id: number, data: UpdateImagenPropiedadRequest): Observable<ImagenPropiedad> {
-    return this.http.put<ImagenPropiedad>(`${this.apiUrl}/${id}`, data, { 
-      headers: this.getAuthHeaders() 
+    const formData = new FormData();
+    
+    // Agregar propiedad_id si se proporciona
+    if (data.propiedad_id) {
+      formData.append('propiedad_id', data.propiedad_id.toString());
+    }
+    
+    // Si se proporciona un archivo, agregarlo
+    if (data.imagen) {
+      formData.append('imagen', data.imagen);
+    }
+    
+    // Si se proporciona URL (y no hay archivo), agregarla
+    if (data.url && !data.imagen) {
+      formData.append('url', data.url);
+    }
+
+    return this.http.put<ImagenPropiedad>(`${this.apiUrl}/${id}`, formData, {
+      headers: this.getAuthHeaders()
     }).pipe(
       catchError(err => {
         console.error(`Error actualizando imagen id=${id}:`, err);
@@ -94,7 +112,7 @@ export class ImagenesPropiedadService {
     );
   }
 
-  // ✅ Eliminar una imagen
+  // ✅ Eliminar una imagen (ahora elimina también de Cloudinary)
   deleteImagenPropiedad(id: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`, { 
       headers: this.getAuthHeaders() 
