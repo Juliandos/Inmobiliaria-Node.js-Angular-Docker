@@ -7,9 +7,7 @@ import cloudinary from "../utils/cloudinary";
 const getImagenesPropiedad = async (req: Request, res: Response) => {
   try {
     const imagenes = await models.imagenes_propiedad.findAll({
-      include: [
-        { model: models.propiedades, as: "propiedad" },
-      ],
+      include: [{ model: models.propiedades, as: "propiedad" }],
     });
     return res.json(imagenes.map((img) => img.toJSON()));
   } catch (e) {
@@ -34,8 +32,6 @@ const getImagenPropiedad = async (req: Request, res: Response) => {
 // ✅ Crear una nueva imagen para una propiedad
 const createImagenPropiedad = async (req: Request, res: Response) => {
   try {
-    console.log("Files recibidos:", req.files);
-
     const propiedad_id = req.body.propiedad_id;
     if (!propiedad_id) {
       return res.status(400).json({ message: "Falta propiedad_id" });
@@ -49,7 +45,6 @@ const createImagenPropiedad = async (req: Request, res: Response) => {
     const urls: string[] = [];
 
     for (const file of files) {
-      // Subir a Cloudinary usando buffer
       const result = await new Promise<any>((resolve, reject) => {
         cloudinary.uploader
           .upload_stream({ folder: "propiedades" }, (error, uploadResult) => {
@@ -61,7 +56,6 @@ const createImagenPropiedad = async (req: Request, res: Response) => {
 
       urls.push(result.secure_url);
 
-      // Guarda en DB cada imagen
       await models.imagenes_propiedad.create({
         propiedad_id,
         url: result.secure_url,
@@ -79,13 +73,73 @@ const createImagenPropiedad = async (req: Request, res: Response) => {
 const updateImagenPropiedad = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const [updated] = await models.imagenes_propiedad.update(req.body, { where: { id } });
-    if (!updated) return res.status(404).json({ message: "Imagen no encontrada" });
+    
+    const imagenExistente = await models.imagenes_propiedad.findByPk(id);
+    if (!imagenExistente) {
+      return res.status(404).json({ message: "Imagen no encontrada" });
+    }
+
+    let updateData: any = {};
+
+    if (req.body.propiedad_id) {
+      updateData.propiedad_id = req.body.propiedad_id;
+    }
+
+    const files = req.files as Express.Multer.File[];
+    if (files && files.length > 0) {
+      if (imagenExistente.url) {
+        try {
+          const urlParts = imagenExistente.url.split("/");
+          const publicIdWithExtension = urlParts[urlParts.length - 1];
+          const publicId = `propiedades/${publicIdWithExtension.split(".")[0]}`;
+          await cloudinary.uploader.destroy(publicId);
+        } catch (deleteError) {
+          console.error("Error eliminando imagen anterior:", deleteError);
+        }
+      }
+
+      const file = files[0];
+      const result = await new Promise<any>((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream({ folder: "propiedades" }, (error, uploadResult) => {
+            if (error) return reject(error);
+            resolve(uploadResult);
+          })
+          .end(file.buffer);
+      });
+
+      updateData.url = result.secure_url;
+    }
+
+    if (req.body.url && !files?.length) {
+      if (imagenExistente.url && imagenExistente.url.includes("cloudinary")) {
+        try {
+          const urlParts = imagenExistente.url.split("/");
+          const publicIdWithExtension = urlParts[urlParts.length - 1];
+          const publicId = `propiedades/${publicIdWithExtension.split(".")[0]}`;
+          await cloudinary.uploader.destroy(publicId);
+        } catch (deleteError) {
+          console.error("Error eliminando imagen anterior:", deleteError);
+        }
+      }
+      updateData.url = req.body.url;
+    }
+
+    const [updated] = await models.imagenes_propiedad.update(updateData, {
+      where: { id },
+    });
+
+    if (!updated) {
+      return res.status(404).json({ message: "No se pudo actualizar la imagen" });
+    }
+
     const imagen = await models.imagenes_propiedad.findByPk(id, {
       include: [{ model: models.propiedades, as: "propiedad" }],
     });
+
     return res.json(imagen?.toJSON());
   } catch (e) {
+    console.error("ERROR_UPDATE_IMAGEN", e);
     handleHttp(res, "ERROR_UPDATE_IMAGEN", e);
   }
 };
@@ -94,10 +148,31 @@ const updateImagenPropiedad = async (req: Request, res: Response) => {
 const deleteImagenPropiedad = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
+    const imagen = await models.imagenes_propiedad.findByPk(id);
+    if (!imagen) {
+      return res.status(404).json({ message: "Imagen no encontrada" });
+    }
+
+    if (imagen.url && imagen.url.includes("cloudinary")) {
+      try {
+        const urlParts = imagen.url.split("/");
+        const publicIdWithExtension = urlParts[urlParts.length - 1];
+        const publicId = `propiedades/${publicIdWithExtension.split(".")[0]}`;
+        await cloudinary.uploader.destroy(publicId);
+      } catch (cloudinaryError) {
+        console.error("Error eliminando de Cloudinary:", cloudinaryError);
+      }
+    }
+
     const deleted = await models.imagenes_propiedad.destroy({ where: { id } });
-    if (!deleted) return res.status(404).json({ message: "Imagen no encontrada" });
-    return res.json({ message: "Imagen eliminada" });
+    if (!deleted) {
+      return res.status(404).json({ message: "No se pudo eliminar la imagen" });
+    }
+
+    return res.json({ message: "Imagen eliminada exitosamente" });
   } catch (e) {
+    console.error("ERROR_DELETE_IMAGEN", e);
     handleHttp(res, "ERROR_DELETE_IMAGEN", e);
   }
 };
