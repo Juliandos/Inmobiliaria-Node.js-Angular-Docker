@@ -5,7 +5,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { PermisosService, Permiso, CreatePermisoRequest, UpdatePermisoRequest } from '../../../services/permisos.service';
 import { RolesService, Rol } from '../../../services/roles.service';
 import { PermisosAuthService } from '../../../services/permisos-auth.service'; // ✅ NUEVO
-import { HasPermissionDirective } from '../../../directives/has-permission.directive'; // ✅ NUEVO
+import { HasPermissionDirective } from '../../../directives/has-permission-auth.directive'; // ✅ NUEVO
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
