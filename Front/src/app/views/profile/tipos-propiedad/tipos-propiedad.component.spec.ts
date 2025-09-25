@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TiposPropiedadComponent } from './tipos-propiedad.component';
+import { TipoPropiedadComponent } from './tipos-propiedad.component';
 
-describe('TiposPropiedadComponent', () => {
-  let component: TiposPropiedadComponent;
-  let fixture: ComponentFixture<TiposPropiedadComponent>;
+describe('TipoPropiedadComponent', () => {
+  let component: TipoPropiedadComponent;
+  let fixture: ComponentFixture<TipoPropiedadComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TiposPropiedadComponent]
+      imports: [TipoPropiedadComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(TiposPropiedadComponent);
+    fixture = TestBed.createComponent(TipoPropiedadComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
