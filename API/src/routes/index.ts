@@ -3,13 +3,17 @@ import { readdirSync } from "fs";
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { verifyToken } from "../middleware/auth";
+import { getUserPermissions } from "../controllers/auth";
 
 // Obtener el equivalente de __dirname en ES modules
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = dirname(__dirname);
 
 const PATH_ROUTER = `${__dirname}`;
 const router = Router();
+
+// Ruta especial para permisos del usuario actual (antes del middleware global)
+router.get("/permisos", verifyToken, getUserPermissions);
 
 // Middleware global con excepción
 router.use((req, res, next) => {

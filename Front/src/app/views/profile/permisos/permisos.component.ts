@@ -298,7 +298,7 @@ export class PermisosComponent implements OnInit {
   }
 
   getPermisosText(permiso: Permiso): string {
-    const permisos = [];
+    const permisos: string[] = [];
     if (permiso.c) permisos.push('C');
     if (permiso.r) permisos.push('R');
     if (permiso.u) permisos.push('U');

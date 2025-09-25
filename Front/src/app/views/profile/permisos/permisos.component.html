@@ -5,7 +5,7 @@
   <h2>Gestión de Permisos</h2>
   
   <!-- Botón de crear con permiso -->
-  <ng-container *hasPermission="'permisos'; operation: 'c'">
+  <ng-container *hasPermission="'permisos'" hasPermissionOperation="c">
     <button 
       mat-raised-button 
       color="primary" 
@@ -18,7 +18,7 @@
   </ng-container>
 
   <!-- Mensaje cuando no tiene permisos para crear -->
-  <ng-container *hasPermission="'permisos'; operation: 'c'; showWhenDenied: true">
+  <ng-container *hasPermission="'permisos'" hasPermissionOperation="c" hasPermissionShowWhenDenied="true">
     <div class="alert alert-info d-flex align-items-center">
       <mat-icon class="me-2">info</mat-icon>
       No tienes permisos para crear nuevos permisos
@@ -33,7 +33,7 @@
 </div>
 
 <!-- Formulario de creación -->
-<ng-container *hasPermission="'permisos'; operation: 'c'">
+<ng-container *hasPermission="'permisos'" hasPermissionOperation="c">
   <mat-card *ngIf="showCreateForm" class="mb-4">
     <mat-card-header>
       <mat-card-title>Crear Nuevo Permiso</mat-card-title>
@@ -126,7 +126,7 @@
 </ng-container>
 
 <!-- Formulario de edición -->
-<ng-container *hasPermission="'permisos'; operation: 'u'">
+<ng-container *hasPermission="'permisos'" hasPermissionOperation="u">
   <mat-card *ngIf="showEditForm" class="mb-4">
     <mat-card-header>
       <mat-card-title>Editar Permiso</mat-card-title>
@@ -277,7 +277,7 @@
       <td mat-cell *matCellDef="let permiso">
         <div class="d-flex gap-1">
           <!-- Botón de editar -->
-          <ng-container *hasPermission="'permisos'; operation: 'u'">
+          <ng-container *hasPermission="'permisos'" hasPermissionOperation="u">
             <button 
               mat-icon-button 
               color="primary" 
@@ -288,7 +288,7 @@
           </ng-container>
           
           <!-- Botón de eliminar -->
-          <ng-container *hasPermission="'permisos'; operation: 'd'">
+          <ng-container *hasPermission="'permisos'" hasPermissionOperation="d">
             <button 
               mat-icon-button 
               color="warn" 
@@ -310,7 +310,7 @@
     <mat-icon class="text-muted" style="font-size: 48px;">security</mat-icon>
     <p class="text-muted mt-2">No se encontraron permisos</p>
     
-    <ng-container *hasPermission="'permisos'; operation: 'c'">
+    <ng-container *hasPermission="'permisos'" hasPermissionOperation="c">
       <button 
         *ngIf="!showCreateForm"
         mat-raised-button 
