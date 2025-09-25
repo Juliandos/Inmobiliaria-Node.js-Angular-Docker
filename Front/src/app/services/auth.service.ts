@@ -1,17 +1,18 @@
+// auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { tap, switchMap, map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = 'http://localhost:3001/auth';
-  private permisos: any[] = []; // permisos en memoria
+  private permisos: any[] = [];
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  /** 🔑 Generar headers con Bearer Token */
+  /** 🔑 Headers con Bearer Token */
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('accessToken');
     return new HttpHeaders({
@@ -23,13 +24,17 @@ export class AuthService {
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
       tap((res) => {
+        // guardar sesión básica
         localStorage.setItem('accessToken', res.accessToken);
         localStorage.setItem('refreshToken', res.refreshToken);
         localStorage.setItem('email', res.user.email);
         localStorage.setItem('userId', res.user.id);
-
-        // 👇 cargar permisos después del login
-        this.loadUserPermissions(res.user.id).subscribe();
+        localStorage.setItem('rolId', res.user.rol_id);
+      }),
+      switchMap((res) => {
+        const rolId = res.user.rol_id;
+        // 👇 cargar permisos por rol
+        return this.loadPermissionsByRole(rolId).pipe(map(() => res));
       })
     );
   }
@@ -48,26 +53,31 @@ export class AuthService {
         localStorage.setItem('refreshToken', res.refreshToken);
         localStorage.setItem('email', res.user.email);
         localStorage.setItem('userId', res.user.id);
+        localStorage.setItem('rolId', res.user.rol_id);
 
-        this.loadUserPermissions(res.user.id).subscribe();
+      }),
+      switchMap((res) => {
+        const rolId = res.user.rol_id;
+        return this.loadPermissionsByRole(rolId).pipe(map(() => res));
       })
     );
   }
 
-  /** 📌 CARGAR PERMISOS DEL USUARIO */
-  loadUserPermissions(userId: number): Observable<any[]> {
-    return this.http.get<any[]>(`http://localhost:3001/permisos/${userId}`, {
+  /** 📌 CARGAR PERMISOS POR ROL */
+  loadPermissionsByRole(rolId: number): Observable<any[]> {
+    // 👉 Ajusta la URL a tu backend: GET /permisos/rol/:rolId
+    return this.http.get<any[]>(`http://localhost:3001/permisos/rol/${rolId}`, {
       headers: this.getAuthHeaders()
     }).pipe(
       tap((permisos) => {
         this.permisos = permisos;
-        console.log('Permisos cargados:', permisos);
+        console.log('Permisos cargados por rol:', permisos);
         localStorage.setItem('permisos', JSON.stringify(permisos));
       })
     );
   }
 
-  /** 📌 OBTENER PERMISOS DESDE LOCALSTORAGE (fallback) */
+  /** 📌 OBTENER PERMISOS (desde memoria o LS) */
   getPermissions(): any[] {
     if (!this.permisos.length) {
       const permisosLS = localStorage.getItem('permisos');
@@ -94,7 +104,7 @@ export class AuthService {
     );
   }
 
-  /** LOGOUT */
+  /** LOGOUT BACKEND */
   logoutBackend(userId: number): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/logout/${userId}`, {}, {
       headers: this.getAuthHeaders()
@@ -103,6 +113,7 @@ export class AuthService {
     );
   }
 
+  /** LOGOUT LOCAL */
   logoutLocal(): void {
     this.clearSession();
     this.router.navigate(['/login']);
@@ -113,6 +124,7 @@ export class AuthService {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('email');
     localStorage.removeItem('userId');
+    localStorage.removeItem('rolId');
     localStorage.removeItem('permisos');
     this.permisos = [];
   }
@@ -120,4 +132,24 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!localStorage.getItem('accessToken');
   }
+
+  /** 📌 OBTENER USUARIO (con permisos incluidos) */
+  getUser(): any {
+    const userId = localStorage.getItem('userId');
+    const email = localStorage.getItem('email');
+    const rolId = localStorage.getItem('rolId');
+    const permisos = this.getPermissions(); // usa tu método existente
+
+    if (!userId || !email || !rolId) {
+      return null;
+    }
+
+    return {
+      id: Number(userId),
+      email,
+      rol_id: Number(rolId),
+      permisos
+    };
+  }
+
 }
