@@ -5,7 +5,8 @@
     mat-raised-button 
     color="primary" 
     (click)="toggleCreateForm()"
-    class="d-flex align-items-center">
+    class="d-flex align-items-center"
+    *hasPermission="{ modulo: 'propiedades', operacion: 'c' }">
     <mat-icon class="me-2">add</mat-icon>
     {{ showCreateForm ? 'Cancelar' : 'Nueva Propiedad' }}
   </button>
@@ -287,14 +288,16 @@
             mat-icon-button 
             color="primary" 
             (click)="onEditPropiedad(propiedad)"
-            matTooltip="Editar propiedad">
+            matTooltip="Editar propiedad"
+            *hasPermission="{ modulo: 'propiedades', operacion: 'u' }">
             <mat-icon>edit</mat-icon>
           </button>
           <button 
             mat-icon-button 
             color="warn" 
             (click)="onDeletePropiedad(propiedad.id)"
-            matTooltip="Eliminar propiedad">
+            matTooltip="Eliminar propiedad"
+            *hasPermission="{ modulo: 'propiedades', operacion: 'd' }">
             <mat-icon>delete</mat-icon>
           </button>
         </div>

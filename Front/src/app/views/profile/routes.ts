@@ -9,11 +9,6 @@ export const routes: Routes = [
     },
     children: [
       {
-        path: '',
-        redirectTo: 'permisos',
-        pathMatch: 'full',
-      },
-      {
         path: 'permisos',
         loadComponent: () =>
           import('./permisos/permisos.component').then(
@@ -29,18 +24,18 @@ export const routes: Routes = [
           import('./propiedades/propiedades.component').then(
             (m) => m.PropiedadesComponent
           ),
-        data: {
-          title: 'Propiedades',
-        },
+        canActivate: [permissionGard],
+        data: { modulo: 'propiedades', operacion: 'r' },
       },
       {
         path: 'roles',
         
         loadComponent: () =>
-          import('./roles/roles.component').then((m) => m.RolesComponent),
-        data: {
-          title: 'Roles',
-        },
+          import('./roles/roles.component').then(
+            (m) => m.RolesComponent
+          ),
+        canActivate: [permissionGard],
+        data: { modulo: 'roles', operacion: 'r' },
       },
       {
         path: 'usuarios',
@@ -49,9 +44,8 @@ export const routes: Routes = [
           import('./usuarios/usuarios.component').then(
             (m) => m.UsuariosComponent
           ),
-        data: {
-          title: 'Usuarios',
-        },
+        canActivate: [permissionGard],
+        data: { modulo: 'usuarios', operacion: 'r' },
       },
       {
         path: 'imagen-propiedad',
@@ -60,9 +54,8 @@ export const routes: Routes = [
           import('./imagen-propiedad/imagen-propiedad.component').then(
             (m) => m.ImagenPropiedadComponent
           ),
-        data: {
-          title: 'Imagen - Propiedad',
-        },
+        canActivate: [permissionGard],
+        data: { modulo: 'imagenes_propiedad', operacion: 'r' },
       },
       {
         path: 'rol-permiso',
@@ -71,18 +64,17 @@ export const routes: Routes = [
           import('./rol-permiso/rol-permiso.component').then(
             (m) => m.RolPermisoComponent
           ),
-        data: {
-          title: 'Roles - Permisos',
-        },
+        canActivate: [permissionGard],
+        data: { modulo: 'rol_permiso', operacion: 'r' },
       },
       {
         path: 'tipos-propiedad',
         
         loadComponent: () =>
-          import('./tipos-propiedad/tipos-propiedad.component').then((m) => m.TipoPropiedadComponent),
-        data: {
-          title: 'Tipos - Propiedad',
-        },
+          import('./tipos-propiedad/tipos-propiedad.component').then((m) => m.TipoPropiedadComponent)
+        ,
+        canActivate: [permissionGard],
+        data: { modulo: 'tipos_propiedad', operacion: 'r' },
       },
       {
         path: 'modulos',

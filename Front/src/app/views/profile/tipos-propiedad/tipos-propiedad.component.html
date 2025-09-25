@@ -5,7 +5,9 @@
     mat-raised-button 
     color="primary" 
     (click)="toggleCreateForm()"
-    class="d-flex align-items-center">
+    class="d-flex align-items-center"
+    *hasPermission="{ modulo: 'tipos_propiedad', operacion: 'c' }"
+    >
     <mat-icon class="me-2">add</mat-icon>
     {{ showCreateForm ? 'Cancelar' : 'Nuevo Tipo' }}
   </button>
@@ -95,7 +97,9 @@
             mat-icon-button 
             color="primary" 
             (click)="onEditTipo(tipo)"
-            matTooltip="Editar tipo">
+            matTooltip="Editar tipo"
+            *hasPermission="{ modulo: 'tipos_propiedad', operacion: 'u' }"
+            >
             <mat-icon>edit</mat-icon>
           </button>
           <button 
