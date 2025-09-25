@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from '../../services/auth.gard';
+import { permissionGard } from '../../guards/permissions.guard';
 
 export const routes: Routes = [
   {
@@ -15,18 +15,16 @@ export const routes: Routes = [
       },
       {
         path: 'permisos',
-        canActivate: [AuthGuard],
         loadComponent: () =>
           import('./permisos/permisos.component').then(
             (m) => m.PermisosComponent
           ),
-        data: {
-          title: 'Permisos',
-        },
+        canActivate: [permissionGard],
+        data: { modulo: 'permisos', operacion: 'r' },
       },
       {
         path: 'propiedades',
-        canActivate: [AuthGuard],
+        
         loadComponent: () =>
           import('./propiedades/propiedades.component').then(
             (m) => m.PropiedadesComponent
@@ -37,7 +35,7 @@ export const routes: Routes = [
       },
       {
         path: 'roles',
-        canActivate: [AuthGuard],
+        
         loadComponent: () =>
           import('./roles/roles.component').then((m) => m.RolesComponent),
         data: {
@@ -46,7 +44,7 @@ export const routes: Routes = [
       },
       {
         path: 'usuarios',
-        canActivate: [AuthGuard],
+        
         loadComponent: () =>
           import('./usuarios/usuarios.component').then(
             (m) => m.UsuariosComponent
@@ -57,7 +55,7 @@ export const routes: Routes = [
       },
       {
         path: 'imagen-propiedad',
-        canActivate: [AuthGuard],
+        
         loadComponent: () =>
           import('./imagen-propiedad/imagen-propiedad.component').then(
             (m) => m.ImagenPropiedadComponent
@@ -68,7 +66,7 @@ export const routes: Routes = [
       },
       {
         path: 'rol-permiso',
-        canActivate: [AuthGuard],
+        
         loadComponent: () =>
           import('./rol-permiso/rol-permiso.component').then(
             (m) => m.RolPermisoComponent
@@ -79,7 +77,7 @@ export const routes: Routes = [
       },
       {
         path: 'tipos-propiedad',
-        canActivate: [AuthGuard],
+        
         loadComponent: () =>
           import('./tipos-propiedad/tipos-propiedad.component').then((m) => m.TiposPropiedadComponent),
         data: {
@@ -88,12 +86,10 @@ export const routes: Routes = [
       },
       {
         path: 'modulos',
-        canActivate: [AuthGuard],
         loadComponent: () =>
           import('./modulos/modulos.component').then((m) => m.ModulosComponent),
-        data: {
-          title: 'Módulos',
-        },
+        canActivate: [permissionGard],
+        data: { modulo: 'modulos', operacion: 'r' } 
       }
     ],
   },
