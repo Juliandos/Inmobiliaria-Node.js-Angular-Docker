@@ -79,7 +79,7 @@ export const routes: Routes = [
         path: 'tipos-propiedad',
         
         loadComponent: () =>
-          import('./tipos-propiedad/tipos-propiedad.component').then((m) => m.TiposPropiedadComponent),
+          import('./tipos-propiedad/tipos-propiedad.component').then((m) => m.TipoPropiedadComponent),
         data: {
           title: 'Tipos - Propiedad',
         },
