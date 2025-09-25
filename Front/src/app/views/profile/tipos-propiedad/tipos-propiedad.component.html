@@ -102,7 +102,9 @@
             mat-icon-button 
             color="warn" 
             (click)="onDeleteTipo(tipo.id)"
-            matTooltip="Eliminar tipo">
+            matTooltip="Eliminar tipo"
+            *hasPermission="{ modulo: 'tipos_propiedad', operacion: 'd' }"
+            >
             <mat-icon>delete</mat-icon>
           </button>
         </div>
