@@ -7,6 +7,7 @@ import {
 } from "../utils/jwt";
 import { models } from "../db/database";
 import { handleHttp } from "../utils/error.handle";
+import { AuthRequest } from "../middleware/auth";
 
 const saltRounds = 10;
 
@@ -124,5 +125,54 @@ export const logout = async (req: Request, res: Response) => {
     return res.json({ message: "Logout OK" });
   } catch (e) {
     handleHttp(res, "ERROR_LOGOUT", e);
+  }
+};
+
+// ✅ OBTENER PERMISOS DEL USUARIO ACTUAL
+export const getUserPermissions = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    
+    if (!userId) {
+      return res.status(401).json({ message: "Usuario no autenticado" });
+    }
+
+    // Obtener el usuario con su rol
+    const user = await models.usuarios.findByPk(userId, {
+      include: [{ model: models.roles, as: "rol", attributes: ["id", "nombre"] }],
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    // Obtener permisos del rol del usuario
+    const permisos = await models.permisos.findAll({
+      where: { rol_id: user.rol_id },
+      include: [
+        { model: models.modulos, as: "modulo", attributes: ["id", "nombre"] },
+      ],
+    });
+
+    // Formatear respuesta para el frontend
+    const permissionsResponse = {
+      userId: user.id,
+      email: user.email,
+      rol: {
+        id: user.rol?.id || 0,
+        nombre: user.rol?.nombre || 'Sin rol'
+      },
+      permisos: permisos.map(permiso => ({
+        modulo: permiso.modulo?.nombre || 'Sin módulo',
+        c: permiso.c || false,
+        r: permiso.r || false,
+        u: permiso.u || false,
+        d: permiso.d || false
+      }))
+    };
+
+    return res.json(permissionsResponse);
+  } catch (e) {
+    handleHttp(res, "ERROR_GET_USER_PERMISSIONS", e);
   }
 };

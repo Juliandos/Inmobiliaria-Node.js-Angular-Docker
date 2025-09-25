@@ -51,6 +51,7 @@ export class PermisosAuthService {
   loadUserPermissions(): Observable<UserPermissions | null> {
     if (!this.hasToken()) {
       this.userPermissions$.next(null);
+      this.permissionsLoaded = true;
       return of(null);
     }
 
@@ -58,12 +59,18 @@ export class PermisosAuthService {
       headers: this.getAuthHeaders()
     }).pipe(
       tap(permissions => {
-        console.log('Permisos cargados del backend:', permissions);
+        console.log('✅ Permisos cargados del backend:', permissions);
         this.userPermissions$.next(permissions);
         this.permissionsLoaded = true;
       }),
       catchError(err => {
-        console.error('Error cargando permisos:', err);
+        console.error('❌ Error cargando permisos:', err);
+        // Si hay error 401, el token puede haber expirado
+        if (err.status === 401) {
+          console.warn('Token expirado, limpiando sesión');
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+        }
         this.userPermissions$.next(null);
         this.permissionsLoaded = true;
         return of(null);
