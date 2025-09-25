@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { HasPermissionDirective } from 'src/app/directives/has-permission.directive';
 
 @Component({
   selector: 'app-tipo-propiedad',
@@ -24,7 +25,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     MatSnackBarModule,
     MatCardModule,
-    MatTooltipModule
+    MatTooltipModule,
+    HasPermissionDirective
   ],
   templateUrl: './tipos-propiedad.component.html',
   styleUrls: ['./tipos-propiedad.component.scss']
