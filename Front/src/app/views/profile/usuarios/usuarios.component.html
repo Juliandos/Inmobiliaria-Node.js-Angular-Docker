@@ -5,7 +5,8 @@
     mat-raised-button 
     color="primary" 
     (click)="toggleCreateForm()"
-    class="d-flex align-items-center">
+    class="d-flex align-items-center"
+    *hasPermission="{ modulo: 'usuarios', operacion: 'c' }">
     <mat-icon class="me-2">add</mat-icon>
     {{ showCreateForm ? 'Cancelar' : 'Nuevo Usuario' }}
   </button>
@@ -236,14 +237,16 @@
             mat-icon-button 
             color="primary" 
             (click)="onEditUsuario(usuario)"
-            matTooltip="Editar usuario">
+            matTooltip="Editar usuario"
+            *hasPermission="{ modulo: 'usuarios', operacion: 'u' }">
             <mat-icon>edit</mat-icon>
           </button>
           <button 
             mat-icon-button 
             color="warn" 
             (click)="onDeleteUsuario(usuario.id)"
-            matTooltip="Eliminar usuario">
+            matTooltip="Eliminar usuario"
+            *hasPermission="{ modulo: 'usuarios', operacion: 'd' }">
             <mat-icon>delete</mat-icon>
           </button>
         </div>

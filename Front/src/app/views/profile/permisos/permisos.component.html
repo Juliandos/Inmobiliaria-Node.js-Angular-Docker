@@ -6,7 +6,8 @@
     color="primary" 
     (click)="toggleCreateForm()"
     [disabled]="loading"
-    class="d-flex align-items-center">
+    class="d-flex align-items-center"
+    *hasPermission="{ modulo: 'permisos', operacion: 'c' }">
     <mat-icon class="me-2">add</mat-icon>
     {{ showCreateForm ? 'Cancelar' : 'Nuevo Permiso' }}
   </button>
@@ -263,14 +264,16 @@
             mat-icon-button 
             color="primary" 
             (click)="onEditPermiso(permiso)"
-            matTooltip="Editar permiso">
+            matTooltip="Editar permiso"
+            *hasPermission="{ modulo: 'permisos', operacion: 'u' }">
             <mat-icon>edit</mat-icon>
           </button>
           <button 
             mat-icon-button 
             color="warn" 
             (click)="onDeletePermiso(permiso.id)"
-            matTooltip="Eliminar permiso">
+            matTooltip="Eliminar permiso"
+            *hasPermission="{ modulo: 'permisos', operacion: 'd' }">
             <mat-icon>delete</mat-icon>
           </button>
         </div>

@@ -13,6 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HasPermissionDirective } from 'src/app/directives/has-permission.directive';
 
 @Component({
   selector: 'app-usuarios',
@@ -31,7 +32,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
     MatIconModule,
     MatSnackBarModule,
     MatCardModule,
-    MatTooltipModule
+    MatTooltipModule,
+    HasPermissionDirective
   ]
 })
 export class UsuariosComponent implements OnInit {

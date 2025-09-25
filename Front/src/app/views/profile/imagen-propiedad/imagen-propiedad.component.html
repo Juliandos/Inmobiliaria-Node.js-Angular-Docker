@@ -6,7 +6,9 @@
     color="primary"
     (click)="startCreate()"
     [disabled]="loading"
-    class="d-flex align-items-center">
+    class="d-flex align-items-center"
+    *hasPermission="{ modulo: 'imagenes_propiedad', operacion: 'c' }"
+    >
     <mat-icon class="me-2">add</mat-icon>
     {{ showCreateForm ? 'Cancelar' : 'Nueva Imagen' }}
   </button>
@@ -273,14 +275,16 @@
             mat-icon-button 
             color="primary" 
             (click)="onEditImagen(imagen)"
-            matTooltip="Editar imagen">
+            matTooltip="Editar imagen"
+            *hasPermission="{ modulo: 'imagenes_propiedad', operacion: 'u' }">
             <mat-icon>edit</mat-icon>
           </button>
           <button 
             mat-icon-button 
             color="warn" 
             (click)="onDeleteImagen(imagen.id)"
-            matTooltip="Eliminar imagen (también de Cloudinary)">
+            matTooltip="Eliminar imagen (también de Cloudinary)"
+            *hasPermission="{ modulo: 'imagenes_propiedad', operacion: 'd' }">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
