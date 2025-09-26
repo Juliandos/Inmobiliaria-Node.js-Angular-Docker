@@ -71,7 +71,6 @@ export class AuthService {
     }).pipe(
       tap((permisos) => {
         this.permisos = permisos;
-        console.log('Permisos cargados por rol:', permisos);
         localStorage.setItem('permisos', JSON.stringify(permisos));
       })
     );
