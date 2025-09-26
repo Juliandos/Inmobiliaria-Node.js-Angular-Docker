@@ -29,4 +29,12 @@ export const routes: Routes = [
       title: 'Register Page'
     }
   }
+  ,
+  {
+    path: 'landpage',
+    loadComponent: () => import('./landpage/landpage.component').then(m => m.LandpageComponent),
+    data: {
+      title: 'Página Principal'
+    }
+  }
 ];
