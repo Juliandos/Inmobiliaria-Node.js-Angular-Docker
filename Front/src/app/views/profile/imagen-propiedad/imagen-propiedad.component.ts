@@ -84,6 +84,7 @@ export class ImagenPropiedadComponent implements OnInit {
         this.propiedadesService.getPropiedades().toPromise()
       ]);
       this.imagenes = imagenes || [];
+      
       this.propiedades = propiedades || [];
     } catch (err) {
       console.error(err);

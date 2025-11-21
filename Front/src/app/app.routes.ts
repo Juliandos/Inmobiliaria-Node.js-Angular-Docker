@@ -26,10 +26,6 @@ export const routes: Routes = [
       {
         path: 'pages',
         loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
-      },
-      {
-        path: 'landpage',
-        loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
       }
     ]
   },
@@ -59,6 +55,13 @@ export const routes: Routes = [
     loadComponent: () => import('./views/pages/register/register.component').then(m => m.RegisterComponent),
     data: {
       title: 'Register Page'
+    }
+  },
+  {
+    path: 'landpage',
+    loadComponent: () => import('./views/pages/landpage/landpage.component').then(m => m.LandpageComponent),
+    data: {
+      title: 'landpage Page'
     }
   },
   { path: '**', redirectTo: 'dashboard' }

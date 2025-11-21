@@ -1,17 +1,17 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { CommonModule, NgStyle } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 // Angular Material
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-import { ButtonDirective, CardBodyComponent, CardComponent, CardGroupComponent, ColComponent, ContainerComponent, FormControlDirective, FormDirective, InputGroupComponent, InputGroupTextDirective, RowComponent, TextColorDirective } from '@coreui/angular';
-import { IconDirective } from '@coreui/icons-angular';
-import { RouterLink } from '@angular/router';
+
+import { ImagenesPropiedadService, ImagenPropiedad } from '../../../services/imagen-propiedad.service';
 
 @Component({
   selector: 'app-landpage',
@@ -19,58 +19,43 @@ import { RouterLink } from '@angular/router';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    // Material
-    MatFormFieldModule,
-    MatInputModule,
+    MatToolbarModule,
+    MatCardModule,
+    MatGridListModule,
+    MatSelectModule,
     MatButtonModule,
-    MatTableModule,
-    MatIconModule,
-    ContainerComponent, RowComponent, ColComponent, CardGroupComponent,
-    TextColorDirective, CardComponent, CardBodyComponent, FormDirective,
-    InputGroupComponent, InputGroupTextDirective, IconDirective,
-    FormControlDirective, ButtonDirective, NgStyle, FormsModule, RouterLink
+    MatFormFieldModule,
+    MatInputModule
   ],
   templateUrl: './landpage.component.html',
   styleUrls: ['./landpage.component.scss']
 })
 export class LandpageComponent implements OnInit {
+  private imagenesPropiedadService = inject(ImagenesPropiedadService);
 
-  formPropiedad!: FormGroup;
-  propiedades: any[] = [];
-  displayedColumns: string[] = ['nombre', 'precio', 'direccion', 'acciones'];
-
-  constructor(private http: HttpClient, private fb: FormBuilder) {}
+  imagenes: ImagenPropiedad[] = [];
+  filterControl = new FormControl('');
 
   ngOnInit(): void {
-    this.formPropiedad = this.fb.group({
-      nombre: ['', Validators.required],
-      precio: ['', Validators.required],
-      direccion: ['', Validators.required]
-    });
-
-    this.getPropiedades();
+    this.loadImagenes();
   }
 
-  getPropiedades() {
-    this.http.get<any[]>('http://localhost/LoriCode/back/api-imagen/')
-      .subscribe(data => {
-        this.propiedades = data;
-      });
-  }
-
-  guardarPropiedad() {
-    if (this.formPropiedad.valid) {
-      const nuevaPropiedad = this.formPropiedad.value;
-      this.propiedades.push(nuevaPropiedad); // Solo frontend (ejemplo)
-      this.formPropiedad.reset();
+  async loadImagenes(): Promise<void> {
+    try {
+      const imagenes = await this.imagenesPropiedadService.getImagenesPropiedad().toPromise();
+      this.imagenes = imagenes || [];
+    } catch (err) {
+      console.error('Error cargando imágenes', err);
     }
   }
 
-  editarPropiedad(prop: any) {
-    this.formPropiedad.patchValue(prop);
-  }
-
-  eliminarPropiedad(id: number) {
-    this.propiedades = this.propiedades.filter(p => p.id !== id);
+  // ✅ Getter para filtrar imágenes dinámicamente
+  get filteredImagenes(): ImagenPropiedad[] {
+    const filter = this.filterControl.value?.toLowerCase() || '';
+    return this.imagenes.filter(img =>
+      img.propiedad?.titulo?.toLowerCase().includes(filter) ||
+      img.url?.toLowerCase().includes(filter) ||
+      img.id?.toString().includes(filter)
+    );
   }
 }
