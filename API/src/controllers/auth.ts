@@ -59,7 +59,7 @@ export const login = async (req: Request, res: Response) => {
     if (!email || !password)
       return res.status(400).json({ message: "email y password requeridos" });
     
-    console.log('📋 Buscando usuario:', email);
+aún no puedo hacer PushManager    console.log('📋 Buscando usuario:', email);
     const user = await models.usuarios.findOne({
       where: { email },
       include: [{ model: models.roles, as: "rol", attributes: ["id", "nombre"] }],
