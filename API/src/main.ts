@@ -11,6 +11,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Middleware para logging de peticiones
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
+
 initModels(sequelize);  // Inicia asociaciones de Sequelize
 
 app.use(router);

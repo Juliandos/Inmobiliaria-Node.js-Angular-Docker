@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -21,7 +21,7 @@ export const register = async (req: Request, res: Response) => {
     const exists = await models.usuarios.findOne({ where: { email } });
     if (exists) return res.status(409).json({ message: "El email ya está registrado" });
 
-    const hashed = await bcrypt.hash(password, saltRounds);
+    const hashed = await bcryptjs.hash(password, saltRounds);
     const user = await models.usuarios.create({
       nombre,
       apellido,
@@ -53,32 +53,50 @@ export const register = async (req: Request, res: Response) => {
 // LOGIN
 export const login = async (req: Request, res: Response) => {
   try {
+    console.log('🔐 Login attempt:', req.body);
     const { email, password } = req.body;
     
     if (!email || !password)
       return res.status(400).json({ message: "email y password requeridos" });
     
+    console.log('📋 Buscando usuario:', email);
     const user = await models.usuarios.findOne({
       where: { email },
       include: [{ model: models.roles, as: "rol", attributes: ["id", "nombre"] }],
     });
     
-    if (!user) return res.status(401).json({ message: "Credenciales inválidas" });
+    if (!user) {
+      console.log('❌ Usuario no encontrado');
+      return res.status(401).json({ message: "Credenciales inválidas" });
+    }
     
-    if (!user.dataValues.password)
+    console.log('✅ Usuario encontrado:', user.dataValues.email);
+    
+    if (!user.dataValues.password) {
+      console.log('❌ Usuario sin contraseña');
       return res.status(400).json({ message: "Usuario sin contraseña, usa OAuth2" });
+    }
     
-    const ok = await bcrypt.compare(password, user.dataValues.password);
-    if (!ok) return res.status(401).json({ message: "Credenciales inválidas" });
-
+    console.log('🔒 Comparando contraseña...');
+    const ok = await bcryptjs.compare(password, user.dataValues.password);
+    if (!ok) {
+      console.log('❌ Contraseña incorrecta');
+      return res.status(401).json({ message: "Credenciales inválidas" });
+    }
+    
+    console.log('✅ Contraseña correcta, generando tokens...');
     const accessToken = generateAccessToken({ id: user.dataValues.id, email: user.dataValues.email });
     const refreshToken = generateRefreshToken({ id: user.dataValues.id });
 
+    console.log('💾 Guardando refresh token...');
     user.set('refreshToken', refreshToken);
     await user.save();
 
+    console.log('✅ Login exitoso');
     return res.json({ accessToken, refreshToken, user });
-  } catch (e) {
+  } catch (e: any) {
+    console.error('❌ Error en login:', e);
+    console.error('Stack:', e.stack);
     handleHttp(res, "ERROR_LOGIN", e);
   }
 };

@@ -1,6 +1,6 @@
 // seed.ts - Script para llenar datos iniciales
 import "dotenv/config";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import { sequelize, models } from "./src/db/database";
 
 async function seedDatabase() {
@@ -45,7 +45,7 @@ async function seedDatabase() {
 
     // ✅ 4. Crear Usuarios
     console.log('📝 Creando usuarios...');
-    const hashedPassword = await bcrypt.hash('123456', 10);
+    const hashedPassword = await bcryptjs.hash('123456', 10);
     await models.usuarios.bulkCreate([
       { email: 'admin@test.com', nombre: 'Admin', apellido: 'Sistema', password: hashedPassword, rol_id: 1 },
       { email: 'jefe@test.com', nombre: 'Juan', apellido: 'Pérez', password: hashedPassword, rol_id: 2 },
