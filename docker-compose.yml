@@ -1,0 +1,196 @@
+# ============================================
+# DOCKER COMPOSE - ORQUESTACIÓN DE CONTENEDORES
+# ============================================
+#
+# ¿QUÉ ES DOCKER COMPOSE?
+# -----------------------
+# Docker Compose es una herramienta que permite definir y ejecutar
+# múltiples contenedores Docker como una sola aplicación.
+#
+# En lugar de ejecutar cada contenedor manualmente, defines todo
+# en este archivo y ejecutas: docker-compose up
+#
+# CONCEPTOS:
+# - Service: Cada servicio es un contenedor (API, Front, MySQL)
+# - Network: Los contenedores pueden comunicarse entre sí
+# - Volumes: Persistencia de datos (base de datos, etc.)
+#
+# ============================================
+
+version: '3.8'
+
+# ============================================
+# SERVICIOS (Contenedores)
+# ============================================
+services:
+  
+  # ==========================================
+  # SERVICIO: MySQL (Base de Datos)
+  # ==========================================
+  mysql:
+    # Imagen de MySQL oficial
+    image: mysql:8.0
+    
+    # Nombre del contenedor (opcional, pero útil)
+    container_name: inmobiliaria-mysql
+    
+    # Variables de entorno para MySQL
+    # ${VARIABLE} lee desde archivo .env en la raíz del proyecto
+    # Si no existe .env, usa el valor por defecto después de :-
+    environment:
+      # Contraseña del usuario root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
+      # Nombre de la base de datos que se crea automáticamente
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-db_inmobiliaria}
+      # Usuario adicional (opcional)
+      MYSQL_USER: ${MYSQL_USER:-app_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-app_password}
+    
+    # Puertos: mapea puerto del contenedor al host
+    # Formato: "PUERTO_HOST:PUERTO_CONTENEDOR"
+    # 3306:3306 = puerto 3306 en tu máquina → puerto 3306 en contenedor
+    ports:
+      - "3306:3306"
+    
+    # Volúmenes: persistencia de datos
+    # Si el contenedor se elimina, los datos se mantienen
+    # ./mysql-data:/var/lib/mysql = carpeta local → carpeta en contenedor
+    volumes:
+      - mysql-data:/var/lib/mysql
+    
+    # Healthcheck: verifica que MySQL esté listo
+    # Docker espera a que MySQL esté listo antes de iniciar otros servicios
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    # Red: todos los servicios están en la misma red
+    networks:
+      - inmobiliaria-network
+
+  # ==========================================
+  # SERVICIO: API (Backend)
+  # ==========================================
+  api:
+    # build: construye la imagen desde el Dockerfile
+    # context: ruta donde está el Dockerfile
+    # dockerfile: nombre del Dockerfile
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    
+    container_name: inmobiliaria-api
+    
+    # Comando para desarrollo (con hot reload)
+    # En producción usarías: command: ["node", "src/main.js"]
+    command: npm run dev
+    
+    # Variables de entorno
+    # ${VARIABLE:-default} lee desde archivo .env o usa valor por defecto
+    # Estas variables están disponibles dentro del contenedor
+    environment:
+      PORT: ${API_PORT:-3001}
+      DB_HOST: mysql  # Nombre del servicio MySQL (Docker resuelve esto automáticamente)
+      DB_PORT: ${API_DB_PORT:-3306}
+      DB_NAME: ${API_DB_NAME:-db_inmobiliaria}
+      DB_USER: ${API_DB_USER:-root}
+      DB_PASS: ${API_DB_PASS:-${MYSQL_ROOT_PASSWORD:-123456}}  # Usa MYSQL_ROOT_PASSWORD si DB_PASS no está definido
+      JWT_SECRET: ${API_JWT_SECRET:-cambiar_este_secret_por_uno_seguro}
+      JWT_REFRESH_SECRET: ${API_JWT_REFRESH_SECRET:-cambiar_este_refresh_secret}
+      CLOUDINARY_CLOUD_NAME: ${API_CLOUDINARY_CLOUD_NAME:-}
+      CLOUDINARY_API_KEY: ${API_CLOUDINARY_API_KEY:-}
+      CLOUDINARY_API_SECRET: ${API_CLOUDINARY_API_SECRET:-}
+      NODE_ENV: ${API_NODE_ENV:-development}
+    
+    # Puertos
+    ports:
+      - "3001:3001"
+    
+    # Dependencias: espera a que MySQL esté listo
+    depends_on:
+      mysql:
+        condition: service_healthy
+    
+    # Volúmenes: monta el código para desarrollo
+    # Esto permite que los cambios se reflejen sin reconstruir
+    volumes:
+      - ./API:/app
+      - /app/node_modules  # Excluye node_modules del montaje
+    
+    # Red
+    networks:
+      - inmobiliaria-network
+
+  # ==========================================
+  # SERVICIO: Front (Frontend)
+  # ==========================================
+  front:
+    build:
+      context: ./Front
+      dockerfile: Dockerfile
+    
+    container_name: inmobiliaria-front
+    
+    # Para desarrollo, puedes usar ng serve
+    # Para producción, nginx sirve los archivos compilados
+    # command: npm start  # Descomenta para desarrollo
+    
+    # Puertos
+    ports:
+      - "4200:80"  # 4200 en tu máquina → 80 en contenedor (nginx)
+    
+    # Dependencias: espera a que la API esté lista
+    depends_on:
+      - api
+    
+    # Volúmenes para desarrollo (opcional)
+    # volumes:
+    #   - ./Front:/app
+    #   - /app/node_modules
+    
+    # Red
+    networks:
+      - inmobiliaria-network
+
+# ============================================
+# VOLÚMENES (Persistencia de Datos)
+# ============================================
+# Los volúmenes son como "discos duros" para los contenedores
+# Si eliminas un contenedor, el volumen persiste
+volumes:
+  mysql-data:
+    # Docker crea un volumen llamado "inmobiliaria_mysql-data"
+    # Los datos de MySQL se guardan aquí
+
+# ============================================
+# REDES (Comunicación entre Contenedores)
+# ============================================
+# Todos los servicios en la misma red pueden comunicarse
+# usando el nombre del servicio como hostname
+# Ejemplo: API puede conectarse a MySQL usando "mysql" como hostname
+networks:
+  inmobiliaria-network:
+    driver: bridge
+    # bridge = red virtual que conecta los contenedores
+
+# ============================================
+# CÓMO USAR ESTE ARCHIVO:
+# ============================================
+# 1. Construir y levantar todo:
+#    docker-compose up -d
+#
+# 2. Ver logs:
+#    docker-compose logs -f
+#
+# 3. Detener todo:
+#    docker-compose down
+#
+# 4. Detener y eliminar volúmenes:
+#    docker-compose down -v
+#
+# 5. Reconstruir imágenes:
+#    docker-compose up --build
+# ============================================
+

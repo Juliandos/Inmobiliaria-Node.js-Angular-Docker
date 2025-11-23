@@ -1,0 +1,43 @@
+# ============================================
+# .dockerignore para Frontend
+# ============================================
+
+# Dependencias
+node_modules/
+npm-debug.log*
+
+# Archivos de build (se generan durante la construcción)
+dist/
+tmp/
+.angular/
+
+# Archivos de desarrollo
+.git/
+.gitignore
+.vscode/
+.idea/
+*.md
+
+# Archivos de testing
+coverage/
+.nyc_output/
+test-results/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Archivos de backup
+*.bak
+*.backup
+
+# Logs
+*.log
+
+# Archivos temporales
+.cache/
+.parcel-cache/
+
+

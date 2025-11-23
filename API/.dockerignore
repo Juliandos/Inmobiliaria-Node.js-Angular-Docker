@@ -1,0 +1,69 @@
+# ============================================
+# .dockerignore - Archivos a Excluir de la Imagen
+# ============================================
+#
+# ¿QUÉ ES .dockerignore?
+# ----------------------
+# Similar a .gitignore, pero para Docker.
+# Define qué archivos NO copiar al construir la imagen.
+#
+# ¿POR QUÉ ES IMPORTANTE?
+# ----------------------
+# 1. Imágenes más pequeñas (más rápidas de construir y transferir)
+# 2. Más seguras (no incluye archivos sensibles)
+# 3. Más rápidas de construir (menos archivos que copiar)
+#
+# ============================================
+
+# Dependencias (se instalan dentro del contenedor)
+node_modules/
+npm-debug.log*
+
+# Archivos de entorno (se pasan como variables de entorno)
+.env
+.env.local
+.env.*.local
+
+# Archivos de desarrollo
+.git/
+.gitignore
+.vscode/
+.idea/
+*.md
+
+# Archivos de build/compilación
+dist/
+build/
+*.tsbuildinfo
+
+# Archivos de testing
+coverage/
+.nyc_output/
+test-results/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Archivos de backup
+*.bak
+*.backup
+*.old
+
+# Archivos de MySQL Workbench
+*.mwb
+*.mwb.bak
+*.mwb.beforefix
+
+# Logs
+logs/
+*.log
+
+# Archivos temporales
+tmp/
+temp/
+.cache/
+
+
