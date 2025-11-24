@@ -53,63 +53,38 @@ export const register = async (req: Request, res: Response) => {
 // LOGIN
 export const login = async (req: Request, res: Response) => {
   try {
-    console.log('🔐 Login attempt:', req.body);
     const { email, password } = req.body;
     
     if (!email || !password)
       return res.status(400).json({ message: "email y password requeridos" });
     
-    console.log('📋 Buscando usuario:', email);
     const user = await models.usuarios.findOne({
       where: { email },
       include: [{ model: models.roles, as: "rol", attributes: ["id", "nombre"] }],
     });
     
     if (!user) {
-      console.log('❌ Usuario no encontrado');
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
     
-    console.log('✅ Usuario encontrado:', user.dataValues.email);
-    
     if (!user.dataValues.password) {
-      console.log('❌ Usuario sin contraseña');
       return res.status(400).json({ message: "Usuario sin contraseña, usa OAuth2" });
     }
     
-    console.log('🔒 Comparando contraseña...');
-    console.log(`   - Password recibida: ${password}`);
-    console.log(`   - Hash en BD (primeros 30 chars): ${user.dataValues.password?.substring(0, 30)}...`);
-    console.log(`   - Hash en BD (longitud): ${user.dataValues.password?.length}`);
-    
     const ok = await bcryptjs.compare(password, user.dataValues.password);
-    console.log(`   - Resultado comparación: ${ok ? '✅ CORRECTO' : '❌ INCORRECTO'}`);
     
     if (!ok) {
-      console.log('❌ Contraseña incorrecta');
-      // Intentar verificar si el hash es válido
-      try {
-        const testHash = await bcryptjs.hash(password, 10);
-        console.log(`   - Hash de prueba generado: ${testHash.substring(0, 30)}...`);
-      } catch (hashError) {
-        console.error('   - Error generando hash de prueba:', hashError);
-      }
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
     
-    console.log('✅ Contraseña correcta, generando tokens...');
     const accessToken = generateAccessToken({ id: user.dataValues.id, email: user.dataValues.email });
     const refreshToken = generateRefreshToken({ id: user.dataValues.id });
 
-    console.log('💾 Guardando refresh token...');
     user.set('refreshToken', refreshToken);
     await user.save();
 
-    console.log('✅ Login exitoso');
     return res.json({ accessToken, refreshToken, user });
   } catch (e: any) {
-    console.error('❌ Error en login:', e);
-    console.error('Stack:', e.stack);
     handleHttp(res, "ERROR_LOGIN", e);
   }
 };
@@ -128,7 +103,6 @@ export const refresh = async (req: Request, res: Response) => {
     });
     
     if (!user) return res.status(401).json({ message: "Usuario no encontrado" });
-    console.log("Payload: ", payload, refreshToken, );
     if (user.dataValues.refreshToken !== refreshToken)
       return res.status(401).json({ message: "Refresh token inválido" });
 

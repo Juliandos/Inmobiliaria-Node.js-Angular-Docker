@@ -65,23 +65,12 @@ export class AuthService {
 
   /** 📌 CARGAR PERMISOS POR ROL */
   loadPermissionsByRole(rolId: number): Observable<any[]> {
-    // 👉 Ajusta la URL a tu backend: GET /permisos/rol/:rolId
     return this.http.get<any[]>(`http://localhost:3001/permisos/rol/${rolId}`, {
       headers: this.getAuthHeaders()
     }).pipe(
       tap((permisos) => {
-        console.log('📥 Permisos recibidos del backend:', permisos.length);
-        console.log('📋 Estructura del primer permiso:', permisos[0]);
-        console.log('📋 Todos los módulos:', permisos.map(p => ({
-          id: p.id,
-          modulo: p.modulo?.nombre,
-          rol: p.rol?.nombre,
-          permisos: { c: p.c, r: p.r, u: p.u, d: p.d }
-        })));
-        
         this.permisos = permisos;
         localStorage.setItem('permisos', JSON.stringify(permisos));
-        console.log('✅ Permisos guardados en localStorage');
       })
     );
   }
@@ -98,38 +87,19 @@ export class AuthService {
   /** 📌 VERIFICAR PERMISO */
   hasPermission(modulo: string, operacion: 'c' | 'r' | 'u' | 'd'): boolean {
     const permisos = this.getPermissions();
-    console.log('🔍 Verificando permiso:', { modulo, operacion, totalPermisos: permisos.length });
-    
-    // Mostrar todos los módulos disponibles para depuración
-    if (permisos.length > 0) {
-      console.log('📋 Módulos disponibles:', permisos.map(p => ({
-        modulo: p.modulo?.nombre,
-        moduloLower: p.modulo?.nombre?.toLowerCase(),
-        buscando: modulo.toLowerCase()
-      })));
-    }
     
     const permiso = permisos.find(p => {
       const moduloNombre = p.modulo?.nombre?.toLowerCase();
       const moduloBuscado = modulo.toLowerCase();
-      const coincide = moduloNombre === moduloBuscado;
-      
-      if (moduloNombre) {
-        console.log(`   - Comparando: "${moduloNombre}" === "${moduloBuscado}" = ${coincide}`);
-      }
-      
-      return coincide;
+      return moduloNombre === moduloBuscado;
     });
     
     if (!permiso) {
-      console.log('❌ Permiso no encontrado para módulo:', modulo);
-      console.log('   Módulos disponibles:', permisos.map(p => p.modulo?.nombre).filter(Boolean));
       return false;
     }
     
     // El backend devuelve números (0/1) o booleanos, verificar ambos
     const tienePermiso = permiso[operacion] === true || permiso[operacion] === 1;
-    console.log(`✅ Permiso ${operacion} para ${modulo}:`, tienePermiso, `(valor: ${permiso[operacion]})`);
     
     return tienePermiso;
   }

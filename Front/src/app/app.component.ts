@@ -31,13 +31,9 @@ export class AppComponent implements OnInit {
     if (this.authService.isLoggedIn()) {
       const rolId = localStorage.getItem('rolId');
       if (rolId) {
-        console.log('🔄 Cargando permisos al iniciar app para rol:', rolId);
         this.authService.loadPermissionsByRole(Number(rolId)).subscribe({
-          next: (permisos) => {
-            console.log('✅ Permisos cargados:', permisos.length);
-          },
           error: (err) => {
-            console.error('❌ Error cargando permisos:', err);
+            console.error('Error cargando permisos:', err);
           }
         });
       }
