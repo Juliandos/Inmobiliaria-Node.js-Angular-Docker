@@ -10,40 +10,84 @@ async function seedDatabase() {
     // Sincronizar base de datos (crea las tablas si no existen)
     await sequelize.sync({ force: false });
 
+    // 🧹 Limpiar datos existentes (en orden inverso a las foreign keys)
+    console.log('🧹 Limpiando datos existentes...');
+    await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+    
+    await models.imagenes_propiedad.destroy({ where: {}, force: true });
+    await models.propiedades.destroy({ where: {}, force: true });
+    await models.permisos.destroy({ where: {}, force: true });
+    await models.usuarios.destroy({ where: {}, force: true });
+    await models.tipos_propiedad.destroy({ where: {}, force: true });
+    await models.modulos.destroy({ where: {}, force: true });
+    await models.roles.destroy({ where: {}, force: true });
+    
+    await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+    console.log('✅ Datos limpiados');
+
     // ✅ 1. Crear Roles
     console.log('📝 Creando roles...');
-    await models.roles.bulkCreate([
-      { nombre: 'Administrador' },
-      { nombre: 'Jefe' },
-      { nombre: 'Secretario' },
-      { nombre: 'Usuario' }
-    ], { ignoreDuplicates: true });
     
-    // Obtener los roles después de crearlos para usar sus IDs reales
-    const roles = await models.roles.findAll({ order: [['id', 'ASC']] });
-    const rolAdmin = roles.find(r => r.nombre === 'Administrador');
-    const rolJefe = roles.find(r => r.nombre === 'Jefe');
-    const rolSecretario = roles.find(r => r.nombre === 'Secretario');
-    const rolUsuario = roles.find(r => r.nombre === 'Usuario');
+    // Crear roles y obtener los objetos creados
+    await models.roles.create({ nombre: 'Administrador' });
+    await models.roles.create({ nombre: 'Jefe' });
+    await models.roles.create({ nombre: 'Secretario' });
+    await models.roles.create({ nombre: 'Usuario' });
     
-    console.log('✅ Roles encontrados:', {
-      admin: rolAdmin?.id,
-      jefe: rolJefe?.id,
-      secretario: rolSecretario?.id,
-      usuario: rolUsuario?.id
+    // Obtener los roles recién creados con sus IDs
+    const rolAdmin = await models.roles.findOne({ where: { nombre: 'Administrador' } });
+    const rolJefe = await models.roles.findOne({ where: { nombre: 'Jefe' } });
+    const rolSecretario = await models.roles.findOne({ where: { nombre: 'Secretario' } });
+    const rolUsuario = await models.roles.findOne({ where: { nombre: 'Usuario' } });
+    
+    if (!rolAdmin || !rolJefe || !rolSecretario || !rolUsuario) {
+      throw new Error('Error al crear o recuperar roles');
+    }
+    
+    // Usar toJSON() para obtener los datos correctos
+    const adminData = rolAdmin.toJSON();
+    const jefeData = rolJefe.toJSON();
+    const secretarioData = rolSecretario.toJSON();
+    const usuarioData = rolUsuario.toJSON();
+    
+    console.log('✅ Roles creados:', {
+      admin: { id: adminData.id, nombre: adminData.nombre },
+      jefe: { id: jefeData.id, nombre: jefeData.nombre },
+      secretario: { id: secretarioData.id, nombre: secretarioData.nombre },
+      usuario: { id: usuarioData.id, nombre: usuarioData.nombre }
     });
 
     // ✅ 2. Crear Módulos
     console.log('📝 Creando módulos...');
-    const modulos = await models.modulos.bulkCreate([
-      { nombre: 'usuarios' },
-      { nombre: 'roles' },
-      { nombre: 'propiedades' },
-      { nombre: 'tipos_propiedad' },
-      { nombre: 'imagenes_propiedad' },
-      { nombre: 'permisos' },
-      { nombre: 'modulos' }
-    ], { ignoreDuplicates: true });
+    
+    // Crear módulos
+    await models.modulos.create({ nombre: 'usuarios' });
+    await models.modulos.create({ nombre: 'roles' });
+    await models.modulos.create({ nombre: 'propiedades' });
+    await models.modulos.create({ nombre: 'tipos_propiedad' });
+    await models.modulos.create({ nombre: 'imagenes_propiedad' });
+    await models.modulos.create({ nombre: 'permisos' });
+    await models.modulos.create({ nombre: 'modulos' });
+    
+    // Obtener los módulos recién creados con sus IDs
+    const moduloUsuarios = await models.modulos.findOne({ where: { nombre: 'usuarios' } });
+    const moduloRoles = await models.modulos.findOne({ where: { nombre: 'roles' } });
+    const moduloPropiedades = await models.modulos.findOne({ where: { nombre: 'propiedades' } });
+    const moduloTiposPropiedad = await models.modulos.findOne({ where: { nombre: 'tipos_propiedad' } });
+    const moduloImagenesPropiedad = await models.modulos.findOne({ where: { nombre: 'imagenes_propiedad' } });
+    const moduloPermisos = await models.modulos.findOne({ where: { nombre: 'permisos' } });
+    const moduloModulos = await models.modulos.findOne({ where: { nombre: 'modulos' } });
+    
+    if (!moduloUsuarios || !moduloRoles || !moduloPropiedades || !moduloTiposPropiedad || !moduloImagenesPropiedad || !moduloPermisos || !moduloModulos) {
+      throw new Error('Error al crear o recuperar módulos');
+    }
+    
+    const allModulos = [moduloUsuarios, moduloRoles, moduloPropiedades, moduloTiposPropiedad, moduloImagenesPropiedad, moduloPermisos, moduloModulos];
+    
+    console.log('✅ Módulos creados:', allModulos.map(m => {
+      const data = m.toJSON();
+      return { id: data.id, nombre: data.nombre };
+    }));
 
     // ✅ 3. Crear Tipos de Propiedad
     console.log('📝 Creando tipos de propiedad...');
@@ -55,218 +99,202 @@ async function seedDatabase() {
       { nombre: 'Bodega' },
       { nombre: 'Lote' },
       { nombre: 'Finca' }
-    ], { ignoreDuplicates: true });
+    ]);
 
     // ✅ 4. Crear Usuarios
     console.log('📝 Creando usuarios...');
+    
     const hashedPassword = await bcryptjs.hash('123456', 10);
     
-    // Verificar y crear/actualizar usuarios uno por uno
-    const usuariosData = [
-      { email: 'admin@test.com', nombre: 'Admin', apellido: 'Sistema', password: hashedPassword, rol_id: rolAdmin?.id },
-      { email: 'jefe@test.com', nombre: 'Juan', apellido: 'Pérez', password: hashedPassword, rol_id: rolJefe?.id },
-      { email: 'secretario@test.com', nombre: 'María', apellido: 'González', password: hashedPassword, rol_id: rolSecretario?.id },
-      { email: 'usuario@test.com', nombre: 'Carlos', apellido: 'Rodríguez', password: hashedPassword, rol_id: rolUsuario?.id }
-    ];
+    // Crear usuarios con los IDs de roles que ya tenemos
+    await models.usuarios.create({
+      email: 'admin@test.com',
+      nombre: 'Admin',
+      apellido: 'Sistema',
+      password: hashedPassword,
+      rol_id: adminData.id
+    });
     
-    for (const usuarioData of usuariosData) {
-      if (!usuarioData.rol_id) {
-        console.warn(`⚠️ No se encontró el rol para ${usuarioData.email}, saltando...`);
-        continue;
-      }
-      
-      const existingUser = await models.usuarios.findOne({ where: { email: usuarioData.email } });
-      
-      if (existingUser) {
-        // Actualizar usuario existente con nueva contraseña y rol
-        console.log(`🔄 Actualizando usuario existente: ${usuarioData.email}`);
-        console.log(`   - Rol ID: ${usuarioData.rol_id}`);
-        console.log(`   - Contraseña hasheada: ${hashedPassword.substring(0, 20)}...`);
-        
-        await existingUser.update({
-          password: hashedPassword,
-          rol_id: usuarioData.rol_id,
-          nombre: usuarioData.nombre,
-          apellido: usuarioData.apellido
-        });
-        
-        // Verificar que se actualizó correctamente
-        const updatedUser = await models.usuarios.findOne({ where: { email: usuarioData.email } });
-        console.log(`   ✅ Usuario actualizado. Nueva contraseña: ${updatedUser?.password?.substring(0, 20)}...`);
-      } else {
-        // Crear nuevo usuario
-        console.log(`➕ Creando nuevo usuario: ${usuarioData.email}`);
-        console.log(`   - Rol ID: ${usuarioData.rol_id}`);
-        const newUser = await models.usuarios.create(usuarioData);
-        console.log(`   ✅ Usuario creado con ID: ${newUser.id}`);
-      }
+    await models.usuarios.create({
+      email: 'jefe@test.com',
+      nombre: 'Juan',
+      apellido: 'Pérez',
+      password: hashedPassword,
+      rol_id: jefeData.id
+    });
+    
+    await models.usuarios.create({
+      email: 'secretario@test.com',
+      nombre: 'María',
+      apellido: 'González',
+      password: hashedPassword,
+      rol_id: secretarioData.id
+    });
+    
+    await models.usuarios.create({
+      email: 'usuario@test.com',
+      nombre: 'Carlos',
+      apellido: 'Rodríguez',
+      password: hashedPassword,
+      rol_id: usuarioData.id
+    });
+    
+    // Obtener los usuarios recién creados con sus IDs
+    const usuarioAdmin = await models.usuarios.findOne({ where: { email: 'admin@test.com' } });
+    const usuarioJefe = await models.usuarios.findOne({ where: { email: 'jefe@test.com' } });
+    const usuarioSecretario = await models.usuarios.findOne({ where: { email: 'secretario@test.com' } });
+    const usuarioUsuario = await models.usuarios.findOne({ where: { email: 'usuario@test.com' } });
+    
+    if (!usuarioAdmin || !usuarioJefe || !usuarioSecretario || !usuarioUsuario) {
+      throw new Error('Error al crear o recuperar usuarios');
     }
     
-    console.log('✅ Usuarios procesados correctamente');
+    const usuarios = [usuarioAdmin, usuarioJefe, usuarioSecretario, usuarioUsuario];
     
-    // Verificar que las contraseñas se pueden comparar
-    console.log('\n🔍 Verificando contraseñas...');
-    const testUser = await models.usuarios.findOne({ where: { email: 'admin@test.com' } });
-    if (testUser) {
-      const testPassword = '123456';
-      const testHash = await bcryptjs.hash(testPassword, 10);
-      const testCompare = await bcryptjs.compare(testPassword, testUser.password);
-      console.log(`   - Contraseña en BD: ${testUser.password?.substring(0, 30)}...`);
-      console.log(`   - Nuevo hash de prueba: ${testHash.substring(0, 30)}...`);
-      console.log(`   - Comparación exitosa: ${testCompare ? '✅ SÍ' : '❌ NO'}`);
-    }
+    console.log('✅ Usuarios creados:');
+    usuarios.forEach(u => {
+      const data = u.toJSON();
+      console.log(`   - ${data.email} (ID: ${data.id}, Rol ID: ${data.rol_id})`);
+    });
 
     // ✅ 5. Configurar Permisos
     console.log('📝 Configurando permisos...');
-    
-    // Obtener todos los roles y módulos (usar los roles ya obtenidos)
-    const allRoles = roles.length > 0 ? roles : await models.roles.findAll();
-    const allModulos = await models.modulos.findAll();
 
     // Configuración de permisos por rol
     const permisosConfig = [
       // Administrador: Todos los permisos en todos los módulos
-      { rolNombre: 'Administrador', permisos: { c: true, r: true, u: true, d: true } },
+      { rolNombre: 'Administrador', permisos: { c: true, r: true, u: true, d: true }, rolData: adminData },
       // Jefe: Todos los permisos en todos los módulos
-      { rolNombre: 'Jefe', permisos: { c: true, r: true, u: true, d: true } },
+      { rolNombre: 'Jefe', permisos: { c: true, r: true, u: true, d: true }, rolData: jefeData },
       // Secretario: Solo lectura y actualización (sin crear ni eliminar)
-      { rolNombre: 'Secretario', permisos: { c: false, r: true, u: true, d: false } }
+      { rolNombre: 'Secretario', permisos: { c: false, r: true, u: true, d: false }, rolData: secretarioData }
     ];
 
     // Crear permisos para Administrador, Jefe y Secretario
+    let permisosCreados = 0;
+    
     for (const config of permisosConfig) {
-      const rol = allRoles.find(r => r.nombre === config.rolNombre);
-      if (rol) {
+      if (config.rolData && config.rolData.id) {
+        console.log(`   Creando permisos para ${config.rolNombre} (ID: ${config.rolData.id})...`);
         for (const modulo of allModulos) {
-          // Verificar si ya existe un permiso para este rol y módulo
-          const existingPermiso = await models.permisos.findOne({
-            where: {
-              rol_id: rol.id,
-              modulo_id: modulo.id
-            }
+          const moduloData = modulo.toJSON();
+          await models.permisos.create({
+            nombre: `${config.rolNombre} - ${moduloData.nombre}`,
+            c: config.permisos.c ? 1 : 0,
+            r: config.permisos.r ? 1 : 0,
+            u: config.permisos.u ? 1 : 0,
+            d: config.permisos.d ? 1 : 0,
+            rol_id: config.rolData.id,
+            modulo_id: moduloData.id
           });
-
-          if (!existingPermiso) {
-            await models.permisos.create({
-              nombre: `${config.rolNombre} - ${modulo.nombre}`,
-              c: config.permisos.c ? 1 : 0,
-              r: config.permisos.r ? 1 : 0,
-              u: config.permisos.u ? 1 : 0,
-              d: config.permisos.d ? 1 : 0,
-              rol_id: rol.id,
-              modulo_id: modulo.id
-            });
-          }
+          permisosCreados++;
         }
+        console.log(`   ✅ ${allModulos.length} permisos creados para ${config.rolNombre}`);
+      } else {
+        console.warn(`   ⚠️ Rol no encontrado: ${config.rolNombre}`);
       }
     }
 
     // Permisos especiales para Usuario (solo lectura en propiedades y tipos_propiedad)
-    const usuarioRol = allRoles.find(r => r.nombre === 'Usuario');
-    if (usuarioRol) {
-      const propiedadesModulo = allModulos.find(m => m.nombre === 'propiedades');
-      const tiposModulo = allModulos.find(m => m.nombre === 'tipos_propiedad');
-      
-      if (propiedadesModulo) {
-        const existingPermiso = await models.permisos.findOne({
-          where: {
-            rol_id: usuarioRol.id,
-            modulo_id: propiedadesModulo.id
-          }
-        });
-        
-        if (!existingPermiso) {
-          await models.permisos.create({
-            nombre: 'Usuario - propiedades',
-            c: 0, r: 1, u: 0, d: 0,
-            rol_id: usuarioRol.id,
-            modulo_id: propiedadesModulo.id
-          });
-        }
-      }
-      
-      if (tiposModulo) {
-        const existingPermiso = await models.permisos.findOne({
-          where: {
-            rol_id: usuarioRol.id,
-            modulo_id: tiposModulo.id
-          }
-        });
-        
-        if (!existingPermiso) {
-          await models.permisos.create({
-            nombre: 'Usuario - tipos_propiedad',
-            c: 0, r: 1, u: 0, d: 0,
-            rol_id: usuarioRol.id,
-            modulo_id: tiposModulo.id
-          });
-        }
-      }
-    }
+    const moduloPropiedadesData = moduloPropiedades.toJSON();
+    const moduloTiposPropiedadData = moduloTiposPropiedad.toJSON();
+    
+    await models.permisos.create({
+      nombre: 'Usuario - propiedades',
+      c: 0, r: 1, u: 0, d: 0,
+      rol_id: usuarioData.id,
+      modulo_id: moduloPropiedadesData.id
+    });
+    
+    await models.permisos.create({
+      nombre: 'Usuario - tipos_propiedad',
+      c: 0, r: 1, u: 0, d: 0,
+      rol_id: usuarioData.id,
+      modulo_id: moduloTiposPropiedadData.id
+    });
+    
+    permisosCreados += 2;
+    console.log(`✅ ${permisosCreados} permisos creados`);
 
     // ✅ 6. Crear Propiedades de ejemplo
     console.log('📝 Creando propiedades de ejemplo...');
     
-    // Obtener usuarios para usar sus IDs reales
-    const usuarios = await models.usuarios.findAll();
-    const usuarioJefe = usuarios.find(u => u.email === 'jefe@test.com');
-    const usuarioSecretario = usuarios.find(u => u.email === 'secretario@test.com');
-    
-    // Obtener tipos de propiedad para usar sus IDs reales
+    // Obtener tipos de propiedad (deben estar en orden: Casa, Apartamento, Local Comercial, Oficina)
     const tiposPropiedad = await models.tipos_propiedad.findAll({ order: [['id', 'ASC']] });
-    const tipoCasa = tiposPropiedad.find(t => t.nombre === 'Casa');
-    const tipoApto = tiposPropiedad.find(t => t.nombre === 'Apartamento');
-    const tipoLocal = tiposPropiedad.find(t => t.nombre === 'Local Comercial');
-    const tipoOficina = tiposPropiedad.find(t => t.nombre === 'Oficina');
+    const tipoCasa = tiposPropiedad.find(t => {
+      const data = t.toJSON();
+      return data.nombre === 'Casa';
+    }) || tiposPropiedad[0];
+    const tipoApto = tiposPropiedad.find(t => {
+      const data = t.toJSON();
+      return data.nombre === 'Apartamento';
+    }) || tiposPropiedad[1];
+    const tipoLocal = tiposPropiedad.find(t => {
+      const data = t.toJSON();
+      return data.nombre === 'Local Comercial';
+    }) || tiposPropiedad[2];
+    const tipoOficina = tiposPropiedad.find(t => {
+      const data = t.toJSON();
+      return data.nombre === 'Oficina';
+    }) || tiposPropiedad[3];
     
-    if (usuarioJefe && usuarioSecretario && tipoCasa && tipoApto && tipoLocal && tipoOficina) {
-      await models.propiedades.bulkCreate([
-        { titulo: 'Casa en Zona Norte', descripcion: 'Hermosa casa de 3 habitaciones con jardín', precio: 250000000.00, habitaciones: 3, banos: 2, parqueadero: 2, tipo_id: tipoCasa.id, usuario_id: usuarioJefe.id },
-        { titulo: 'Apartamento Centro', descripcion: 'Moderno apartamento en el centro de la ciudad', precio: 180000000.00, habitaciones: 2, banos: 1, parqueadero: 1, tipo_id: tipoApto.id, usuario_id: usuarioJefe.id },
-        { titulo: 'Local Comercial', descripcion: 'Local comercial en zona comercial', precio: 120000000.00, habitaciones: 0, banos: 1, parqueadero: 0, tipo_id: tipoLocal.id, usuario_id: usuarioSecretario.id },
-        { titulo: 'Oficina Ejecutiva', descripcion: 'Oficina moderna para empresas', precio: 85000000.00, habitaciones: 0, banos: 1, parqueadero: 1, tipo_id: tipoOficina.id, usuario_id: usuarioSecretario.id },
-        { titulo: 'Casa Campestre', descripcion: 'Casa de descanso en las afueras', precio: 320000000.00, habitaciones: 4, banos: 3, parqueadero: 3, tipo_id: tipoCasa.id, usuario_id: usuarioJefe.id }
-      ], { ignoreDuplicates: true });
-    } else {
-      console.warn('⚠️ No se pudieron crear propiedades: faltan usuarios o tipos de propiedad');
-    }
+    const tipoCasaData = tipoCasa.toJSON();
+    const tipoAptoData = tipoApto.toJSON();
+    const tipoLocalData = tipoLocal.toJSON();
+    const tipoOficinaData = tipoOficina.toJSON();
+    const usuarioJefeData = usuarioJefe.toJSON();
+    const usuarioSecretarioData = usuarioSecretario.toJSON();
+    
+    await models.propiedades.bulkCreate([
+      { titulo: 'Casa en Zona Norte', descripcion: 'Hermosa casa de 3 habitaciones con jardín', precio: 250000000.00, habitaciones: 3, banos: 2, parqueadero: 2, tipo_id: tipoCasaData.id, usuario_id: usuarioJefeData.id },
+      { titulo: 'Apartamento Centro', descripcion: 'Moderno apartamento en el centro de la ciudad', precio: 180000000.00, habitaciones: 2, banos: 1, parqueadero: 1, tipo_id: tipoAptoData.id, usuario_id: usuarioJefeData.id },
+      { titulo: 'Local Comercial', descripcion: 'Local comercial en zona comercial', precio: 120000000.00, habitaciones: 0, banos: 1, parqueadero: 0, tipo_id: tipoLocalData.id, usuario_id: usuarioSecretarioData.id },
+      { titulo: 'Oficina Ejecutiva', descripcion: 'Oficina moderna para empresas', precio: 85000000.00, habitaciones: 0, banos: 1, parqueadero: 1, tipo_id: tipoOficinaData.id, usuario_id: usuarioSecretarioData.id },
+      { titulo: 'Casa Campestre', descripcion: 'Casa de descanso en las afueras', precio: 320000000.00, habitaciones: 4, banos: 3, parqueadero: 3, tipo_id: tipoCasaData.id, usuario_id: usuarioJefeData.id }
+    ]);
+    
+    console.log('✅ 5 propiedades creadas');
 
     // ✅ 7. Crear Imágenes de ejemplo
     console.log('📝 Creando imágenes de ejemplo...');
-    const propiedades = await models.propiedades.findAll({ order: [['id', 'ASC']], limit: 5 });
     
-    if (propiedades.length > 0) {
-      const imagenesData = [
-        { propiedad_id: propiedades[0]?.id, url: 'https://example.com/casa1-frente.jpg' },
-        { propiedad_id: propiedades[0]?.id, url: 'https://example.com/casa1-interior.jpg' },
-        { propiedad_id: propiedades[1]?.id, url: 'https://example.com/apt1-sala.jpg' },
-        { propiedad_id: propiedades[2]?.id, url: 'https://example.com/local1-frente.jpg' },
-        { propiedad_id: propiedades[3]?.id, url: 'https://example.com/oficina1.jpg' },
-        { propiedad_id: propiedades[4]?.id, url: 'https://example.com/casa-campestre.jpg' }
-      ].filter(img => img.propiedad_id); // Filtrar solo las que tienen propiedad_id válido
-      
-      if (imagenesData.length > 0) {
-        await models.imagenes_propiedad.bulkCreate(imagenesData, { ignoreDuplicates: true });
-      }
+    const propiedades = await models.propiedades.findAll({ order: [['id', 'ASC']] });
+    
+    if (propiedades.length >= 5) {
+      await models.imagenes_propiedad.bulkCreate([
+        { propiedad_id: propiedades[0].id, url: 'https://example.com/casa1-frente.jpg' },
+        { propiedad_id: propiedades[0].id, url: 'https://example.com/casa1-interior.jpg' },
+        { propiedad_id: propiedades[1].id, url: 'https://example.com/apt1-sala.jpg' },
+        { propiedad_id: propiedades[2].id, url: 'https://example.com/local1-frente.jpg' },
+        { propiedad_id: propiedades[3].id, url: 'https://example.com/oficina1.jpg' },
+        { propiedad_id: propiedades[4].id, url: 'https://example.com/casa-campestre.jpg' }
+      ]);
+      console.log('✅ 6 imágenes creadas');
     } else {
-      console.warn('⚠️ No se pudieron crear imágenes: no hay propiedades');
+      console.warn('⚠️ No se pudieron crear imágenes: no hay suficientes propiedades');
     }
 
-    console.log('✅ Seed completado exitosamente!');
-    console.log('\n📊 Datos creados:');
-    console.log(`- ${allRoles.length} roles`);
-    console.log(`- ${allModulos.length} módulos`);
+    console.log('\n✅ Seed completado exitosamente!');
+    console.log('\n📊 Resumen de datos creados:');
+    console.log(`- 4 roles (Administrador, Jefe, Secretario, Usuario)`);
+    console.log(`- 7 módulos (usuarios, roles, propiedades, tipos_propiedad, imagenes_propiedad, permisos, modulos)`);
     console.log('- 7 tipos de propiedad');
     console.log('- 4 usuarios (password: 123456)');
-    console.log('- Permisos configurados según roles');
+    console.log(`- ${permisosCreados} permisos configurados`);
     console.log('- 5 propiedades de ejemplo');
     console.log('- 6 imágenes de ejemplo');
 
-    console.log('\n👥 Usuarios creados:');
-    console.log('- admin@test.com (Administrador)');
-    console.log('- jefe@test.com (Jefe)');
-    console.log('- secretario@test.com (Secretario)');
-    console.log('- usuario@test.com (Usuario)');
+    console.log('\n👥 Usuarios de prueba:');
+    console.log('- admin@test.com / 123456 (Administrador - todos los permisos)');
+    console.log('- jefe@test.com / 123456 (Jefe - todos los permisos)');
+    console.log('- secretario@test.com / 123456 (Secretario - solo lectura y actualización)');
+    console.log('- usuario@test.com / 123456 (Usuario - solo lectura en propiedades)');
+    
+    console.log('\n📋 Permisos por rol:');
+    console.log('- Administrador: Todos los permisos (c, r, u, d) en todos los módulos');
+    console.log('- Jefe: Todos los permisos (c, r, u, d) en todos los módulos');
+    console.log('- Secretario: Solo lectura y actualización (r, u) en todos los módulos');
+    console.log('- Usuario: Solo lectura (r) en propiedades y tipos_propiedad');
 
   } catch (error) {
     console.error('❌ Error durante el seed:', error);

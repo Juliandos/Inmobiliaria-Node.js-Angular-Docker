@@ -8,6 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/main.ts",
     "seed": "tsx seed.ts",
+    "clean-db": "tsx clean-db.ts",
+    "reset-db": "tsx clean-db.ts && tsx seed.ts",
     "fix-passwords": "tsx fix-passwords.ts"
   },
   "repository": {
