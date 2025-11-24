@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { Sequelize } from "sequelize";
 import { initModels } from "../models/init-models.js";
 

@@ -7,6 +7,7 @@ export interface Propiedad {
   titulo: string;
   descripcion?: string;
   precio?: number;
+  area?: number;
   habitaciones?: number;
   banos?: number;
   parqueadero?: number;
@@ -21,6 +22,7 @@ export interface CreatePropiedadRequest {
   titulo: string;
   descripcion?: string;
   precio?: number;
+  area?: number;
   habitaciones?: number;
   banos?: number;
   parqueadero?: number;
@@ -32,6 +34,7 @@ export interface UpdatePropiedadRequest {
   titulo?: string;
   descripcion?: string;
   precio?: number;
+  area?: number;
   habitaciones?: number;
   banos?: number;
   parqueadero?: number;

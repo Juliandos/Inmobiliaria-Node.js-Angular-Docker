@@ -45,6 +45,16 @@ export class modulos extends Model<modulosAttributes, modulosCreationAttributes>
       type: DataTypes.STRING(50),
       allowNull: false,
       unique: "nombre"
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
     }
   }, {
     sequelize,

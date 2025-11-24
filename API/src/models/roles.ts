@@ -58,6 +58,16 @@ export class roles extends Model<rolesAttributes, rolesCreationAttributes> imple
       type: DataTypes.STRING(50),
       allowNull: false,
       unique: "nombre"
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
     }
   }, {
     sequelize,

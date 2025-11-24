@@ -9,6 +9,7 @@ export interface propiedadesAttributes {
   titulo: string;
   descripcion?: string;
   precio?: number;
+  area?: number;
   habitaciones?: number;
   banos?: number;
   parqueadero?: number;
@@ -20,7 +21,7 @@ export interface propiedadesAttributes {
 
 export type propiedadesPk = "id";
 export type propiedadesId = propiedades[propiedadesPk];
-export type propiedadesOptionalAttributes = "id" | "descripcion" | "precio" | "habitaciones" | "banos" | "parqueadero" | "tipo_id" | "usuario_id" | "createdAt" | "updatedAt";
+export type propiedadesOptionalAttributes = "id" | "descripcion" | "precio" | "area" | "habitaciones" | "banos" | "parqueadero" | "tipo_id" | "usuario_id" | "createdAt" | "updatedAt";
 export type propiedadesCreationAttributes = Optional<propiedadesAttributes, propiedadesOptionalAttributes>;
 
 export class propiedades extends Model<propiedadesAttributes, propiedadesCreationAttributes> implements propiedadesAttributes {
@@ -28,6 +29,7 @@ export class propiedades extends Model<propiedadesAttributes, propiedadesCreatio
   titulo!: string;
   descripcion?: string;
   precio?: number;
+  area?: number;
   habitaciones?: number;
   banos?: number;
   parqueadero?: number;
@@ -79,6 +81,12 @@ export class propiedades extends Model<propiedadesAttributes, propiedadesCreatio
       type: DataTypes.DECIMAL(12,2),
       allowNull: true
     },
+    area: {
+      type: DataTypes.DECIMAL(10,2),
+      allowNull: true,
+      defaultValue: 0,
+      comment: 'Área en metros cuadrados'
+    },
     habitaciones: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -109,6 +117,16 @@ export class propiedades extends Model<propiedadesAttributes, propiedadesCreatio
         model: 'usuarios',
         key: 'id'
       }
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
     }
   }, {
     sequelize,

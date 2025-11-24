@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { HasPermissionDirective } from 'src/app/directives/has-permission.directive';
+import { HasPermissionDirective } from '../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-propiedades',
@@ -44,7 +44,7 @@ export class PropiedadesComponent implements OnInit {
   propiedades: Propiedad[] = [];
   tipos: TipoPropiedad[] = [];
   usuarios: Usuario[] = [];
-  displayedColumns = ['id', 'titulo', 'tipo', 'precio', 'usuario', 'habitaciones', 'acciones'];
+  displayedColumns = ['id', 'titulo', 'tipo', 'precio', 'area', 'usuario', 'habitaciones', 'acciones'];
   filterControl = new FormControl('');
 
   // Formularios
@@ -52,6 +52,7 @@ export class PropiedadesComponent implements OnInit {
     titulo: new FormControl('', [Validators.required]),
     descripcion: new FormControl(''),
     precio: new FormControl<number | null>(null),
+    area: new FormControl<number | null>(null),
     habitaciones: new FormControl<number | null>(null),
     banos: new FormControl<number | null>(null),
     parqueadero: new FormControl<number | null>(null),
@@ -64,6 +65,7 @@ export class PropiedadesComponent implements OnInit {
     titulo: new FormControl('', [Validators.required]),
     descripcion: new FormControl(''),
     precio: new FormControl<number | null>(null),
+    area: new FormControl<number | null>(null),
     habitaciones: new FormControl<number | null>(null),
     banos: new FormControl<number | null>(null),
     parqueadero: new FormControl<number | null>(null),
@@ -135,6 +137,7 @@ export class PropiedadesComponent implements OnInit {
         titulo: this.createForm.value.titulo!,
         descripcion: this.createForm.value.descripcion || undefined,
         precio: this.createForm.value.precio || undefined,
+        area: this.createForm.value.area || undefined,
         habitaciones: this.createForm.value.habitaciones || undefined,
         banos: this.createForm.value.banos || undefined,
         parqueadero: this.createForm.value.parqueadero || undefined,
@@ -165,6 +168,7 @@ export class PropiedadesComponent implements OnInit {
       titulo: propiedad.titulo,
       descripcion: propiedad.descripcion || '',
       precio: propiedad.precio || null,
+      area: propiedad.area || null,
       habitaciones: propiedad.habitaciones || null,
       banos: propiedad.banos || null,
       parqueadero: propiedad.parqueadero || null,
@@ -182,6 +186,7 @@ export class PropiedadesComponent implements OnInit {
         titulo: this.editForm.value.titulo!,
         descripcion: this.editForm.value.descripcion || undefined,
         precio: this.editForm.value.precio || undefined,
+        area: this.editForm.value.area || undefined,
         habitaciones: this.editForm.value.habitaciones || undefined,
         banos: this.editForm.value.banos || undefined,
         parqueadero: this.editForm.value.parqueadero || undefined,
@@ -274,6 +279,11 @@ export class PropiedadesComponent implements OnInit {
       currency: 'COP',
       minimumFractionDigits: 0
     }).format(price);
+  }
+
+  formatArea(area?: number): string {
+    if (!area) return 'N/A';
+    return `${area} m²`;
   }
 
   private showSnackBar(message: string): void {

@@ -129,10 +129,10 @@ API/public/uploads/
 Front/uploads/
 
 # ========== Archivos de MySQL Workbench ==========
-# Archivos .mwb son de MySQL Workbench (opcional, puedes comentar si quieres incluirlos)
-# API/*.mwb
-# API/*.mwb.bak
-# API/*.mwb.beforefix
+# Archivos .mwb son de MySQL Workbench (no incluirlos en el repo)
+*.mwb
+*.mwb.bak
+*.mwb.beforefix
 
 # ========== Archivos de Docker (si usas Docker) ==========
 # docker-compose.override.yml
