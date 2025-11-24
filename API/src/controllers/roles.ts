@@ -7,10 +7,12 @@ import { handleHttp } from "../utils/error.handle";
 const getRoles = async (req: Request, res: Response) => {
   try {
     const roles = await models.roles.findAll({
+      attributes: ['id', 'nombre', 'createdAt', 'updatedAt'], // Incluir explícitamente el ID
       include: [
         {
           model: models.usuarios,
           as: "usuarios",
+          attributes: ['id', 'email', 'nombre', 'apellido'], // Incluir IDs explícitamente
         },
       ],
     });
@@ -50,7 +52,10 @@ const updateRol = async (req: Request, res: Response) => {
     const { id } = req.params;
     const [updated] = await models.roles.update(req.body, { where: { id } });
     if (!updated) return res.status(404).json({ message: "Rol no encontrado" });
-    const rol = await models.roles.findByPk(id);
+    // Obtener el rol actualizado con sus usuarios
+    const rol = await models.roles.findByPk(id, {
+      include: [{ model: models.usuarios, as: "usuarios" }]
+    });
     return res.json(rol?.toJSON());
   } catch (e) {
     handleHttp(res, "ERROR_UPDATE_ROL", e);

@@ -42,7 +42,15 @@ const getPropiedad = async (req: Request, res: Response) => {
 const createPropiedad = async (req: Request, res: Response) => {
   try {
     const propiedad = await models.propiedades.create(req.body);
-    return res.status(201).json(propiedad.toJSON());
+    // Obtener la propiedad creada con sus relaciones
+    const propiedadWithRelations = await models.propiedades.findByPk(propiedad.id, {
+      include: [
+        { model: models.usuarios, as: "usuario" },
+        { model: models.tipos_propiedad, as: "tipo" },
+        { model: models.imagenes_propiedad, as: "imagenes_propiedads" },
+      ],
+    });
+    return res.status(201).json(propiedadWithRelations?.toJSON());
   } catch (e) {
     handleHttp(res, "ERROR_CREATE_PROPIEDAD", e);
   }

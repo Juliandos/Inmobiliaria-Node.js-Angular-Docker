@@ -4,6 +4,11 @@ import { permissionGard } from '../../guards/permissions.guard';
 export const routes: Routes = [
   {
     path: '',
+    redirectTo: 'usuarios',
+    pathMatch: 'full'
+  },
+  {
+    path: '',
     data: {
       title: 'Profile',
     },

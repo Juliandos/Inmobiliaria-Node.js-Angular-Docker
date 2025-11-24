@@ -78,9 +78,22 @@ export const login = async (req: Request, res: Response) => {
     }
     
     console.log('🔒 Comparando contraseña...');
+    console.log(`   - Password recibida: ${password}`);
+    console.log(`   - Hash en BD (primeros 30 chars): ${user.dataValues.password?.substring(0, 30)}...`);
+    console.log(`   - Hash en BD (longitud): ${user.dataValues.password?.length}`);
+    
     const ok = await bcryptjs.compare(password, user.dataValues.password);
+    console.log(`   - Resultado comparación: ${ok ? '✅ CORRECTO' : '❌ INCORRECTO'}`);
+    
     if (!ok) {
       console.log('❌ Contraseña incorrecta');
+      // Intentar verificar si el hash es válido
+      try {
+        const testHash = await bcryptjs.hash(password, 10);
+        console.log(`   - Hash de prueba generado: ${testHash.substring(0, 30)}...`);
+      } catch (hashError) {
+        console.error('   - Error generando hash de prueba:', hashError);
+      }
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
     

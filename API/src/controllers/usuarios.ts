@@ -14,7 +14,9 @@ const getUsuarios = async (req: Request, res: Response) => {
 const getUsuario = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const user = await models.usuarios.findByPk(id, { include: ["rol"] });
+    const user = await models.usuarios.findByPk(id, { 
+      include: [{ model: models.roles, as: "rol" }] 
+    });
     if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
     return res.json(user.toJSON());
   } catch (e) {
@@ -25,7 +27,11 @@ const getUsuario = async (req: Request, res: Response) => {
 const createUsuario = async (req: Request, res: Response) => {
   try {
     const user = await models.usuarios.create(req.body);
-    return res.status(201).json(user.toJSON());
+    // Obtener el usuario creado con su rol
+    const userWithRol = await models.usuarios.findByPk(user.id, {
+      include: [{ model: models.roles, as: "rol" }]
+    });
+    return res.status(201).json(userWithRol?.toJSON());
   } catch (e) {
     handleHttp(res, "ERROR_CREATE_USUARIO", e);
   }
@@ -36,7 +42,10 @@ const updateUsuario = async (req: Request, res: Response) => {
     const { id } = req.params;
     const [updated] = await models.usuarios.update(req.body, { where: { id } });
     if (!updated) return res.status(404).json({ message: "Usuario no encontrado" });
-    const user = await models.usuarios.findByPk(id);
+    // Obtener el usuario actualizado con su rol
+    const user = await models.usuarios.findByPk(id, {
+      include: [{ model: models.roles, as: "rol" }]
+    });
     return res.json(user?.toJSON());
   } catch (e) {
     handleHttp(res, "ERROR_UPDATE_USUARIO", e);

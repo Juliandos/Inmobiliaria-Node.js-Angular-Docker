@@ -11,6 +11,7 @@ export const routes: Routes = [
   {
     path: '',
     component: DefaultLayoutComponent,
+    canActivate: [permissionGard], // Guard global para todas las rutas protegidas
     data: {
       title: 'Home'
     },

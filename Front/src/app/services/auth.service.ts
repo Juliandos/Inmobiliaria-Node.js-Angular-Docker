@@ -88,8 +88,24 @@ export class AuthService {
   /** 📌 VERIFICAR PERMISO */
   hasPermission(modulo: string, operacion: 'c' | 'r' | 'u' | 'd'): boolean {
     const permisos = this.getPermissions();
-    const permiso = permisos.find(p => p.modulo?.nombre?.toLowerCase() === modulo.toLowerCase());
-    return permiso ? permiso[operacion] === true : false;
+    console.log('🔍 Verificando permiso:', { modulo, operacion, totalPermisos: permisos.length });
+    
+    const permiso = permisos.find(p => {
+      const moduloNombre = p.modulo?.nombre?.toLowerCase();
+      const moduloBuscado = modulo.toLowerCase();
+      return moduloNombre === moduloBuscado;
+    });
+    
+    if (!permiso) {
+      console.log('❌ Permiso no encontrado para módulo:', modulo);
+      return false;
+    }
+    
+    // El backend devuelve números (0/1) o booleanos, verificar ambos
+    const tienePermiso = permiso[operacion] === true || permiso[operacion] === 1;
+    console.log(`✅ Permiso ${operacion} para ${modulo}:`, tienePermiso, `(valor: ${permiso[operacion]})`);
+    
+    return tienePermiso;
   }
 
   /** REFRESH TOKEN */

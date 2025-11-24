@@ -7,19 +7,37 @@ export const permissionGard: CanActivateFn = (route, state) => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
+  console.log('🛡️ Guard ejecutándose para ruta:', state.url);
+
+  // Verificar si está logueado
   if (!auth.isLoggedIn()) {
+    console.log('❌ Usuario no logueado, redirigiendo a login');
     router.navigate(['/login']);
     return false;
   }
 
-  // 🔐 Opcional: validar permiso requerido desde data
+  // 🔐 Validar permiso requerido desde data
   const modulo = route.data?.['modulo'];
   const operacion = route.data?.['operacion'];
 
-  if (modulo && operacion && !auth.hasPermission(modulo, operacion)) {
-    router.navigate(['/dashboard']); // o página de error
+  // Si no hay módulo/operación especificados, permitir acceso (solo verifica login)
+  if (!modulo || !operacion) {
+    console.log('✅ Ruta sin restricción de permisos, permitiendo acceso');
+    return true;
+  }
+
+  // Verificar permiso
+  const tienePermiso = auth.hasPermission(modulo, operacion);
+  
+  if (!tienePermiso) {
+    console.log(`❌ Sin permiso ${operacion} para módulo ${modulo}, redirigiendo a dashboard`);
+    // Evitar loop infinito: solo redirigir si no estamos ya en dashboard
+    if (!state.url.includes('/dashboard')) {
+      router.navigate(['/dashboard'], { skipLocationChange: false });
+    }
     return false;
   }
 
+  console.log(`✅ Permiso ${operacion} para ${modulo} verificado, permitiendo acceso`);
   return true;
 };

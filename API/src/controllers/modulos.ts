@@ -7,10 +7,12 @@ import { handleHttp } from "../utils/error.handle";
 const getModulos = async (req: Request, res: Response) => {
   try {
     const modulos = await models.modulos.findAll({
+      attributes: ['id', 'nombre', 'createdAt', 'updatedAt'], // Incluir explícitamente el ID
       include: [
         {
           model: models.permisos,
           as: "permisos",
+          attributes: ['id', 'nombre', 'c', 'r', 'u', 'd', 'rol_id', 'modulo_id'], // Incluir IDs explícitamente
           include: [
             {
               model: models.roles,
