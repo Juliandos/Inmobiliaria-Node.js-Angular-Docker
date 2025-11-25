@@ -1,8 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, inject } from '@angular/core';
 import { ModulosService, Modulo, CreateModuloRequest, UpdateModuloRequest } from '../../../services/modulos.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +23,8 @@ import { HasPermissionDirective } from 'src/app/directives/has-permission.direct
     CommonModule,
     ReactiveFormsModule,
     MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -31,13 +35,19 @@ import { HasPermissionDirective } from 'src/app/directives/has-permission.direct
     HasPermissionDirective
   ]
 })
-export class ModulosComponent implements OnInit {
+export class ModulosComponent implements OnInit, AfterViewInit {
   private modulosService = inject(ModulosService);
   private snackBar = inject(MatSnackBar);
 
-  modulos: Modulo[] = [];
+  // ViewChild para paginador y ordenamiento
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  // DataSource para la tabla
+  dataSource = new MatTableDataSource<Modulo>([]);
   displayedColumns = ['id', 'nombre', 'permisos_count', 'acciones'];
   filterControl = new FormControl('');
+  loading = false;
 
   // Formularios
   createForm = new FormGroup({
@@ -53,25 +63,34 @@ export class ModulosComponent implements OnInit {
   showCreateForm = false;
   showEditForm = false;
   editingModuloId: number | null = null;
-  loading = false;
 
   ngOnInit(): void {
     this.loadModulos();
+    
+    // Configurar filtro personalizado
+    this.dataSource.filterPredicate = (data: Modulo, filter: string): boolean => {
+      const searchStr = filter.toLowerCase();
+      return data.nombre.toLowerCase().includes(searchStr) ||
+             data.id.toString().includes(searchStr);
+    };
+
+    // Suscribirse a cambios en el filtro
+    this.filterControl.valueChanges.subscribe(value => {
+      this.dataSource.filter = value?.trim().toLowerCase() || '';
+    });
   }
 
-  get filteredModulos(): Modulo[] {
-    const filter = this.filterControl.value?.toLowerCase() || '';
-    return this.modulos.filter(m =>
-      m.nombre.toLowerCase().includes(filter) ||
-      m.id.toString().includes(filter)
-    );
+  ngAfterViewInit(): void {
+    // Configurar paginador y ordenamiento después de que la vista se inicialice
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   loadModulos(): void {
     this.loading = true;
     this.modulosService.getModulos().subscribe({
       next: (data) => {
-        this.modulos = data;
+        this.dataSource.data = data;
         this.loading = false;
       },
       error: (err) => {
@@ -91,7 +110,8 @@ export class ModulosComponent implements OnInit {
 
       this.modulosService.createModulo(newModulo).subscribe({
         next: (modulo) => {
-          this.modulos.push(modulo);
+          const currentData = this.dataSource.data;
+          this.dataSource.data = [...currentData, modulo];
           this.createForm.reset();
           this.showCreateForm = false;
           this.showSnackBar('Módulo creado exitosamente');
@@ -125,9 +145,11 @@ export class ModulosComponent implements OnInit {
 
       this.modulosService.updateModulo(this.editingModuloId, updateData).subscribe({
         next: (updatedModulo) => {
-          const index = this.modulos.findIndex(m => m.id === this.editingModuloId);
+          const currentData = this.dataSource.data;
+          const index = currentData.findIndex(m => m.id === this.editingModuloId);
           if (index !== -1) {
-            this.modulos[index] = updatedModulo;
+            currentData[index] = updatedModulo;
+            this.dataSource.data = [...currentData];
           }
           this.cancelEdit();
           this.showSnackBar('Módulo actualizado exitosamente');
@@ -146,7 +168,7 @@ export class ModulosComponent implements OnInit {
     if (confirm('¿Estás seguro de que quieres eliminar este módulo?')) {
       this.modulosService.deleteModulo(id).subscribe({
         next: () => {
-          this.modulos = this.modulos.filter(m => m.id !== id);
+          this.dataSource.data = this.dataSource.data.filter(m => m.id !== id);
           this.showSnackBar('Módulo eliminado exitosamente');
         },
         error: (err) => {
@@ -184,5 +206,55 @@ export class ModulosComponent implements OnInit {
   // ✅ UTILIDADES DE TEMPLATE
   getPermisosCount(modulo: Modulo): number {
     return modulo.permisos?.length || 0;
+  }
+
+  // ✅ LIMPIAR FILTRO
+  clearFilter(): void {
+    this.filterControl.setValue('');
+  }
+
+  // ✅ EXPORTAR A CSV
+  exportToCSV(): void {
+    const data = this.dataSource.filteredData;
+    if (data.length === 0) {
+      this.showSnackBar('No hay datos para exportar');
+      return;
+    }
+
+    const headers = ['ID', 'Nombre', 'Cantidad de Permisos'];
+    const csvData = data.map(m => [
+      m.id,
+      m.nombre,
+      this.getPermisosCount(m)
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...csvData.map(row => row.join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `modulos_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    this.showSnackBar('Datos exportados correctamente');
+  }
+
+  // ✅ OBTENER TOTAL DE REGISTROS
+  getTotalRecords(): number {
+    return this.dataSource.data.length;
+  }
+
+  // ✅ OBTENER REGISTROS FILTRADOS
+  getFilteredRecords(): number {
+    return this.dataSource.filteredData.length;
   }
 }

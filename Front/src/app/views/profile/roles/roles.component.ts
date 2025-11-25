@@ -1,8 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, inject } from '@angular/core';
 import { RolesService, Rol, CreateRolRequest, UpdateRolRequest } from '../../../services/roles.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +24,8 @@ import { HasPermissionDirective } from 'src/app/directives/has-permission.direct
     CommonModule,
     ReactiveFormsModule,
     MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -33,13 +37,19 @@ import { HasPermissionDirective } from 'src/app/directives/has-permission.direct
     HasPermissionDirective
   ]
 })
-export class RolesComponent implements OnInit {
+export class RolesComponent implements OnInit, AfterViewInit {
   private rolesService = inject(RolesService);
   private snackBar = inject(MatSnackBar);
 
-  roles: Rol[] = [];
+  // ViewChild para paginador y ordenamiento
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  // DataSource para la tabla
+  dataSource = new MatTableDataSource<Rol>([]);
   displayedColumns = ['id', 'nombre', 'acciones'];
   filterControl = new FormControl('');
+  loading = false;
 
   // Formularios
   createForm = new FormGroup({
@@ -58,24 +68,37 @@ export class RolesComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadRoles();
+    
+    // Configurar filtro personalizado
+    this.dataSource.filterPredicate = (data: Rol, filter: string): boolean => {
+      const searchStr = filter.toLowerCase();
+      return data.nombre.toLowerCase().includes(searchStr) ||
+             data.id.toString().includes(searchStr);
+    };
+
+    // Suscribirse a cambios en el filtro
+    this.filterControl.valueChanges.subscribe(value => {
+      this.dataSource.filter = value?.trim().toLowerCase() || '';
+    });
   }
 
-  get filteredRoles(): Rol[] {
-    const filter = this.filterControl.value?.toLowerCase() || '';
-    return this.roles.filter(r =>
-      r.nombre.toLowerCase().includes(filter) ||
-      r.id.toString().includes(filter)
-    );
+  ngAfterViewInit(): void {
+    // Configurar paginador y ordenamiento después de que la vista se inicialice
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   loadRoles(): void {
+    this.loading = true;
     this.rolesService.getRoles().subscribe({
       next: (data) => {
-        this.roles = data;
+        this.dataSource.data = data;
+        this.loading = false;
       },
       error: (err) => {
         console.error('Error cargando roles:', err);
         this.showSnackBar('Error cargando roles');
+        this.loading = false;
       }
     });
   }
@@ -89,7 +112,8 @@ export class RolesComponent implements OnInit {
 
       this.rolesService.createRol(newRol).subscribe({
         next: (rol) => {
-          this.roles.push(rol);
+          const currentData = this.dataSource.data;
+          this.dataSource.data = [...currentData, rol];
           this.createForm.reset();
           this.showCreateForm = false;
           this.showSnackBar('Rol creado exitosamente');
@@ -122,9 +146,11 @@ export class RolesComponent implements OnInit {
 
       this.rolesService.updateRol(this.editingRoleId, updateData).subscribe({
         next: (updatedRol) => {
-          const index = this.roles.findIndex(r => r.id === this.editingRoleId);
+          const currentData = this.dataSource.data;
+          const index = currentData.findIndex(r => r.id === this.editingRoleId);
           if (index !== -1) {
-            this.roles[index] = updatedRol;
+            currentData[index] = updatedRol;
+            this.dataSource.data = [...currentData];
           }
           this.cancelEdit();
           this.showSnackBar('Rol actualizado exitosamente');
@@ -142,7 +168,7 @@ export class RolesComponent implements OnInit {
     if (confirm('¿Estás seguro de que quieres eliminar este rol?')) {
       this.rolesService.deleteRol(id).subscribe({
         next: () => {
-          this.roles = this.roles.filter(r => r.id !== id);
+          this.dataSource.data = this.dataSource.data.filter(r => r.id !== id);
           this.showSnackBar('Rol eliminado exitosamente');
         },
         error: (err) => {
@@ -174,5 +200,51 @@ export class RolesComponent implements OnInit {
       horizontalPosition: 'right',
       verticalPosition: 'top'
     });
+  }
+
+  // ✅ LIMPIAR FILTRO
+  clearFilter(): void {
+    this.filterControl.setValue('');
+  }
+
+  // ✅ EXPORTAR A CSV
+  exportToCSV(): void {
+    const data = this.dataSource.filteredData;
+    if (data.length === 0) {
+      this.showSnackBar('No hay datos para exportar');
+      return;
+    }
+
+    const headers = ['ID', 'Nombre'];
+    const csvData = data.map(r => [r.id, r.nombre]);
+
+    const csvContent = [
+      headers.join(','),
+      ...csvData.map(row => row.join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `roles_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    this.showSnackBar('Datos exportados correctamente');
+  }
+
+  // ✅ OBTENER TOTAL DE REGISTROS
+  getTotalRecords(): number {
+    return this.dataSource.data.length;
+  }
+
+  // ✅ OBTENER REGISTROS FILTRADOS
+  getFilteredRecords(): number {
+    return this.dataSource.filteredData.length;
   }
 }

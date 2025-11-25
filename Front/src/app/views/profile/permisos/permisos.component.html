@@ -1,16 +1,33 @@
-<!-- Header con botón de crear -->
+<!-- Header con botones de acción -->
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h2>Gestión de Permisos</h2>
-  <button 
-    mat-raised-button 
-    color="primary" 
-    (click)="toggleCreateForm()"
-    [disabled]="loading"
-    class="d-flex align-items-center"
-    *hasPermission="{ modulo: 'permisos', operacion: 'c' }">
-    <mat-icon class="me-2">add</mat-icon>
-    {{ showCreateForm ? 'Cancelar' : 'Nuevo Permiso' }}
-  </button>
+  <div>
+    <h2>Gestión de Permisos</h2>
+    <p class="text-muted mb-0" *ngIf="!loading">
+      Total: {{ getTotalRecords() }} permisos
+      <span *ngIf="filterControl.value"> | Filtrados: {{ getFilteredRecords() }}</span>
+    </p>
+  </div>
+  <div class="d-flex gap-2">
+    <button 
+      mat-raised-button 
+      color="accent" 
+      (click)="exportToCSV()"
+      [disabled]="loading || dataSource.data.length === 0"
+      class="d-flex align-items-center">
+      <mat-icon class="me-2">download</mat-icon>
+      Exportar CSV
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="toggleCreateForm()"
+      [disabled]="loading"
+      class="d-flex align-items-center"
+      *hasPermission="{ modulo: 'permisos', operacion: 'c' }">
+      <mat-icon class="me-2">add</mat-icon>
+      {{ showCreateForm ? 'Cancelar' : 'Nuevo Permiso' }}
+    </button>
+  </div>
 </div>
 
 <!-- Loading indicator -->
@@ -204,29 +221,37 @@
 <!-- Campo de filtro -->
 <mat-form-field appearance="outline" class="mb-3 w-100">
   <mat-label>Filtrar permisos</mat-label>
-  <input matInput [formControl]="filterControl" placeholder="Buscar por nombre, rol o módulo">
+  <input matInput [formControl]="filterControl" placeholder="Buscar por nombre, rol, módulo o ID">
   <mat-icon matPrefix>search</mat-icon>
+  <button 
+    mat-icon-button 
+    matSuffix 
+    *ngIf="filterControl.value" 
+    (click)="clearFilter()"
+    matTooltip="Limpiar filtro">
+    <mat-icon>close</mat-icon>
+  </button>
 </mat-form-field>
 
 <!-- Tabla de permisos -->
 <div class="mat-elevation-z8">
-  <table mat-table [dataSource]="filteredPermisos" class="w-100">
+  <table mat-table [dataSource]="dataSource" matSort class="w-100">
 
     <!-- ID Column -->
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef class="fw-bold">ID</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="fw-bold">ID</th>
       <td mat-cell *matCellDef="let permiso">{{ permiso.id }}</td>
     </ng-container>
 
     <!-- Nombre Column -->
     <ng-container matColumnDef="nombre">
-      <th mat-header-cell *matHeaderCellDef class="fw-bold">Nombre</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="fw-bold">Nombre</th>
       <td mat-cell *matCellDef="let permiso">{{ permiso.nombre }}</td>
     </ng-container>
 
     <!-- Rol Column -->
     <ng-container matColumnDef="rol">
-      <th mat-header-cell *matHeaderCellDef class="fw-bold">Rol</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="fw-bold">Rol</th>
       <td mat-cell *matCellDef="let permiso">
         <span class="badge bg-primary">{{ permiso.rol?.nombre || 'N/A' }}</span>
       </td>
@@ -234,7 +259,7 @@
 
     <!-- Módulo Column -->
     <ng-container matColumnDef="modulo">
-      <th mat-header-cell *matHeaderCellDef class="fw-bold">Módulo</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="fw-bold">Módulo</th>
       <td mat-cell *matCellDef="let permiso">
         <span class="badge bg-secondary">{{ permiso.modulo?.nombre || 'N/A' }}</span>
       </td>
@@ -284,8 +309,16 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
+  <!-- Paginador -->
+  <mat-paginator 
+    [pageSizeOptions]="[5, 10, 25, 50, 100]"
+    [pageSize]="10"
+    showFirstLastButtons
+    aria-label="Seleccionar página de permisos">
+  </mat-paginator>
+
   <!-- Mensaje cuando no hay datos -->
-  <div *ngIf="filteredPermisos.length === 0 && !loading" class="text-center p-4">
+  <div *ngIf="dataSource.data.length === 0 && !loading" class="text-center p-4">
     <mat-icon class="text-muted" style="font-size: 48px;">security</mat-icon>
     <p class="text-muted mt-2">No se encontraron permisos</p>
     <button 

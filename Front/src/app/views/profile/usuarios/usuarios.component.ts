@@ -1,7 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, inject } from '@angular/core';
 import { UsuariosService, Usuario, CreateUsuarioRequest, UpdateUsuarioRequest } from '../../../services/usuarios.service';
 import { RolesService, Rol } from '../../../services/roles.service';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +26,8 @@ import { HasPermissionDirective } from 'src/app/directives/has-permission.direct
     CommonModule,
     ReactiveFormsModule,
     MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -36,16 +40,22 @@ import { HasPermissionDirective } from 'src/app/directives/has-permission.direct
     HasPermissionDirective
   ]
 })
-export class UsuariosComponent implements OnInit {
+export class UsuariosComponent implements OnInit, AfterViewInit {
   private usuariosService = inject(UsuariosService);
   private rolesService = inject(RolesService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
 
-  usuarios: Usuario[] = [];
-  roles: Rol[] = []; // Ahora dinámico desde la BD
+  // ViewChild para paginador y ordenamiento
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  // DataSource para la tabla
+  dataSource = new MatTableDataSource<Usuario>([]);
+  roles: Rol[] = [];
   displayedColumns = ['id', 'email', 'nombre', 'apellido', 'rol_id', 'acciones'];
   filterControl = new FormControl('');
+  loading = false;
   
   // Formularios
   createForm = new FormGroup({
@@ -73,26 +83,48 @@ export class UsuariosComponent implements OnInit {
   ngOnInit(): void {
     this.loadUsuarios();
     this.loadRoles();
+    
+    // Configurar filtro personalizado
+    this.dataSource.filterPredicate = (data: Usuario, filter: string): boolean => {
+      const searchStr = filter.toLowerCase();
+      return data.nombre.toLowerCase().includes(searchStr) ||
+             data.apellido.toLowerCase().includes(searchStr) ||
+             data.email.toLowerCase().includes(searchStr) ||
+             data.id.toString().includes(searchStr) ||
+             (data.rol?.nombre?.toLowerCase() || '').includes(searchStr);
+    };
+
+    // Suscribirse a cambios en el filtro
+    this.filterControl.valueChanges.subscribe(value => {
+      this.dataSource.filter = value?.trim().toLowerCase() || '';
+    });
   }
 
-  get filteredUsuarios(): Usuario[] {
-    const filter = this.filterControl.value?.toLowerCase() || '';
-    return this.usuarios.filter(u =>
-      u.nombre.toLowerCase().includes(filter) ||
-      u.apellido.toLowerCase().includes(filter) ||
-      u.email.toLowerCase().includes(filter) ||
-      u.id.toString().includes(filter)
-    );
+  ngAfterViewInit(): void {
+    // Configurar paginador y ordenamiento después de que la vista se inicialice
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    
+    // Configurar el ordenamiento personalizado para campos anidados
+    this.dataSource.sortingDataAccessor = (item: Usuario, property: string) => {
+      switch (property) {
+        case 'rol_id': return item.rol?.nombre || '';
+        default: return (item as any)[property];
+      }
+    };
   }
 
   loadUsuarios(): void {
+    this.loading = true;
     this.usuariosService.getUsuarios().subscribe({
       next: (data) => {
-        this.usuarios = data;
+        this.dataSource.data = data;
+        this.loading = false;
       },
       error: (err) => {
         console.error('Error cargando usuarios:', err);
         this.showSnackBar('Error cargando usuarios');
+        this.loading = false;
       }
     });
   }
@@ -127,7 +159,8 @@ export class UsuariosComponent implements OnInit {
 
       this.usuariosService.createUsuario(newUser).subscribe({
         next: (usuario) => {
-          this.usuarios.push(usuario);
+          const currentData = this.dataSource.data;
+          this.dataSource.data = [...currentData, usuario];
           this.createForm.reset();
           this.showCreateForm = false;
           this.showSnackBar('Usuario creado exitosamente');
@@ -172,9 +205,11 @@ export class UsuariosComponent implements OnInit {
 
       this.usuariosService.updateUsuario(this.editingUserId, updateData).subscribe({
         next: (updatedUser) => {
-          const index = this.usuarios.findIndex(u => u.id === this.editingUserId);
+          const currentData = this.dataSource.data;
+          const index = currentData.findIndex(u => u.id === this.editingUserId);
           if (index !== -1) {
-            this.usuarios[index] = updatedUser;
+            currentData[index] = updatedUser;
+            this.dataSource.data = [...currentData];
           }
           this.cancelEdit();
           this.showSnackBar('Usuario actualizado exitosamente');
@@ -192,7 +227,7 @@ export class UsuariosComponent implements OnInit {
     if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
       this.usuariosService.deleteUsuario(id).subscribe({
         next: () => {
-          this.usuarios = this.usuarios.filter(u => u.id !== id);
+          this.dataSource.data = this.dataSource.data.filter(u => u.id !== id);
           this.showSnackBar('Usuario eliminado exitosamente');
         },
         error: (err) => {
@@ -242,5 +277,57 @@ export class UsuariosComponent implements OnInit {
       horizontalPosition: 'right',
       verticalPosition: 'top'
     });
+  }
+
+  // ✅ LIMPIAR FILTRO
+  clearFilter(): void {
+    this.filterControl.setValue('');
+  }
+
+  // ✅ EXPORTAR A CSV
+  exportToCSV(): void {
+    const data = this.dataSource.filteredData;
+    if (data.length === 0) {
+      this.showSnackBar('No hay datos para exportar');
+      return;
+    }
+
+    const headers = ['ID', 'Email', 'Nombre', 'Apellido', 'Rol'];
+    const csvData = data.map(u => [
+      u.id,
+      u.email,
+      u.nombre,
+      u.apellido,
+      this.getRolNameFromUser(u)
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...csvData.map(row => row.join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `usuarios_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    this.showSnackBar('Datos exportados correctamente');
+  }
+
+  // ✅ OBTENER TOTAL DE REGISTROS
+  getTotalRecords(): number {
+    return this.dataSource.data.length;
+  }
+
+  // ✅ OBTENER REGISTROS FILTRADOS
+  getFilteredRecords(): number {
+    return this.dataSource.filteredData.length;
   }
 }

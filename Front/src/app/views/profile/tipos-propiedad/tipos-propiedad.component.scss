@@ -1,0 +1,58 @@
+// Estilos para la tabla de tipos de propiedad
+table {
+  width: 100%;
+  
+  th.mat-header-cell {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  td.mat-cell {
+    font-size: 13px;
+  }
+}
+
+// Animación de carga
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .d-flex.gap-2 {
+    flex-direction: column;
+    gap: 0.5rem !important;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
+
+// Mejoras visuales para la tabla
+.mat-elevation-z8 {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+// Hover en las filas
+tr.mat-row:hover {
+  background-color: #f5f5f5;
+}
+
+// Estilo del paginador
+mat-paginator {
+  background-color: #fafafa;
+  border-top: 1px solid #e0e0e0;
+}
+

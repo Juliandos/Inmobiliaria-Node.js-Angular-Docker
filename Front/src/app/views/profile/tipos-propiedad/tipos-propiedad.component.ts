@@ -1,8 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, inject } from '@angular/core';
 import { TiposPropiedadService, TipoPropiedad, CreateTipoPropiedadRequest, UpdateTipoPropiedadRequest } from '../../../services/tipos.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,6 +21,8 @@ import { HasPermissionDirective } from 'src/app/directives/has-permission.direct
     CommonModule,
     ReactiveFormsModule,
     MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -31,13 +35,19 @@ import { HasPermissionDirective } from 'src/app/directives/has-permission.direct
   templateUrl: './tipos-propiedad.component.html',
   styleUrls: ['./tipos-propiedad.component.scss']
 })
-export class TipoPropiedadComponent implements OnInit {
+export class TipoPropiedadComponent implements OnInit, AfterViewInit {
   private tiposService = inject(TiposPropiedadService);
   private snackBar = inject(MatSnackBar);
 
-  tipos: TipoPropiedad[] = [];
+  // ViewChild para paginador y ordenamiento
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  // DataSource para la tabla
+  dataSource = new MatTableDataSource<TipoPropiedad>([]);
   displayedColumns = ['id', 'nombre', 'acciones'];
   filterControl = new FormControl('');
+  loading = false;
 
   // Formularios
   createForm = new FormGroup({
@@ -56,20 +66,37 @@ export class TipoPropiedadComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTipos();
+    
+    // Configurar filtro personalizado
+    this.dataSource.filterPredicate = (data: TipoPropiedad, filter: string): boolean => {
+      const searchStr = filter.toLowerCase();
+      return data.nombre.toLowerCase().includes(searchStr) ||
+             data.id.toString().includes(searchStr);
+    };
+
+    // Suscribirse a cambios en el filtro
+    this.filterControl.valueChanges.subscribe(value => {
+      this.dataSource.filter = value?.trim().toLowerCase() || '';
+    });
   }
 
-  get filteredTipos(): TipoPropiedad[] {
-    const filter = this.filterControl.value?.toLowerCase() || '';
-    return this.tipos.filter(t =>
-      t.nombre.toLowerCase().includes(filter) ||
-      t.id.toString().includes(filter)
-    );
+  ngAfterViewInit(): void {
+    // Configurar paginador y ordenamiento después de que la vista se inicialice
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   loadTipos(): void {
+    this.loading = true;
     this.tiposService.getTipos().subscribe({
-      next: (data) => this.tipos = data,
-      error: () => this.showSnackBar('Error cargando tipos de propiedad')
+      next: (data) => {
+        this.dataSource.data = data;
+        this.loading = false;
+      },
+      error: () => {
+        this.showSnackBar('Error cargando tipos de propiedad');
+        this.loading = false;
+      }
     });
   }
 
@@ -81,7 +108,8 @@ export class TipoPropiedadComponent implements OnInit {
       };
       this.tiposService.createTipo(newTipo).subscribe({
         next: (tipo) => {
-          this.tipos.push(tipo);
+          const currentData = this.dataSource.data;
+          this.dataSource.data = [...currentData, tipo];
           this.createForm.reset();
           this.showCreateForm = false;
           this.showSnackBar('Tipo de propiedad creado exitosamente');
@@ -111,8 +139,12 @@ export class TipoPropiedadComponent implements OnInit {
       
       this.tiposService.updateTipo(this.editingTipoId, updateData).subscribe({
         next: (updatedTipo) => {
-          const index = this.tipos.findIndex(t => t.id === this.editingTipoId);
-          if (index !== -1) this.tipos[index] = updatedTipo;
+          const currentData = this.dataSource.data;
+          const index = currentData.findIndex(t => t.id === this.editingTipoId);
+          if (index !== -1) {
+            currentData[index] = updatedTipo;
+            this.dataSource.data = [...currentData];
+          }
           this.cancelEdit();
           this.showSnackBar('Tipo de propiedad actualizado exitosamente');
         },
@@ -126,7 +158,7 @@ export class TipoPropiedadComponent implements OnInit {
     if (confirm('¿Estás seguro de que quieres eliminar este tipo de propiedad?')) {
       this.tiposService.deleteTipo(id).subscribe({
         next: () => {
-          this.tipos = this.tipos.filter(t => t.id !== id);
+          this.dataSource.data = this.dataSource.data.filter(t => t.id !== id);
           this.showSnackBar('Tipo de propiedad eliminado exitosamente');
         },
         error: () => this.showSnackBar('Error eliminando tipo de propiedad')
@@ -149,5 +181,51 @@ export class TipoPropiedadComponent implements OnInit {
 
   private showSnackBar(message: string): void {
     this.snackBar.open(message, 'Cerrar', { duration: 3000 });
+  }
+
+  // ✅ LIMPIAR FILTRO
+  clearFilter(): void {
+    this.filterControl.setValue('');
+  }
+
+  // ✅ EXPORTAR A CSV
+  exportToCSV(): void {
+    const data = this.dataSource.filteredData;
+    if (data.length === 0) {
+      this.showSnackBar('No hay datos para exportar');
+      return;
+    }
+
+    const headers = ['ID', 'Nombre'];
+    const csvData = data.map(t => [t.id, t.nombre]);
+
+    const csvContent = [
+      headers.join(','),
+      ...csvData.map(row => row.join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `tipos_propiedad_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    this.showSnackBar('Datos exportados correctamente');
+  }
+
+  // ✅ OBTENER TOTAL DE REGISTROS
+  getTotalRecords(): number {
+    return this.dataSource.data.length;
+  }
+
+  // ✅ OBTENER REGISTROS FILTRADOS
+  getFilteredRecords(): number {
+    return this.dataSource.filteredData.length;
   }
 }

@@ -1,9 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, inject } from '@angular/core';
 import { PermisosService, Permiso, CreatePermisoRequest, UpdatePermisoRequest, Modulo } from '../../../services/permisos.service';
 import { RolesService, Rol } from '../../../services/roles.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +16,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
-import { HasPermissionDirective } from 'src/app/directives/has-permission.directive';
+import { HasPermissionDirective } from '../../../directives/has-permission.directive';
 
 @Component({
   selector: 'app-permisos',
@@ -25,6 +27,8 @@ import { HasPermissionDirective } from 'src/app/directives/has-permission.direct
     CommonModule,
     ReactiveFormsModule,
     MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -38,12 +42,17 @@ import { HasPermissionDirective } from 'src/app/directives/has-permission.direct
     HasPermissionDirective
   ]
 })
-export class PermisosComponent implements OnInit {
+export class PermisosComponent implements OnInit, AfterViewInit {
   private permisosService = inject(PermisosService);
   private rolesService = inject(RolesService);
   private snackBar = inject(MatSnackBar);
 
-  permisos: Permiso[] = [];
+  // ViewChild para paginador y ordenamiento
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  // DataSource para la tabla
+  dataSource = new MatTableDataSource<Permiso>([]);
   roles: Rol[] = [];
   modulos: Modulo[] = [];
   
@@ -80,16 +89,35 @@ export class PermisosComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
+    
+    // Configurar filtro personalizado
+    this.dataSource.filterPredicate = (data: Permiso, filter: string): boolean => {
+      const searchStr = filter.toLowerCase();
+      return data.nombre.toLowerCase().includes(searchStr) ||
+             data.id.toString().includes(searchStr) ||
+             (data.rol?.nombre?.toLowerCase() || '').includes(searchStr) ||
+             (data.modulo?.nombre?.toLowerCase() || '').includes(searchStr);
+    };
+
+    // Suscribirse a cambios en el filtro
+    this.filterControl.valueChanges.subscribe(value => {
+      this.dataSource.filter = value?.trim().toLowerCase() || '';
+    });
   }
 
-  get filteredPermisos(): Permiso[] {
-    const filter = this.filterControl.value?.toLowerCase() || '';
-    return this.permisos.filter(p =>
-      p.nombre.toLowerCase().includes(filter) ||
-      p.id.toString().includes(filter) ||
-      p.rol?.nombre.toLowerCase().includes(filter) ||
-      p.modulo?.nombre.toLowerCase().includes(filter)
-    );
+  ngAfterViewInit(): void {
+    // Configurar paginador y ordenamiento después de que la vista se inicialice
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    
+    // Configurar el ordenamiento personalizado para campos anidados
+    this.dataSource.sortingDataAccessor = (item: Permiso, property: string) => {
+      switch (property) {
+        case 'rol': return item.rol?.nombre || '';
+        case 'modulo': return item.modulo?.nombre || '';
+        default: return (item as any)[property];
+      }
+    };
   }
 
   async loadData(): Promise<void> {
@@ -102,7 +130,7 @@ export class PermisosComponent implements OnInit {
         this.permisosService.getModulos().toPromise()
       ]);
 
-      this.permisos = permisos || [];
+      this.dataSource.data = permisos || [];
       this.roles = roles || [];
       this.modulos = modulos || [];
       
@@ -129,7 +157,8 @@ export class PermisosComponent implements OnInit {
 
       this.permisosService.createPermiso(newPermiso).subscribe({
         next: (permiso) => {
-          this.permisos.push(permiso);
+          const currentData = this.dataSource.data;
+          this.dataSource.data = [...currentData, permiso];
           this.createForm.reset();
           this.createForm.patchValue({ r: true }); // Reset con lectura por defecto
           this.showCreateForm = false;
@@ -176,9 +205,11 @@ export class PermisosComponent implements OnInit {
 
       this.permisosService.updatePermiso(this.editingPermisoId, updateData).subscribe({
         next: (updatedPermiso) => {
-          const index = this.permisos.findIndex(p => p.id === this.editingPermisoId);
+          const currentData = this.dataSource.data;
+          const index = currentData.findIndex(p => p.id === this.editingPermisoId);
           if (index !== -1) {
-            this.permisos[index] = updatedPermiso;
+            currentData[index] = updatedPermiso;
+            this.dataSource.data = [...currentData];
           }
           this.cancelEdit();
           this.showSnackBar('Permiso actualizado exitosamente');
@@ -197,7 +228,7 @@ export class PermisosComponent implements OnInit {
     if (confirm('¿Estás seguro de que quieres eliminar este permiso?')) {
       this.permisosService.deletePermiso(id).subscribe({
         next: () => {
-          this.permisos = this.permisos.filter(p => p.id !== id);
+          this.dataSource.data = this.dataSource.data.filter(p => p.id !== id);
           this.showSnackBar('Permiso eliminado exitosamente');
         },
         error: (err) => {
@@ -250,5 +281,60 @@ export class PermisosComponent implements OnInit {
       'Eliminar': ''
     };
     return colors[action] || '';
+  }
+
+  // ✅ LIMPIAR FILTRO
+  clearFilter(): void {
+    this.filterControl.setValue('');
+  }
+
+  // ✅ EXPORTAR A CSV
+  exportToCSV(): void {
+    const data = this.dataSource.filteredData;
+    if (data.length === 0) {
+      this.showSnackBar('No hay datos para exportar');
+      return;
+    }
+
+    const headers = ['ID', 'Nombre', 'Rol', 'Módulo', 'Crear', 'Leer', 'Actualizar', 'Eliminar'];
+    const csvData = data.map(p => [
+      p.id,
+      p.nombre,
+      p.rol?.nombre || 'N/A',
+      p.modulo?.nombre || 'N/A',
+      p.c ? 'Sí' : 'No',
+      p.r ? 'Sí' : 'No',
+      p.u ? 'Sí' : 'No',
+      p.d ? 'Sí' : 'No'
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...csvData.map(row => row.join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `permisos_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    this.showSnackBar('Datos exportados correctamente');
+  }
+
+  // ✅ OBTENER TOTAL DE REGISTROS
+  getTotalRecords(): number {
+    return this.dataSource.data.length;
+  }
+
+  // ✅ OBTENER REGISTROS FILTRADOS
+  getFilteredRecords(): number {
+    return this.dataSource.filteredData.length;
   }
 }
