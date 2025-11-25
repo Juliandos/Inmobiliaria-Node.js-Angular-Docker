@@ -1,0 +1,150 @@
+// ============================================
+// VARIABLES DE COLORES - LANDING PAGE
+// Basadas en el logo: Rojo, Blanco, Negro
+// ============================================
+
+// COLORES PRINCIPALES
+$color-primary-red: #dc3545;        // Rojo principal del logo
+$color-white: #ffffff;              // Blanco del logo
+$color-black: #000000;              // Negro del logo
+
+// VARIANTES DE ROJO
+$color-red-light: lighten($color-primary-red, 10%);    // #e84d5a
+$color-red-lighter: lighten($color-primary-red, 20%);  // #f36673
+$color-red-dark: darken($color-primary-red, 10%);     // #c02a38
+$color-red-darker: darken($color-primary-red, 20%);    // #a4202b
+$color-red-transparent-95: rgba(220, 53, 69, 0.95);   // 95% opacidad
+$color-red-transparent-90: rgba(220, 53, 69, 0.9);     // 90% opacidad
+$color-red-transparent-80: rgba(220, 53, 69, 0.8);    // 80% opacidad
+$color-red-transparent-50: rgba(220, 53, 69, 0.5);    // 50% opacidad
+$color-red-transparent-30: rgba(220, 53, 69, 0.3);    // 30% opacidad
+$color-red-transparent-10: rgba(220, 53, 69, 0.1);    // 10% opacidad
+
+// VARIANTES DE NEGRO
+$color-black-light: lighten($color-black, 10%);        // #1a1a1a
+$color-black-lighter: lighten($color-black, 20%);     // #333333
+$color-black-transparent-90: rgba(0, 0, 0, 0.9);      // 90% opacidad
+$color-black-transparent-85: rgba(0, 0, 0, 0.85);     // 85% opacidad
+$color-black-transparent-80: rgba(0, 0, 0, 0.8);       // 80% opacidad
+$color-black-transparent-70: rgba(0, 0, 0, 0.7);      // 70% opacidad
+$color-black-transparent-50: rgba(0, 0, 0, 0.5);      // 50% opacidad
+$color-black-transparent-30: rgba(0, 0, 0, 0.3);      // 30% opacidad
+$color-black-transparent-10: rgba(0, 0, 0, 0.1);      // 10% opacidad
+
+// VARIANTES DE BLANCO
+$color-white-off: #f8f9fa;                             // Blanco ligeramente gris
+$color-white-transparent-95: rgba(255, 255, 255, 0.95); // 95% opacidad
+$color-white-transparent-90: rgba(255, 255, 255, 0.9);  // 90% opacidad
+$color-white-transparent-80: rgba(255, 255, 255, 0.8);  // 80% opacidad
+$color-white-transparent-50: rgba(255, 255, 255, 0.5);  // 50% opacidad
+$color-white-transparent-30: rgba(255, 255, 255, 0.3);  // 30% opacidad
+$color-white-transparent-10: rgba(255, 255, 255, 0.1);  // 10% opacidad
+
+// COLORES DE TEXTO
+$text-color-primary: $color-black;                     // Texto principal
+$text-color-secondary: #666666;                        // Texto secundario
+$text-color-light: rgba(255, 255, 255, 0.8);           // Texto claro
+$text-color-on-red: $color-white;                      // Texto sobre fondo rojo
+$text-color-on-black: $color-white;                    // Texto sobre fondo negro
+
+// COLORES DE FONDO
+$bg-primary: $color-white;                              // Fondo principal
+$bg-secondary: #f5f5f5;                                 // Fondo secundario
+$bg-dark: #2c2c2c;                                      // Fondo oscuro (footer)
+$bg-header: $color-black-transparent-85;               // Fondo del header
+$bg-search: $color-red-transparent-95;                 // Fondo del filtro de búsqueda
+
+// COLORES DE BORDES
+$border-color-light: rgba(255, 255, 255, 0.1);         // Borde claro
+$border-color-dark: rgba(0, 0, 0, 0.1);                 // Borde oscuro
+$border-color-red: $color-primary-red;                  // Borde rojo
+
+// COLORES DE SOMBRAS
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);              // Sombra pequeña
+$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.2);               // Sombra media
+$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.3);              // Sombra grande
+$shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.4);             // Sombra extra grande
+$shadow-red: 0 4px 12px rgba(220, 53, 69, 0.3);         // Sombra roja
+
+// COLORES DE HOVER Y ESTADOS
+$hover-red: $color-red-light;                           // Hover rojo claro
+$hover-red-dark: $color-red-dark;                      // Hover rojo oscuro
+$active-red: $color-red-darker;                         // Estado activo rojo
+
+// COLORES DE GRADIENTES
+$gradient-red: linear-gradient(135deg, $color-primary-red 0%, $color-red-dark 100%);
+$gradient-red-light: linear-gradient(135deg, $color-red-light 0%, $color-primary-red 100%);
+$gradient-black: linear-gradient(135deg, $color-black 0%, $color-black-lighter 100%);
+
+// TRANSICIONES
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
+$transition-all: all 0.3s ease;
+
+// EFECTOS DE ANIMACIÓN
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px $color-red-transparent-50;
+  }
+  50% {
+    box-shadow: 0 0 20px $color-red-transparent-80, 0 0 30px $color-red-transparent-50;
+  }
+}
+
+// MIXINS ÚTILES
+@mixin hover-lift {
+  transition: $transition-all;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: $shadow-md;
+  }
+}
+
+@mixin hover-glow-red {
+  transition: $transition-all;
+  
+  &:hover {
+    box-shadow: $shadow-red;
+  }
+}
+
+@mixin text-gradient-red {
+  background: $gradient-red;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+

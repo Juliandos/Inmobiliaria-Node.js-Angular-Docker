@@ -1,9 +1,12 @@
+@import '../variables';
+
 // Page Header
 .page-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: $gradient-red;
+  color: $text-color-on-red;
   padding: 60px 20px;
   text-align: center;
+  animation: fadeIn 0.6s ease;
 
   h1 {
     font-size: 3rem;
@@ -24,18 +27,19 @@
 .loading-section {
   padding: 80px 20px;
   text-align: center;
-  color: #667eea;
+  color: $color-primary-red;
 
   mat-icon {
     font-size: 64px;
     width: 64px;
     height: 64px;
     margin-bottom: 1rem;
+    animation: spin 1s linear infinite;
   }
 
   p {
     font-size: 1.2rem;
-    color: #666;
+    color: $text-color-secondary;
   }
 }
 
@@ -55,7 +59,7 @@
 // Propiedades Section
 .propiedades-section {
   padding: 60px 20px;
-  background-color: #f5f5f5;
+  background-color: $bg-secondary;
   min-height: 60vh;
 
   .propiedades-grid {
@@ -69,26 +73,32 @@
   .propiedad-card {
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: $transition-all;
+    animation: fadeIn 0.6s ease;
 
     &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      @include hover-lift;
+      box-shadow: $shadow-lg;
     }
 
     .propiedad-image {
       width: 100%;
       height: 200px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: $gradient-red;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: $transition-all;
+
+      &:hover {
+        background: $gradient-red-light;
+      }
 
       mat-icon {
         font-size: 80px;
         width: 80px;
         height: 80px;
-        color: white;
+        color: $text-color-on-red;
       }
     }
 
@@ -97,12 +107,14 @@
 
       mat-card-title {
         font-size: 1.4rem;
-        color: #333;
+        color: $text-color-primary;
       }
 
       .tipo-chip {
         margin-top: 0.5rem;
         font-size: 0.9rem;
+        background-color: $color-red-transparent-10 !important;
+        color: $color-primary-red !important;
       }
     }
 
@@ -110,7 +122,7 @@
       flex-grow: 1;
 
       .descripcion {
-        color: #666;
+        color: $text-color-secondary;
         line-height: 1.6;
         margin-bottom: 1rem;
         min-height: 60px;
@@ -122,20 +134,31 @@
         gap: 1rem;
         margin-bottom: 1rem;
         padding: 1rem 0;
-        border-top: 1px solid #eee;
-        border-bottom: 1px solid #eee;
+        border-top: 1px solid $border-color-dark;
+        border-bottom: 1px solid $border-color-dark;
 
         .detalle-item {
           display: flex;
           align-items: center;
           gap: 0.3rem;
-          color: #666;
+          color: $text-color-secondary;
+          transition: $transition-fast;
+
+          &:hover {
+            color: $color-primary-red;
+          }
 
           mat-icon {
             font-size: 20px;
             width: 20px;
             height: 20px;
-            color: #667eea;
+            color: $color-primary-red;
+            transition: $transition-fast;
+          }
+
+          &:hover mat-icon {
+            color: $hover-red;
+            transform: scale(1.1);
           }
 
           span {
@@ -150,6 +173,7 @@
         gap: 0.5rem;
         color: #2ecc71;
         font-size: 1.5rem;
+        font-weight: 700;
 
         mat-icon {
           font-size: 28px;
@@ -165,6 +189,17 @@
       padding: 1rem;
 
       button {
+        transition: $transition-all;
+
+        &[color="primary"]:hover {
+          background-color: $hover-red !important;
+        }
+
+        &[color="accent"]:hover {
+          background-color: $color-primary-red !important;
+          color: $text-color-on-red !important;
+        }
+
         mat-icon {
           margin-right: 4px;
         }
@@ -180,19 +215,20 @@
       font-size: 120px;
       width: 120px;
       height: 120px;
-      color: #ccc;
+      color: $text-color-secondary;
       margin-bottom: 2rem;
+      opacity: 0.5;
     }
 
     h3 {
       font-size: 2rem;
-      color: #666;
+      color: $text-color-secondary;
       margin-bottom: 1rem;
     }
 
     p {
       font-size: 1.2rem;
-      color: #999;
+      color: $text-color-secondary;
     }
   }
 }

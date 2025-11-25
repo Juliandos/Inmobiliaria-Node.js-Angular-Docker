@@ -1,9 +1,12 @@
+@import '../variables';
+
 // Page Header
 .page-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: $gradient-red;
+  color: $text-color-on-red;
   padding: 60px 20px;
   text-align: center;
+  animation: fadeIn 0.6s ease;
 
   h1 {
     font-size: 3rem;
@@ -23,7 +26,7 @@
 // Contact Section
 .contact-section {
   padding: 60px 20px;
-  background-color: #f5f5f5;
+  background-color: $bg-secondary;
 
   .contact-grid {
     display: grid;
@@ -49,6 +52,12 @@
     }
 
     button {
+      transition: $transition-all;
+
+      &:hover {
+        background-color: $hover-red !important;
+      }
+
       mat-icon {
         margin-right: 8px;
       }
@@ -59,20 +68,21 @@
     h2 {
       font-size: 2rem;
       margin-bottom: 1rem;
-      color: #333;
+      color: $text-color-primary;
     }
 
     p {
-      color: #666;
+      color: $text-color-secondary;
       line-height: 1.6;
     }
 
     .info-card {
       margin-bottom: 1rem;
-      transition: transform 0.3s ease;
+      transition: $transition-all;
 
       &:hover {
         transform: translateX(5px);
+        box-shadow: $shadow-sm;
       }
 
       .info-content {
@@ -84,43 +94,51 @@
           font-size: 40px;
           width: 40px;
           height: 40px;
-          color: #667eea;
+          color: $color-primary-red;
+          transition: $transition-all;
+        }
+
+        &:hover .info-icon {
+          color: $hover-red;
+          transform: scale(1.1);
         }
 
         h3 {
           margin: 0 0 0.5rem 0;
           font-size: 1.2rem;
-          color: #333;
+          color: $text-color-primary;
         }
 
         p {
           margin: 0;
-          color: #666;
+          color: $text-color-secondary;
         }
       }
     }
 
     .business-hours {
-      background-color: white;
+      background-color: $bg-primary;
       padding: 1.5rem;
       border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: $shadow-sm;
+      transition: $transition-all;
+      @include hover-lift;
 
       h3 {
         display: flex;
         align-items: center;
         gap: 0.5rem;
         margin-bottom: 1rem;
-        color: #333;
+        color: $text-color-primary;
 
         mat-icon {
-          color: #667eea;
+          color: $color-primary-red;
         }
       }
 
       p {
         margin: 0.5rem 0;
-        color: #666;
+        color: $text-color-secondary;
       }
     }
 

@@ -1,7 +1,14 @@
+@import '../variables';
+
 .search-filter-container {
-  background-color: rgba(220, 53, 69, 0.95);
+  background-color: $bg-search;
   padding: 30px 20px;
   margin-top: 0;
+  transition: $transition-normal;
+
+  &:hover {
+    background-color: $color-primary-red;
+  }
 }
 
 .search-content {
@@ -40,6 +47,15 @@
   height: 56px;
   font-size: 16px;
   font-weight: 600;
+  background-color: $color-black !important;
+  color: $text-color-on-black !important;
+  transition: $transition-all;
+
+  &:hover {
+    background-color: $color-black-lighter !important;
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
 
   mat-icon {
     margin-right: 8px;

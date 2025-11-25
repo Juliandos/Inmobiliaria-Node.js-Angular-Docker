@@ -1,6 +1,8 @@
+@import '../variables';
+
 .landing-footer {
-  background-color: #2c2c2c;
-  color: white;
+  background-color: $bg-dark;
+  color: $text-color-on-black;
   padding: 60px 20px 30px;
 }
 
@@ -32,7 +34,7 @@
 }
 
 .footer-title {
-  color: white;
+  color: $text-color-on-black;
   font-size: 18px;
   font-weight: 700;
   margin-bottom: 20px;
@@ -50,27 +52,34 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: rgba(255, 255, 255, 0.8);
+  color: $text-color-light;
   text-decoration: none;
   padding: 8px 0;
-  transition: color 0.3s ease;
+  transition: $transition-normal;
 
   &:hover {
-    color: white;
+    color: $text-color-on-black;
+    transform: translateX(5px);
   }
 
   .link-icon {
     width: 20px;
     height: 20px;
-    background-color: #dc3545;
+    background-color: $color-primary-red;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: $text-color-on-red;
     font-size: 12px;
     font-weight: 700;
     flex-shrink: 0;
+    transition: $transition-all;
+
+    &:hover {
+      background-color: $hover-red;
+      transform: scale(1.1);
+    }
   }
 }
 
@@ -85,7 +94,7 @@
   }
 
   .contact-city {
-    color: rgba(255, 255, 255, 0.9);
+    color: $text-color-on-black;
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 8px;
@@ -94,7 +103,7 @@
   .contact-address,
   .contact-email,
   .contact-phone {
-    color: rgba(255, 255, 255, 0.7);
+    color: $text-color-light;
     font-size: 14px;
     margin: 4px 0;
     line-height: 1.6;
@@ -102,7 +111,7 @@
 
   .contact-divider {
     border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 1px solid $border-color-light;
     margin: 20px 0;
   }
 }
@@ -114,7 +123,7 @@
 }
 
 .footer-logo {
-  background-color: white;
+  background-color: $bg-primary;
   padding: 30px 20px;
   border-radius: 8px;
   display: flex;
@@ -123,21 +132,29 @@
   gap: 15px;
   max-width: 300px;
   margin: 0 auto;
+  transition: $transition-all;
+  @include hover-lift;
 }
 
 .footer-logo-circle {
   width: 80px;
   height: 80px;
-  background-color: #dc3545;
+  background-color: $color-primary-red;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 4px solid white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 4px solid $color-white;
+  box-shadow: $shadow-lg;
+  transition: $transition-all;
+
+  &:hover {
+    @include hover-glow-red;
+    transform: scale(1.05);
+  }
 
   .footer-logo-letter {
-    color: white;
+    color: $text-color-on-red;
     font-size: 48px;
     font-weight: 900;
     font-family: 'Arial', sans-serif;
@@ -152,7 +169,7 @@
 }
 
 .footer-logo-ventas {
-  color: #000;
+  color: $color-black;
   font-size: 32px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -160,20 +177,20 @@
 }
 
 .footer-logo-name {
-  background-color: #000;
+  background-color: $color-black;
   padding: 6px 16px;
   margin: 4px 0;
 }
 
 .footer-logo-hamilton {
-  color: #dc3545;
+  color: $color-primary-red;
   font-size: 24px;
   font-weight: 700;
   letter-spacing: 1px;
 }
 
 .footer-logo-inmobiliaria {
-  color: #000;
+  color: $color-black;
   font-size: 16px;
   font-weight: 400;
   letter-spacing: 1px;
@@ -182,7 +199,7 @@
 
 // Bottom Section
 .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid $border-color-light;
   padding-top: 30px;
 }
 
@@ -196,7 +213,7 @@
 }
 
 .welcome-message {
-  color: white;
+  color: $text-color-on-black;
   font-size: 14px;
   text-align: center;
   line-height: 1.6;
@@ -217,13 +234,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: $text-color-on-red;
   text-decoration: none;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: $transition-all;
 
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    @include hover-lift;
+    box-shadow: $shadow-md;
   }
 
   mat-icon {
