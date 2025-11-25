@@ -1,0 +1,29 @@
+<header class="landing-header">
+  <div class="header-content">
+    <!-- Logo -->
+    <div class="logo-container">
+      <div class="logo-circle">
+        <span class="logo-letter">H</span>
+      </div>
+      <div class="logo-text">
+        <span class="logo-ventas">VENTAS</span>
+        <div class="logo-name">
+          <span class="logo-hamilton">HAMILTON ORTEGA</span>
+        </div>
+        <span class="logo-inmobiliaria">inmobiliaria</span>
+      </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="header-nav">
+      <a 
+        *ngFor="let item of menuItems" 
+        [routerLink]="item.route"
+        [queryParams]="item.queryParams"
+        class="nav-link">
+        {{ item.label }}
+      </a>
+    </nav>
+  </div>
+</header>
+

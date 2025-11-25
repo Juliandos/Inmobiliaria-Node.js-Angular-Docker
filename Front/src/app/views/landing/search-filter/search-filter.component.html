@@ -1,0 +1,32 @@
+<div class="search-filter-container">
+  <div class="search-content">
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="search-form">
+      
+      <!-- Buscando Field -->
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>BUSCANDO</mat-label>
+        <input matInput formControlName="buscando" placeholder="Ej: Casa, Apartamento, Lote">
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+
+      <!-- Ubicación Field -->
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>UBICACIÓN</mat-label>
+        <mat-select formControlName="ubicacion">
+          <mat-option value="">Todas las ubicaciones</mat-option>
+          <mat-option *ngFor="let ubicacion of ubicaciones" [value]="ubicacion">
+            {{ ubicacion }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matPrefix>location_on</mat-icon>
+      </mat-form-field>
+
+      <!-- Search Button -->
+      <button mat-raised-button color="primary" type="submit" class="search-button">
+        <mat-icon>search</mat-icon>
+        Buscar
+      </button>
+    </form>
+  </div>
+</div>
+
