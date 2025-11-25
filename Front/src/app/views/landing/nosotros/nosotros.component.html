@@ -1,0 +1,73 @@
+<!-- Header -->
+<div class="page-header">
+  <div class="container">
+    <h1>Nosotros</h1>
+    <p>Conoce nuestra historia y lo que nos hace únicos</p>
+  </div>
+</div>
+
+<!-- About Section -->
+<div class="about-section">
+  <div class="container">
+    <mat-card class="about-card">
+      <mat-card-header>
+        <mat-card-title>Quiénes Somos</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          Somos una empresa inmobiliaria comprometida con ayudarte a encontrar la propiedad de tus sueños.
+          Con años de experiencia en el mercado, ofrecemos un servicio personalizado y profesional que
+          garantiza tu satisfacción.
+        </p>
+        <p>
+          Nuestro equipo de expertos está listo para asesorarte en cada paso del proceso, desde la búsqueda
+          hasta el cierre de la transacción.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<!-- Misión y Visión -->
+<div class="mission-vision-section">
+  <div class="container">
+    <div class="mv-grid">
+      <mat-card class="mv-card">
+        <mat-card-header>
+          <mat-icon class="mv-icon">flag</mat-icon>
+          <mat-card-title>Misión</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{ mision }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="mv-card">
+        <mat-card-header>
+          <mat-icon class="mv-icon">visibility</mat-icon>
+          <mat-card-title>Visión</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{ vision }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<!-- Valores -->
+<div class="values-section">
+  <div class="container">
+    <h2 class="section-title">Nuestros Valores</h2>
+    <div class="values-grid">
+      <mat-card *ngFor="let valor of valores" class="value-card">
+        <mat-card-content>
+          <mat-icon class="value-icon">{{ valor.icon }}</mat-icon>
+          <h3>{{ valor.title }}</h3>
+          <p>{{ valor.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+

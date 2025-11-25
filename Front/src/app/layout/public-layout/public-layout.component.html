@@ -1,0 +1,75 @@
+<!-- Public Navbar -->
+<mat-toolbar class="public-navbar" color="primary">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <a routerLink="/landing/home" class="navbar-brand">
+      <mat-icon>home_work</mat-icon>
+      <span>Inmobiliaria</span>
+    </a>
+
+    <!-- Navigation Links -->
+    <nav class="navbar-nav">
+      <a mat-button routerLink="/landing/home" routerLinkActive="active">
+        <mat-icon>home</mat-icon>
+        Inicio
+      </a>
+      <a mat-button routerLink="/landing/nosotros" routerLinkActive="active">
+        <mat-icon>info</mat-icon>
+        Nosotros
+      </a>
+      <a mat-button routerLink="/landing/propiedades" routerLinkActive="active">
+        <mat-icon>apartment</mat-icon>
+        Propiedades
+      </a>
+      <a mat-button routerLink="/landing/contacto" routerLinkActive="active">
+        <mat-icon>contact_mail</mat-icon>
+        Contacto
+      </a>
+    </nav>
+
+    <!-- Auth Buttons -->
+    <div class="navbar-actions">
+      <a mat-button routerLink="/login">
+        <mat-icon>login</mat-icon>
+        Iniciar Sesión
+      </a>
+      <a mat-raised-button color="accent" routerLink="/dashboard">
+        <mat-icon>dashboard</mat-icon>
+        Dashboard
+      </a>
+    </div>
+  </div>
+</mat-toolbar>
+
+<!-- Main Content -->
+<main class="public-content">
+  <router-outlet (activate)="onActivate()"></router-outlet>
+</main>
+
+<!-- Footer -->
+<footer class="public-footer">
+  <div class="footer-container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Inmobiliaria</h3>
+        <p>Encuentra la propiedad de tus sueños</p>
+      </div>
+      <div class="footer-section">
+        <h4>Enlaces Rápidos</h4>
+        <a routerLink="/landing/home">Inicio</a>
+        <a routerLink="/landing/nosotros">Nosotros</a>
+        <a routerLink="/landing/propiedades">Propiedades</a>
+        <a routerLink="/landing/contacto">Contacto</a>
+      </div>
+      <div class="footer-section">
+        <h4>Contacto</h4>
+        <p><mat-icon>phone</mat-icon> +57 300 123 4567</p>
+        <p><mat-icon>email</mat-icon> contacto&#64;inmobiliaria.com</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Inmobiliaria. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>
+

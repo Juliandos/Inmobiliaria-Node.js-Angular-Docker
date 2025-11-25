@@ -11,6 +11,37 @@ export const navItems: INavData[] = [
     }
   },
   {
+    name: 'Página de Aterrizaje',
+    title: true
+  },
+  {
+    name: 'Home',
+    url: '/landing',
+    iconComponent: { name: 'cil-home' },
+    children: [
+      {
+        name: 'Inicio',
+        url: '/landing/home',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Sobre Nosotros',
+        url: '/landing/nosotros',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Propiedades',
+        url: '/landing/propiedades',
+        icon: 'nav-icon-bullet'
+      },
+      {
+        name: 'Contáctenos',
+        url: '/landing/contacto',
+        icon: 'nav-icon-bullet'
+      }
+    ]
+  },
+  {
     name: 'Control de Usuario',
     title: true
   },

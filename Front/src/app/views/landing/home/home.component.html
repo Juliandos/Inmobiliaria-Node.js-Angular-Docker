@@ -1,0 +1,47 @@
+<!-- Hero Section -->
+<div class="hero-section">
+  <div class="container">
+    <div class="hero-content">
+      <h1 class="hero-title">Encuentra tu hogar ideal</h1>
+      <p class="hero-subtitle">Las mejores propiedades al alcance de tu mano</p>
+      <div class="hero-buttons">
+        <button mat-raised-button color="primary" routerLink="/landing/propiedades">
+          <mat-icon>search</mat-icon>
+          Ver Propiedades
+        </button>
+        <button mat-raised-button routerLink="/landing/contacto">
+          <mat-icon>contact_mail</mat-icon>
+          Contáctanos
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Features Section -->
+<div class="features-section">
+  <div class="container">
+    <h2 class="section-title">¿Por qué elegirnos?</h2>
+    <div class="features-grid">
+      <mat-card *ngFor="let feature of features" class="feature-card">
+        <mat-card-content>
+          <mat-icon class="feature-icon">{{ feature.icon }}</mat-icon>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<!-- CTA Section -->
+<div class="cta-section">
+  <div class="container">
+    <h2>¿Listo para encontrar tu propiedad?</h2>
+    <p>Explora nuestro catálogo completo de propiedades disponibles</p>
+    <button mat-raised-button color="accent" routerLink="/landing/propiedades">
+      Explorar Propiedades
+    </button>
+  </div>
+</div>
+

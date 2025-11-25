@@ -1,13 +1,28 @@
 import { Routes } from '@angular/router';
-import { DefaultLayoutComponent } from './layout';
+import { DefaultLayoutComponent, PublicLayoutComponent } from './layout';
 import { permissionGard } from './guards/permissions.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'landing',
     pathMatch: 'full'
   },
+  // Rutas públicas (Landing Page - Sin autenticación)
+  {
+    path: 'landing',
+    component: PublicLayoutComponent,
+    data: {
+      title: 'Landing'
+    },
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./views/landing/routes').then((m) => m.routes)
+      }
+    ]
+  },
+  // Rutas protegidas (Dashboard - Con autenticación)
   {
     path: '',
     component: DefaultLayoutComponent,
@@ -65,5 +80,5 @@ export const routes: Routes = [
       title: 'landpage Page'
     }
   },
-  { path: '**', redirectTo: 'dashboard' }
+  { path: '**', redirectTo: 'landing' }
 ];
