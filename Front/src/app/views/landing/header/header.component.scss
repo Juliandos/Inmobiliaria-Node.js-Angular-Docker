@@ -24,67 +24,21 @@
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 15px;
+  justify-content: center;
+  width: 100%;
 }
 
-.logo-circle {
-  width: 60px;
-  height: 60px;
-  background-color: $color-primary-red;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 3px solid $color-white;
-  box-shadow: $shadow-md;
+.logo-image {
+  max-width: 400px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
   transition: $transition-all;
 
   &:hover {
-    @include hover-glow-red;
-    transform: scale(1.05);
+    transform: scale(1.02);
+    opacity: 0.9;
   }
-
-  .logo-letter {
-    color: $text-color-on-red;
-    font-size: 32px;
-    font-weight: 900;
-    font-family: 'Arial', sans-serif;
-  }
-}
-
-.logo-text {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.logo-ventas {
-  color: $text-color-on-black;
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  line-height: 1;
-}
-
-.logo-name {
-  background-color: $color-black;
-  padding: 4px 12px;
-  margin: 2px 0;
-}
-
-.logo-hamilton {
-  color: $color-primary-red;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.logo-inmobiliaria {
-  color: $text-color-on-black;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 1px;
-  text-transform: lowercase;
 }
 
 // Navigation Menu
@@ -121,26 +75,8 @@
 
 // Responsive
 @media (max-width: 768px) {
-  .logo-container {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .logo-circle {
-    width: 50px;
-    height: 50px;
-
-    .logo-letter {
-      font-size: 28px;
-    }
-  }
-
-  .logo-ventas {
-    font-size: 20px;
-  }
-
-  .logo-hamilton {
-    font-size: 16px;
+  .logo-image {
+    max-width: 280px;
   }
 
   .header-nav {
@@ -150,6 +86,12 @@
   .nav-link {
     padding: 8px 16px;
     font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-image {
+    max-width: 220px;
   }
 }
 
