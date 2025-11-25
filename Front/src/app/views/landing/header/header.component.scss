@@ -1,97 +1,288 @@
 @import '../variables';
 
+// Mobile First - Base styles
 .landing-header {
   background-color: $bg-header;
-  padding: 20px 0;
+  padding: 12px 0;
   position: sticky;
   top: 0;
   z-index: 1000;
   backdrop-filter: blur(10px);
   box-shadow: $shadow-md;
+  width: 100%;
+
+  &.mobile-menu-active {
+    position: relative;
+  }
 }
 
 .header-content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 16px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-// Logo Container
+// Logo Container - Left
 .logo-container {
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
 }
 
-.logo-image {
-  max-width: 400px;
-  width: 100%;
-  height: auto;
-  object-fit: contain;
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
   transition: $transition-all;
 
   &:hover {
-    transform: scale(1.02);
-    opacity: 0.9;
+    opacity: 0.8;
+    transform: scale(1.05);
   }
 }
 
-// Navigation Menu
+.logo-image {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  transition: $transition-all;
+}
+
+// Navigation Menu - Center
 .header-nav {
-  display: flex;
-  gap: 10px;
+  display: none; // Hidden on mobile by default
+  gap: 4px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .nav-link {
-  background-color: $color-black-transparent-80;
+  background-color: transparent;
   color: $text-color-on-black;
-  padding: 10px 20px;
+  padding: 8px 12px;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   transition: $transition-all;
-  border: 1px solid $border-color-light;
   border-radius: 4px;
+  white-space: nowrap;
 
   &:hover {
-    background-color: $color-red-transparent-90;
-    transform: translateY(-2px);
-    box-shadow: $shadow-md;
-    color: $text-color-on-red;
+    background-color: $color-red-transparent-30;
+    color: $color-primary-red;
   }
 
-  &:active {
-    transform: translateY(0);
-    background-color: $active-red;
+  &:active,
+  &.active {
+    background-color: $color-red-transparent-50;
+    color: $text-color-on-red;
   }
 }
 
-// Responsive
-@media (max-width: 768px) {
+// Right Section
+.header-right {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+}
+
+.search-field {
+  display: none; // Hidden on mobile by default
+  width: 150px;
+  min-width: 0;
+
+  ::ng-deep {
+    .mat-mdc-text-field-wrapper {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 0 8px;
+    }
+
+    .mat-mdc-form-field-label {
+      color: $text-color-light;
+      font-size: 12px;
+    }
+
+    .mat-mdc-input-element {
+      color: $text-color-on-black;
+      font-size: 13px;
+    }
+
+    .mat-mdc-form-field-focus-overlay {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+  }
+
+  .search-icon {
+    cursor: pointer;
+    color: $text-color-light;
+    transition: $transition-fast;
+    font-size: 18px;
+
+    &:hover {
+      color: $color-primary-red;
+    }
+  }
+}
+
+.user-menu-button {
+  color: $text-color-on-black;
+  transition: $transition-all;
+  flex-shrink: 0;
+
+  &:hover {
+    color: $color-primary-red;
+    background-color: $color-red-transparent-30;
+  }
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.user-menu {
+  ::ng-deep {
+    .mat-mdc-menu-item {
+      mat-icon {
+        margin-right: 12px;
+        color: $color-primary-red;
+      }
+    }
+  }
+}
+
+// Mobile Menu Toggle (hamburger)
+.mobile-menu-toggle {
+  display: block;
+  color: $text-color-on-black;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  transition: $transition-all;
+  flex-shrink: 0;
+
+  &:hover {
+    color: $color-primary-red;
+  }
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+  }
+}
+
+// Mobile Menu Styles
+.header-nav.mobile-open {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: $bg-header;
+  padding: 16px;
+  box-shadow: $shadow-lg;
+  gap: 8px;
+  z-index: 999;
+  animation: slideDown 0.3s ease;
+
+  .nav-link {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Tablet (768px and up)
+@media (min-width: 768px) {
+  .header-content {
+    flex-wrap: nowrap;
+    gap: 16px;
+    padding: 0 20px;
+  }
+
   .logo-image {
-    max-width: 280px;
+    height: 50px;
   }
 
   .header-nav {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
     gap: 8px;
   }
 
   .nav-link {
     padding: 8px 16px;
-    font-size: 12px;
+    font-size: 14px;
+  }
+
+  .header-right {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+  }
+
+  .search-field {
+    display: block;
+    width: 180px;
+  }
+
+  .mobile-menu-toggle {
+    display: none;
   }
 }
 
-@media (max-width: 480px) {
+// Desktop (1024px and up)
+@media (min-width: 1024px) {
+  .header-content {
+    padding: 0 24px;
+  }
+
   .logo-image {
-    max-width: 220px;
+    height: 60px;
+  }
+
+  .nav-link {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  .search-field {
+    width: 250px;
+
+    ::ng-deep {
+      .mat-mdc-form-field-label {
+        font-size: 14px;
+      }
+
+      .mat-mdc-input-element {
+        font-size: 14px;
+      }
+    }
   }
 }
+
 

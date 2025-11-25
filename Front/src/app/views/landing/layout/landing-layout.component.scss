@@ -1,27 +1,36 @@
 @import '../variables';
 
+// Mobile First
 .landing-layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;
+  width: 100%;
 }
 
-// Background Image (solo para home)
-.landing-layout::before {
-  content: '';
-  position: fixed;
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  min-height: 400px;
+}
+
+.floating-search-wrapper {
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  z-index: -1;
-  opacity: 0.7;
-  filter: brightness(0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  pointer-events: none;
+
+  app-search-filter {
+    pointer-events: all;
+  }
 }
 
 .main-content {
@@ -29,5 +38,22 @@
   width: 100%;
   position: relative;
   z-index: 1;
+  background-color: $bg-primary;
+}
+
+// Tablet
+@media (min-width: 768px) {
+  .hero-section {
+    height: 70vh;
+    min-height: 500px;
+  }
+}
+
+// Desktop
+@media (min-width: 1024px) {
+  .hero-section {
+    height: 80vh;
+    min-height: 600px;
+  }
 }
 

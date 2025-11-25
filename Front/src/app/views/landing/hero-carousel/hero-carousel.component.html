@@ -1,0 +1,60 @@
+<div class="hero-carousel-container">
+  <!-- Images Container -->
+  <div class="carousel-wrapper">
+    <div 
+      class="carousel-slide"
+      *ngFor="let image of images; let i = index"
+      [class.active]="i === currentIndex"
+      [style.background-image]="'url(' + image.url + ')'">
+      <!-- Artistic Red Overlay -->
+      <div class="carousel-overlay"></div>
+      <div class="red-artistic-overlay"></div>
+      <div class="red-glow-effect"></div>
+    </div>
+  </div>
+
+  <!-- Decorative Red Elements -->
+  <div class="red-decorative-corner top-left"></div>
+  <div class="red-decorative-corner top-right"></div>
+  <div class="red-decorative-corner bottom-left"></div>
+  <div class="red-decorative-corner bottom-right"></div>
+  
+  <!-- Red Light Rays -->
+  <div class="red-light-rays">
+    <div class="ray ray-1"></div>
+    <div class="ray ray-2"></div>
+    <div class="ray ray-3"></div>
+  </div>
+
+  <!-- Navigation Arrows -->
+  <button 
+    mat-icon-button 
+    class="carousel-nav carousel-nav-prev"
+    (click)="previousImage()"
+    aria-label="Imagen anterior">
+    <mat-icon>chevron_left</mat-icon>
+    <div class="nav-red-glow"></div>
+  </button>
+  
+  <button 
+    mat-icon-button 
+    class="carousel-nav carousel-nav-next"
+    (click)="nextImage()"
+    aria-label="Siguiente imagen">
+    <mat-icon>chevron_right</mat-icon>
+    <div class="nav-red-glow"></div>
+  </button>
+
+  <!-- Indicators -->
+  <div class="carousel-indicators">
+    <button
+      *ngFor="let image of images; let i = index"
+      class="indicator"
+      [class.active]="i === currentIndex"
+      (click)="goToImage(i)"
+      [attr.aria-label]="'Ir a imagen ' + (i + 1)">
+      <div class="indicator-red-pulse"></div>
+    </button>
+  </div>
+</div>
+
