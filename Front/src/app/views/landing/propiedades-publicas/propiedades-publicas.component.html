@@ -32,7 +32,7 @@
 
         <mat-card-content>
           <p *ngIf="propiedad.descripcion" class="descripcion">
-            {{ propiedad.descripcion | slice:0:100 }}{{ (propiedad.descripcion?.length ?? 0) > 100 ? '...' : '' }}
+            {{ propiedad.descripcion | slice:0:100 }}{{ propiedad.descripcion && propiedad.descripcion.length > 100 ? '...' : '' }}
           </p>
 
           <!-- Detalles -->

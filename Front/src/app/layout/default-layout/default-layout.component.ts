@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { NgScrollbar } from 'ngx-scrollbar';
 
 import { IconDirective } from '@coreui/icons-angular';
@@ -48,8 +48,26 @@ function isOverflown(element: HTMLElement) {
     DefaultFooterComponent
   ]
 })
-export class DefaultLayoutComponent {
+export class DefaultLayoutComponent implements OnInit {
   public navItems = navItems;
+
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    // Interceptar clicks en links de landing para redirigir fuera del dashboard
+    setTimeout(() => {
+      const sidebarLinks = document.querySelectorAll('c-sidebar-nav a[href^="/landing"]');
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const href = (link as HTMLAnchorElement).getAttribute('href');
+          if (href) {
+            window.location.href = href;
+          }
+        });
+      });
+    }, 100);
+  }
 
   onScrollbarUpdate($event: any) {
     // if ($event.verticalUsed) {

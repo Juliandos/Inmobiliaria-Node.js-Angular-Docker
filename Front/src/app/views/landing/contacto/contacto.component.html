@@ -30,7 +30,7 @@
 
             <mat-form-field appearance="outline" class="w-100 mb-3">
               <mat-label>Email</mat-label>
-              <input matInput formControlName="email" type="email" placeholder="correo&#64;ejemplo.com">
+              <input matInput formControlName="email" type="email" placeholder="correo@ejemplo.com">
               <mat-icon matPrefix>email</mat-icon>
               <mat-error *ngIf="contactForm.get('email')?.hasError('required')">
                 El email es requerido

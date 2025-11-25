@@ -9,7 +9,7 @@ export const permissionGard: CanActivateFn = (route, state) => {
 
   // Verificar si está logueado
   if (!auth.isLoggedIn()) {
-    router.navigate(['/landing']);
+    router.navigate(['/login']);
     return false;
   }
 

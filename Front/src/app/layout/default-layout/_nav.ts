@@ -16,7 +16,7 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Home',
-    url: '/landing',
+    url: '/landing/home',
     iconComponent: { name: 'cil-home' },
     children: [
       {
