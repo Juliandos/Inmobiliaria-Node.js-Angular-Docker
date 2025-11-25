@@ -44,7 +44,7 @@ export class PropiedadesComponent implements OnInit {
   propiedades: Propiedad[] = [];
   tipos: TipoPropiedad[] = [];
   usuarios: Usuario[] = [];
-  displayedColumns = ['id', 'titulo', 'tipo', 'precio', 'area', 'usuario', 'habitaciones', 'acciones'];
+  displayedColumns = ['id', 'titulo', 'tipo', 'precio', 'area', 'usuario', 'distribucion', 'acciones'];
   filterControl = new FormControl('');
 
   // Formularios

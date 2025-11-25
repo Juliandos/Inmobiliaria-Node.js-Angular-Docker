@@ -288,16 +288,22 @@
       </td>
     </ng-container>
 
-    <!-- Habitaciones Column -->
-    <ng-container matColumnDef="habitaciones">
-      <th mat-header-cell *matHeaderCellDef class="fw-bold">Habitaciones</th>
+    <!-- Distribución Column -->
+    <ng-container matColumnDef="distribucion">
+      <th mat-header-cell *matHeaderCellDef class="fw-bold">Distribución</th>
       <td mat-cell *matCellDef="let propiedad">
-        <div class="d-flex align-items-center">
-          <mat-icon class="me-1 text-muted" style="font-size: 16px;">bed</mat-icon>
-          {{ propiedad.habitaciones || 'N/A' }}
-          <span *ngIf="propiedad.banos" class="ms-2">
+        <div class="d-flex align-items-center flex-wrap">
+          <span class="d-flex align-items-center me-2">
+            <mat-icon class="me-1 text-muted" style="font-size: 16px;">bed</mat-icon>
+            {{ propiedad.habitaciones || '0' }}
+          </span>
+          <span class="d-flex align-items-center me-2">
             <mat-icon class="me-1 text-muted" style="font-size: 16px;">bathtub</mat-icon>
-            {{ propiedad.banos }}
+            {{ propiedad.banos || '0' }}
+          </span>
+          <span class="d-flex align-items-center">
+            <mat-icon class="me-1 text-muted" style="font-size: 16px;">garage</mat-icon>
+            {{ propiedad.parqueadero || '0' }}
           </span>
         </div>
       </td>
