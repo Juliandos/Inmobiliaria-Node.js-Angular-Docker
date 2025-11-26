@@ -11,6 +11,7 @@ export interface Propiedad {
   habitaciones?: number;
   banos?: number;
   parqueadero?: number;
+  ciudad?: string;
   tipo_id?: number;
   usuario_id?: number;
   operacion_id?: number;
@@ -28,6 +29,7 @@ export interface CreatePropiedadRequest {
   habitaciones?: number;
   banos?: number;
   parqueadero?: number;
+  ciudad?: string;
   tipo_id?: number;
   usuario_id?: number;
   operacion_id?: number;
@@ -41,6 +43,7 @@ export interface UpdatePropiedadRequest {
   habitaciones?: number;
   banos?: number;
   parqueadero?: number;
+  ciudad?: string;
   tipo_id?: number;
   usuario_id?: number;
   operacion_id?: number;

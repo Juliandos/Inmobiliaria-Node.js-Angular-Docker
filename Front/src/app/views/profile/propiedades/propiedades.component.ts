@@ -47,7 +47,7 @@ export class PropiedadesComponent implements OnInit {
   tipos: TipoPropiedad[] = [];
   usuarios: Usuario[] = [];
   operaciones: Operacion[] = [];
-  displayedColumns = ['id', 'titulo', 'tipo', 'operacion', 'precio', 'area', 'usuario', 'distribucion', 'acciones'];
+  displayedColumns = ['id', 'titulo', 'ciudad', 'tipo', 'operacion', 'precio', 'area', 'usuario', 'distribucion', 'acciones'];
   filterControl = new FormControl('');
 
   // Formularios
@@ -59,6 +59,7 @@ export class PropiedadesComponent implements OnInit {
     habitaciones: new FormControl<number | null>(null),
     banos: new FormControl<number | null>(null),
     parqueadero: new FormControl<number | null>(null),
+    ciudad: new FormControl(''),
     tipo_id: new FormControl<number | null>(null),
     usuario_id: new FormControl<number | null>(null),
     operacion_id: new FormControl<number | null>(null)
@@ -73,6 +74,7 @@ export class PropiedadesComponent implements OnInit {
     habitaciones: new FormControl<number | null>(null),
     banos: new FormControl<number | null>(null),
     parqueadero: new FormControl<number | null>(null),
+    ciudad: new FormControl(''),
     tipo_id: new FormControl<number | null>(null),
     usuario_id: new FormControl<number | null>(null),
     operacion_id: new FormControl<number | null>(null)
@@ -95,6 +97,7 @@ export class PropiedadesComponent implements OnInit {
     return this.propiedades.filter(p =>
       p.titulo.toLowerCase().includes(filter) ||
       p.id.toString().includes(filter) ||
+      (p.ciudad || '').toLowerCase().includes(filter) ||
       (p.tipo?.nombre || '').toLowerCase().includes(filter) ||
       (p.usuario?.nombre || '').toLowerCase().includes(filter) ||
       (p.operacion?.nombre || '').toLowerCase().includes(filter)
@@ -160,6 +163,7 @@ export class PropiedadesComponent implements OnInit {
         habitaciones: this.createForm.value.habitaciones || undefined,
         banos: this.createForm.value.banos || undefined,
         parqueadero: this.createForm.value.parqueadero || undefined,
+        ciudad: this.createForm.value.ciudad || undefined,
         tipo_id: this.createForm.value.tipo_id || undefined,
         usuario_id: this.createForm.value.usuario_id || undefined,
         operacion_id: this.createForm.value.operacion_id || undefined
@@ -192,6 +196,7 @@ export class PropiedadesComponent implements OnInit {
       habitaciones: propiedad.habitaciones || null,
       banos: propiedad.banos || null,
       parqueadero: propiedad.parqueadero || null,
+      ciudad: propiedad.ciudad || '',
       tipo_id: propiedad.tipo_id || null,
       usuario_id: propiedad.usuario_id || null,
       operacion_id: propiedad.operacion_id || null
@@ -211,6 +216,7 @@ export class PropiedadesComponent implements OnInit {
         habitaciones: this.editForm.value.habitaciones || undefined,
         banos: this.editForm.value.banos || undefined,
         parqueadero: this.editForm.value.parqueadero || undefined,
+        ciudad: this.editForm.value.ciudad || undefined,
         tipo_id: this.editForm.value.tipo_id || undefined,
         usuario_id: this.editForm.value.usuario_id || undefined,
         operacion_id: this.editForm.value.operacion_id || undefined
