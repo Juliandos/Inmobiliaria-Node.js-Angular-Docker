@@ -1,0 +1,31 @@
+<div class="related-properties-container">
+  <div class="container">
+    <h2 class="section-title">Otras Propiedades</h2>
+    
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-section">
+      <mat-icon class="spin">refresh</mat-icon>
+      <p>Cargando propiedades...</p>
+    </div>
+
+    <!-- Properties List -->
+    <div *ngIf="!loading && propiedades.length > 0" class="properties-scroll-container">
+      <div class="properties-list">
+        <app-property-card
+          *ngFor="let propiedad of propiedades; trackBy: trackByPropiedadId"
+          [propiedad]="propiedad"
+          class="property-card-item">
+        </app-property-card>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && propiedades.length === 0" class="empty-state">
+      <mat-icon>home_work</mat-icon>
+      <p>No hay otras propiedades disponibles</p>
+    </div>
+  </div>
+</div>
+
+
+

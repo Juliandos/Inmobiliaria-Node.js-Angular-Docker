@@ -1,0 +1,180 @@
+@import '../../../views/landing/variables';
+
+.related-properties-container {
+  width: 100%;
+  padding: 60px 0;
+  background-color: $bg-dark;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-title {
+  color: $text-color-on-black;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  padding-bottom: 15px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      $color-primary-red 50%,
+      transparent 100%
+    );
+  }
+}
+
+// Loading Section
+.loading-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: $text-color-on-black;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    color: $color-primary-red;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    font-size: 16px;
+    color: $text-color-light;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Properties Scroll Container
+.properties-scroll-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 20px 0;
+  scroll-behavior: smooth;
+  
+  // Custom scrollbar styling
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $bg-dark;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $color-primary-red;
+    border-radius: 4px;
+    transition: $transition-all;
+
+    &:hover {
+      background: $hover-red;
+    }
+  }
+}
+
+.properties-list {
+  display: flex;
+  gap: 24px;
+  padding: 10px 0;
+  min-width: min-content;
+}
+
+.property-card-item {
+  flex: 0 0 auto;
+  width: 320px;
+  min-width: 280px;
+  max-width: 380px;
+  transition: $transition-all;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+// Empty State
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: $text-color-light;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 20px;
+    color: $color-primary-red;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 18px;
+    text-align: center;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .related-properties-container {
+    padding: 40px 0;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  .properties-list {
+    gap: 16px;
+  }
+
+  .property-card-item {
+    width: 280px;
+    min-width: 260px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .properties-list {
+    gap: 30px;
+  }
+
+  .property-card-item {
+    width: 350px;
+  }
+}
+
+
+

@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { PropiedadesService, Propiedad } from '../../../services/propiedades.service';
-import { PropertyCardComponent } from '../../components/shared/property-card/property-card.component';
+import { PropertyCardComponent } from '../../../components/shared/property-card/property-card.component';
 
 @Component({
   selector: 'app-propiedades-publicas',

@@ -7,9 +7,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider';
 import { PropiedadesService, Propiedad } from '../../../services/propiedades.service';
-import { MinimalCarouselComponent } from '../../components/landing/minimal-carousel/minimal-carousel.component';
-import { PropertyImagesCarouselComponent } from '../../components/landing/property-images-carousel/property-images-carousel.component';
-import { GoogleMapsComponent } from '../../components/landing/google-maps/google-maps.component';
+import { MinimalCarouselComponent } from '../../../components/landing/minimal-carousel/minimal-carousel.component';
+import { PropertyImagesCarouselComponent } from '../../../components/landing/property-images-carousel/property-images-carousel.component';
+import { GoogleMapsComponent } from '../../../components/landing/google-maps/google-maps.component';
+import { RelatedPropertiesComponent } from '../../../components/shared/related-properties/related-properties.component';
 
 @Component({
   selector: 'app-property-detail',
@@ -24,7 +25,8 @@ import { GoogleMapsComponent } from '../../components/landing/google-maps/google
     MatDividerModule,
     MinimalCarouselComponent,
     PropertyImagesCarouselComponent,
-    GoogleMapsComponent
+    GoogleMapsComponent,
+    RelatedPropertiesComponent
   ],
   templateUrl: './property-detail.component.html',
   styleUrls: ['./property-detail.component.scss']
