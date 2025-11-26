@@ -19,6 +19,7 @@ async function seedDatabase() {
     await models.permisos.destroy({ where: {}, force: true });
     await models.usuarios.destroy({ where: {}, force: true });
     await models.tipos_propiedad.destroy({ where: {}, force: true });
+    await models.operacion.destroy({ where: {}, force: true });
     await models.modulos.destroy({ where: {}, force: true });
     await models.roles.destroy({ where: {}, force: true });
     
@@ -100,6 +101,37 @@ async function seedDatabase() {
       { nombre: 'Lote' },
       { nombre: 'Finca' }
     ]);
+
+    // ✅ 3.1. Crear Operaciones
+    console.log('📝 Creando operaciones...');
+    await models.operacion.bulkCreate([
+      { nombre: 'Venta' },
+      { nombre: 'Arriendo' },
+      { nombre: 'Anticres' },
+      { nombre: 'Hipoteca' }
+    ]);
+
+    // Obtener las operaciones recién creadas con sus IDs
+    const operacionVenta = await models.operacion.findOne({ where: { nombre: 'Venta' } });
+    const operacionArriendo = await models.operacion.findOne({ where: { nombre: 'Arriendo' } });
+    const operacionAnticres = await models.operacion.findOne({ where: { nombre: 'Anticres' } });
+    const operacionHipoteca = await models.operacion.findOne({ where: { nombre: 'Hipoteca' } });
+    
+    if (!operacionVenta || !operacionArriendo || !operacionAnticres || !operacionHipoteca) {
+      throw new Error('Error al crear o recuperar operaciones');
+    }
+    
+    const operacionVentaData = operacionVenta.toJSON();
+    const operacionArriendoData = operacionArriendo.toJSON();
+    const operacionAnticresData = operacionAnticres.toJSON();
+    const operacionHipotecaData = operacionHipoteca.toJSON();
+    
+    console.log('✅ Operaciones creadas:', {
+      venta: { id: operacionVentaData.id, nombre: operacionVentaData.nombre },
+      arriendo: { id: operacionArriendoData.id, nombre: operacionArriendoData.nombre },
+      anticres: { id: operacionAnticresData.id, nombre: operacionAnticresData.nombre },
+      hipoteca: { id: operacionHipotecaData.id, nombre: operacionHipotecaData.nombre }
+    });
 
     // ✅ 4. Crear Usuarios
     console.log('📝 Creando usuarios...');
@@ -246,11 +278,11 @@ async function seedDatabase() {
     const usuarioSecretarioData = usuarioSecretario.toJSON();
     
     await models.propiedades.bulkCreate([
-      { titulo: 'Casa en Zona Norte', descripcion: 'Hermosa casa de 3 habitaciones con jardín', precio: 250000000.00, area: 180.00, habitaciones: 3, banos: 2, parqueadero: 2, tipo_id: tipoCasaData.id, usuario_id: usuarioJefeData.id },
-      { titulo: 'Apartamento Centro', descripcion: 'Moderno apartamento en el centro de la ciudad', precio: 180000000.00, area: 85.50, habitaciones: 2, banos: 1, parqueadero: 1, tipo_id: tipoAptoData.id, usuario_id: usuarioJefeData.id },
-      { titulo: 'Local Comercial', descripcion: 'Local comercial en zona comercial', precio: 120000000.00, area: 120.00, habitaciones: 0, banos: 1, parqueadero: 0, tipo_id: tipoLocalData.id, usuario_id: usuarioSecretarioData.id },
-      { titulo: 'Oficina Ejecutiva', descripcion: 'Oficina moderna para empresas', precio: 85000000.00, area: 65.00, habitaciones: 0, banos: 1, parqueadero: 1, tipo_id: tipoOficinaData.id, usuario_id: usuarioSecretarioData.id },
-      { titulo: 'Casa Campestre', descripcion: 'Casa de descanso en las afueras', precio: 320000000.00, area: 250.00, habitaciones: 4, banos: 3, parqueadero: 3, tipo_id: tipoCasaData.id, usuario_id: usuarioJefeData.id }
+      { titulo: 'Casa en Zona Norte', descripcion: 'Hermosa casa de 3 habitaciones con jardín', precio: 250000000.00, area: 180.00, habitaciones: 3, banos: 2, parqueadero: 2, tipo_id: tipoCasaData.id, usuario_id: usuarioJefeData.id, operacion_id: operacionVentaData.id },
+      { titulo: 'Apartamento Centro', descripcion: 'Moderno apartamento en el centro de la ciudad', precio: 180000000.00, area: 85.50, habitaciones: 2, banos: 1, parqueadero: 1, tipo_id: tipoAptoData.id, usuario_id: usuarioJefeData.id, operacion_id: operacionArriendoData.id },
+      { titulo: 'Local Comercial', descripcion: 'Local comercial en zona comercial', precio: 120000000.00, area: 120.00, habitaciones: 0, banos: 1, parqueadero: 0, tipo_id: tipoLocalData.id, usuario_id: usuarioSecretarioData.id, operacion_id: operacionVentaData.id },
+      { titulo: 'Oficina Ejecutiva', descripcion: 'Oficina moderna para empresas', precio: 85000000.00, area: 65.00, habitaciones: 0, banos: 1, parqueadero: 1, tipo_id: tipoOficinaData.id, usuario_id: usuarioSecretarioData.id, operacion_id: operacionArriendoData.id },
+      { titulo: 'Casa Campestre', descripcion: 'Casa de descanso en las afueras', precio: 320000000.00, area: 250.00, habitaciones: 4, banos: 3, parqueadero: 3, tipo_id: tipoCasaData.id, usuario_id: usuarioJefeData.id, operacion_id: operacionVentaData.id }
     ]);
     
     console.log('✅ 5 propiedades creadas');
@@ -279,6 +311,7 @@ async function seedDatabase() {
     console.log(`- 4 roles (Administrador, Jefe, Secretario, Usuario)`);
     console.log(`- 7 módulos (usuarios, roles, propiedades, tipos_propiedad, imagenes_propiedad, permisos, modulos)`);
     console.log('- 7 tipos de propiedad');
+    console.log('- 4 operaciones (Venta, Arriendo, Anticres, Hipoteca)');
     console.log('- 4 usuarios (password: 123456)');
     console.log(`- ${permisosCreados} permisos configurados`);
     console.log('- 5 propiedades de ejemplo');
