@@ -97,6 +97,18 @@
             </mat-select>
           </mat-form-field>
         </div>
+        
+        <div class="col-md-6 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Operación</mat-label>
+            <mat-select formControlName="operacion_id">
+              <mat-option value="">Sin operación</mat-option>
+              <mat-option *ngFor="let operacion of operaciones" [value]="operacion.id">
+                {{ operacion.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
       
       <div class="d-flex gap-2">
@@ -204,6 +216,18 @@
             </mat-select>
           </mat-form-field>
         </div>
+        
+        <div class="col-md-6 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Operación</mat-label>
+            <mat-select formControlName="operacion_id">
+              <mat-option value="">Sin operación</mat-option>
+              <mat-option *ngFor="let operacion of operaciones" [value]="operacion.id">
+                {{ operacion.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
       
       <div class="d-flex gap-2">
@@ -261,6 +285,14 @@
       <th mat-header-cell *matHeaderCellDef class="fw-bold">Tipo</th>
       <td mat-cell *matCellDef="let propiedad">
         <span class="badge bg-info">{{ getTipoNameFromPropiedad(propiedad) }}</span>
+      </td>
+    </ng-container>
+
+    <!-- Operación Column -->
+    <ng-container matColumnDef="operacion">
+      <th mat-header-cell *matHeaderCellDef class="fw-bold">Operación</th>
+      <td mat-cell *matCellDef="let propiedad">
+        <span class="badge bg-warning">{{ getOperacionNameFromPropiedad(propiedad) }}</span>
       </td>
     </ng-container>
 

@@ -76,6 +76,11 @@ export const navItems: INavData[] = [
         icon: 'nav-icon-bullet'
       },
       {
+        name: 'Operaciones',
+        url: '/profile/operaciones',
+        icon: 'nav-icon-bullet'
+      },
+      {
         name: 'Módulos',
         url: '/profile/modulos',
         icon: 'nav-icon-bullet'

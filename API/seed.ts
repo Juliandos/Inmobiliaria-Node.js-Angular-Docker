@@ -66,6 +66,7 @@ async function seedDatabase() {
     await models.modulos.create({ nombre: 'roles' });
     await models.modulos.create({ nombre: 'propiedades' });
     await models.modulos.create({ nombre: 'tipos_propiedad' });
+    await models.modulos.create({ nombre: 'operacion' });
     await models.modulos.create({ nombre: 'imagenes_propiedad' });
     await models.modulos.create({ nombre: 'permisos' });
     await models.modulos.create({ nombre: 'modulos' });
@@ -75,15 +76,16 @@ async function seedDatabase() {
     const moduloRoles = await models.modulos.findOne({ where: { nombre: 'roles' } });
     const moduloPropiedades = await models.modulos.findOne({ where: { nombre: 'propiedades' } });
     const moduloTiposPropiedad = await models.modulos.findOne({ where: { nombre: 'tipos_propiedad' } });
+    const moduloOperacion = await models.modulos.findOne({ where: { nombre: 'operacion' } });
     const moduloImagenesPropiedad = await models.modulos.findOne({ where: { nombre: 'imagenes_propiedad' } });
     const moduloPermisos = await models.modulos.findOne({ where: { nombre: 'permisos' } });
     const moduloModulos = await models.modulos.findOne({ where: { nombre: 'modulos' } });
     
-    if (!moduloUsuarios || !moduloRoles || !moduloPropiedades || !moduloTiposPropiedad || !moduloImagenesPropiedad || !moduloPermisos || !moduloModulos) {
+    if (!moduloUsuarios || !moduloRoles || !moduloPropiedades || !moduloTiposPropiedad || !moduloOperacion || !moduloImagenesPropiedad || !moduloPermisos || !moduloModulos) {
       throw new Error('Error al crear o recuperar módulos');
     }
     
-    const allModulos = [moduloUsuarios, moduloRoles, moduloPropiedades, moduloTiposPropiedad, moduloImagenesPropiedad, moduloPermisos, moduloModulos];
+    const allModulos = [moduloUsuarios, moduloRoles, moduloPropiedades, moduloTiposPropiedad, moduloOperacion, moduloImagenesPropiedad, moduloPermisos, moduloModulos];
     
     console.log('✅ Módulos creados:', allModulos.map(m => {
       const data = m.toJSON();
@@ -309,7 +311,7 @@ async function seedDatabase() {
     console.log('\n✅ Seed completado exitosamente!');
     console.log('\n📊 Resumen de datos creados:');
     console.log(`- 4 roles (Administrador, Jefe, Secretario, Usuario)`);
-    console.log(`- 7 módulos (usuarios, roles, propiedades, tipos_propiedad, imagenes_propiedad, permisos, modulos)`);
+    console.log(`- 8 módulos (usuarios, roles, propiedades, tipos_propiedad, operacion, imagenes_propiedad, permisos, modulos)`);
     console.log('- 7 tipos de propiedad');
     console.log('- 4 operaciones (Venta, Arriendo, Anticres, Hipoteca)');
     console.log('- 4 usuarios (password: 123456)');

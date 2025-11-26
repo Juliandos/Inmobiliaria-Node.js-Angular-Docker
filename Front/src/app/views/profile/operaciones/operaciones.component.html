@@ -1,0 +1,173 @@
+<!-- Header con botones de acción -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2>Gestión de Operaciones</h2>
+    <p class="text-muted mb-0" *ngIf="!loading">
+      Total: {{ getTotalRecords() }} operaciones
+      <span *ngIf="filterControl.value"> | Filtrados: {{ getFilteredRecords() }}</span>
+    </p>
+  </div>
+  <div class="d-flex gap-2">
+    <button 
+      mat-raised-button 
+      color="accent" 
+      (click)="exportToCSV()"
+      [disabled]="loading || dataSource.data.length === 0"
+      class="d-flex align-items-center">
+      <mat-icon class="me-2">download</mat-icon>
+      Exportar CSV
+    </button>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="toggleCreateForm()"
+      [disabled]="loading"
+      class="d-flex align-items-center"
+      *hasPermission="{ modulo: 'operacion', operacion: 'c' }">
+      <mat-icon class="me-2">add</mat-icon>
+      {{ showCreateForm ? 'Cancelar' : 'Nueva Operación' }}
+    </button>
+  </div>
+</div>
+
+<!-- Loading indicator -->
+<div *ngIf="loading" class="text-center mb-4">
+  <mat-icon class="spin">refresh</mat-icon>
+  Cargando datos...
+</div>
+
+<!-- Formulario Crear -->
+<mat-card *ngIf="showCreateForm" class="mb-4">
+  <mat-card-header>
+    <mat-card-title>Crear Nueva Operación</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="pt-3">
+    <form [formGroup]="createForm" (ngSubmit)="onCreateOperacion()">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Nombre*</mat-label>
+        <input matInput formControlName="nombre" placeholder="Ej: Venta, Arriendo">
+        <mat-error *ngIf="createForm.get('nombre')?.hasError('required')">
+          El nombre es requerido
+        </mat-error>
+      </mat-form-field>
+      <div class="d-flex gap-2">
+        <button mat-raised-button color="primary" type="submit" [disabled]="createForm.invalid">
+          <mat-icon class="me-2">save</mat-icon>
+          Crear Operación
+        </button>
+        <button mat-button type="button" (click)="toggleCreateForm()">Cancelar</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<!-- Formulario Editar -->
+<mat-card *ngIf="showEditForm" class="mb-4">
+  <mat-card-header>
+    <mat-card-title>Editar Operación</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="pt-3">
+    <form [formGroup]="editForm" (ngSubmit)="onUpdateOperacion()">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Nombre*</mat-label>
+        <input matInput formControlName="nombre">
+        <mat-error *ngIf="editForm.get('nombre')?.hasError('required')">
+          El nombre es requerido
+        </mat-error>
+      </mat-form-field>
+      <div class="d-flex gap-2">
+        <button mat-raised-button color="primary" type="submit" [disabled]="editForm.invalid">
+          <mat-icon class="me-2">update</mat-icon>
+          Actualizar Operación
+        </button>
+        <button mat-button type="button" (click)="cancelEdit()">Cancelar</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<!-- Campo de filtro -->
+<mat-form-field appearance="outline" class="mb-3 w-100">
+  <mat-label>Filtrar operaciones</mat-label>
+  <input matInput [formControl]="filterControl" placeholder="Buscar por nombre o ID">
+  <mat-icon matPrefix>search</mat-icon>
+  <button 
+    mat-icon-button 
+    matSuffix 
+    *ngIf="filterControl.value" 
+    (click)="clearFilter()"
+    matTooltip="Limpiar filtro">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>
+
+<!-- Tabla -->
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort class="w-100">
+    
+    <!-- ID -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="fw-bold">ID</th>
+      <td mat-cell *matCellDef="let operacion">{{ operacion.id }}</td>
+    </ng-container>
+
+    <!-- Nombre -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="fw-bold">Nombre</th>
+      <td mat-cell *matCellDef="let operacion">
+        <strong>{{ operacion.nombre }}</strong>
+      </td>
+    </ng-container>
+
+    <!-- Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef class="fw-bold">Acciones</th>
+      <td mat-cell *matCellDef="let operacion">
+        <div class="d-flex gap-1">
+          <button 
+            mat-icon-button 
+            color="primary" 
+            (click)="onEditOperacion(operacion)"
+            matTooltip="Editar operación"
+            *hasPermission="{ modulo: 'operacion', operacion: 'u' }">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button 
+            mat-icon-button 
+            color="warn" 
+            (click)="onDeleteOperacion(operacion.id)"
+            matTooltip="Eliminar operación"
+            *hasPermission="{ modulo: 'operacion', operacion: 'd' }">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <!-- Paginador -->
+  <mat-paginator 
+    [pageSizeOptions]="[5, 10, 25, 50, 100]"
+    [pageSize]="10"
+    showFirstLastButtons
+    aria-label="Seleccionar página de operaciones">
+  </mat-paginator>
+
+  <!-- Mensaje vacío -->
+  <div *ngIf="dataSource.data.length === 0 && !loading" class="text-center p-4">
+    <mat-icon class="text-muted" style="font-size: 48px;">business_center</mat-icon>
+    <p class="text-muted mt-2">No se encontraron operaciones</p>
+    <button 
+      *ngIf="!showCreateForm"
+      mat-raised-button 
+      color="primary" 
+      (click)="toggleCreateForm()">
+      <mat-icon class="me-2">add</mat-icon>
+      Crear primera operación
+    </button>
+  </div>
+</div>
+

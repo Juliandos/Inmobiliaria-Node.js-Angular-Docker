@@ -13,8 +13,10 @@ export interface Propiedad {
   parqueadero?: number;
   tipo_id?: number;
   usuario_id?: number;
+  operacion_id?: number;
   tipo?: { id: number; nombre: string };
   usuario?: { id: number; nombre: string; apellido: string };
+  operacion?: { id: number; nombre: string };
   imagenes_propiedads?: { id: number; url: string }[];
 }
 
@@ -28,6 +30,7 @@ export interface CreatePropiedadRequest {
   parqueadero?: number;
   tipo_id?: number;
   usuario_id?: number;
+  operacion_id?: number;
 }
 
 export interface UpdatePropiedadRequest {
@@ -40,6 +43,7 @@ export interface UpdatePropiedadRequest {
   parqueadero?: number;
   tipo_id?: number;
   usuario_id?: number;
+  operacion_id?: number;
 }
 
 @Injectable({ providedIn: 'root' })

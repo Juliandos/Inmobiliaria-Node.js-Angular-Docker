@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { PropiedadesService, Propiedad, CreatePropiedadRequest, UpdatePropiedadRequest } from '../../../services/propiedades.service';
 import { TiposPropiedadService, TipoPropiedad } from '../../../services/tipos.service';
 import { UsuariosService, Usuario } from '../../../services/usuarios.service';
+import { OperacionesService, Operacion } from '../../../services/operaciones.service';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
@@ -39,12 +40,14 @@ export class PropiedadesComponent implements OnInit {
   private propiedadesService = inject(PropiedadesService);
   private tiposService = inject(TiposPropiedadService);
   private usuariosService = inject(UsuariosService);
+  private operacionesService = inject(OperacionesService);
   private snackBar = inject(MatSnackBar);
 
   propiedades: Propiedad[] = [];
   tipos: TipoPropiedad[] = [];
   usuarios: Usuario[] = [];
-  displayedColumns = ['id', 'titulo', 'tipo', 'precio', 'area', 'usuario', 'distribucion', 'acciones'];
+  operaciones: Operacion[] = [];
+  displayedColumns = ['id', 'titulo', 'tipo', 'operacion', 'precio', 'area', 'usuario', 'distribucion', 'acciones'];
   filterControl = new FormControl('');
 
   // Formularios
@@ -57,7 +60,8 @@ export class PropiedadesComponent implements OnInit {
     banos: new FormControl<number | null>(null),
     parqueadero: new FormControl<number | null>(null),
     tipo_id: new FormControl<number | null>(null),
-    usuario_id: new FormControl<number | null>(null)
+    usuario_id: new FormControl<number | null>(null),
+    operacion_id: new FormControl<number | null>(null)
   });
 
   editForm = new FormGroup({
@@ -70,7 +74,8 @@ export class PropiedadesComponent implements OnInit {
     banos: new FormControl<number | null>(null),
     parqueadero: new FormControl<number | null>(null),
     tipo_id: new FormControl<number | null>(null),
-    usuario_id: new FormControl<number | null>(null)
+    usuario_id: new FormControl<number | null>(null),
+    operacion_id: new FormControl<number | null>(null)
   });
 
   // Estado
@@ -82,6 +87,7 @@ export class PropiedadesComponent implements OnInit {
     this.loadPropiedades();
     this.loadTipos();
     this.loadUsuarios();
+    this.loadOperaciones();
   }
 
   get filteredPropiedades(): Propiedad[] {
@@ -90,7 +96,8 @@ export class PropiedadesComponent implements OnInit {
       p.titulo.toLowerCase().includes(filter) ||
       p.id.toString().includes(filter) ||
       (p.tipo?.nombre || '').toLowerCase().includes(filter) ||
-      (p.usuario?.nombre || '').toLowerCase().includes(filter)
+      (p.usuario?.nombre || '').toLowerCase().includes(filter) ||
+      (p.operacion?.nombre || '').toLowerCase().includes(filter)
     );
   }
 
@@ -130,6 +137,18 @@ export class PropiedadesComponent implements OnInit {
     });
   }
 
+  loadOperaciones(): void {
+    this.operacionesService.getOperaciones().subscribe({
+      next: (data) => {
+        this.operaciones = data;
+      },
+      error: (err) => {
+        console.error('Error cargando operaciones:', err);
+        this.showSnackBar('Error cargando operaciones');
+      }
+    });
+  }
+
   // ✅ CREAR PROPIEDAD
   onCreatePropiedad(): void {
     if (this.createForm.valid) {
@@ -142,7 +161,8 @@ export class PropiedadesComponent implements OnInit {
         banos: this.createForm.value.banos || undefined,
         parqueadero: this.createForm.value.parqueadero || undefined,
         tipo_id: this.createForm.value.tipo_id || undefined,
-        usuario_id: this.createForm.value.usuario_id || undefined
+        usuario_id: this.createForm.value.usuario_id || undefined,
+        operacion_id: this.createForm.value.operacion_id || undefined
       };
 
       this.propiedadesService.createPropiedad(newPropiedad).subscribe({
@@ -173,7 +193,8 @@ export class PropiedadesComponent implements OnInit {
       banos: propiedad.banos || null,
       parqueadero: propiedad.parqueadero || null,
       tipo_id: propiedad.tipo_id || null,
-      usuario_id: propiedad.usuario_id || null
+      usuario_id: propiedad.usuario_id || null,
+      operacion_id: propiedad.operacion_id || null
     });
     this.showEditForm = true;
     this.showCreateForm = false;
@@ -191,7 +212,8 @@ export class PropiedadesComponent implements OnInit {
         banos: this.editForm.value.banos || undefined,
         parqueadero: this.editForm.value.parqueadero || undefined,
         tipo_id: this.editForm.value.tipo_id || undefined,
-        usuario_id: this.editForm.value.usuario_id || undefined
+        usuario_id: this.editForm.value.usuario_id || undefined,
+        operacion_id: this.editForm.value.operacion_id || undefined
       };
 
       this.propiedadesService.updatePropiedad(this.editingPropiedadId, updateData).subscribe({
@@ -270,6 +292,21 @@ export class PropiedadesComponent implements OnInit {
     }
     // Si no, buscar en la lista local
     return this.getUsuarioName(propiedad.usuario_id);
+  }
+
+  getOperacionName(operacionId?: number): string {
+    if (!operacionId) return 'Sin operación';
+    const operacion = this.operaciones.find(o => o.id === operacionId);
+    return operacion ? operacion.nombre : `Operación ${operacionId}`;
+  }
+
+  getOperacionNameFromPropiedad(propiedad: Propiedad): string {
+    // Primero intentar obtener de la relación incluida
+    if (propiedad.operacion?.nombre) {
+      return propiedad.operacion.nombre;
+    }
+    // Si no, buscar en la lista local
+    return this.getOperacionName(propiedad.operacion_id);
   }
 
   formatPrice(price?: number): string {

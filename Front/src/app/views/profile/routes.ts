@@ -87,6 +87,13 @@ export const routes: Routes = [
           import('./modulos/modulos.component').then((m) => m.ModulosComponent),
         canActivate: [permissionGard],
         data: { modulo: 'modulos', operacion: 'r' } 
+      },
+      {
+        path: 'operaciones',
+        loadComponent: () =>
+          import('./operaciones/operaciones.component').then((m) => m.OperacionesComponent),
+        canActivate: [permissionGard],
+        data: { modulo: 'operacion', operacion: 'r' }
       }
     ],
   },
