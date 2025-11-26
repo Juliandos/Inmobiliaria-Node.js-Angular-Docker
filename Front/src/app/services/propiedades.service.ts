@@ -61,6 +61,11 @@ export class PropiedadesService {
     return this.http.get<Propiedad[]>(this.apiUrl, { headers: this.getAuthHeaders() });
   }
 
+  // Obtener propiedades públicas (sin autenticación, para landing page)
+  getPropiedadesPublicas(): Observable<Propiedad[]> {
+    return this.http.get<Propiedad[]>(this.apiUrl);
+  }
+
   // Obtener propiedades por operación con límite (para landing page)
   // No requiere autenticación ya que es público
   getPropiedadesByOperacion(operacionId: number, limit: number = 10): Observable<Propiedad[]> {

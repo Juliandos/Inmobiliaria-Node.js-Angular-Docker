@@ -22,9 +22,15 @@
       </mat-form-field>
 
       <!-- Search Button -->
-      <button mat-raised-button color="primary" type="submit" class="search-button">
-        <mat-icon>search</mat-icon>
-        Buscar
+      <button 
+        mat-raised-button 
+        color="primary" 
+        type="submit" 
+        class="search-button"
+        [disabled]="loading">
+        <mat-icon *ngIf="!loading">search</mat-icon>
+        <mat-icon *ngIf="loading" class="spin">refresh</mat-icon>
+        {{ loading ? 'Buscando...' : 'Buscar' }}
       </button>
     </form>
   </div>

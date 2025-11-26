@@ -62,6 +62,26 @@
   background-color: $bg-secondary;
   min-height: 60vh;
 
+  .filter-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background-color: rgba($color-primary-red, 0.1);
+    border-left: 4px solid $color-primary-red;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    color: $text-color-primary;
+    font-size: 0.95rem;
+
+    mat-icon {
+      color: $color-primary-red;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
   .propiedades-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));

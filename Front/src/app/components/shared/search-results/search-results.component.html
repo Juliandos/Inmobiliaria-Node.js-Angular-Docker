@@ -1,0 +1,39 @@
+<div id="search-results" class="search-results-container" *ngIf="hasSearched">
+  <div class="container">
+    <div class="search-header">
+      <h2 class="section-title">
+        <mat-icon>search</mat-icon>
+        Propiedades Buscadas
+      </h2>
+      <p class="search-summary" *ngIf="searchParams.buscando || searchParams.ubicacion">
+        Resultados para {{ getSearchSummary() }}
+      </p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isSearching" class="loading-section">
+      <mat-icon class="spin">refresh</mat-icon>
+      <p>Buscando propiedades...</p>
+    </div>
+
+    <!-- Results Grid -->
+    <div *ngIf="!isSearching && propiedades.length > 0" class="properties-grid">
+      <app-property-card
+        *ngFor="let propiedad of propiedades; trackBy: trackByPropiedadId"
+        [propiedad]="propiedad"
+        class="property-card-item">
+      </app-property-card>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isSearching && propiedades.length === 0 && hasSearched" class="empty-state">
+      <mat-icon>search_off</mat-icon>
+      <h3>No se encontraron propiedades</h3>
+      <p>No hay propiedades que coincidan con tu búsqueda.</p>
+      <p class="search-terms" *ngIf="searchParams.buscando || searchParams.ubicacion">
+        Términos de búsqueda: {{ getSearchSummary() }}
+      </p>
+    </div>
+  </div>
+</div>
+

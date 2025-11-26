@@ -15,14 +15,31 @@
 <!-- Propiedades Grid -->
 <div *ngIf="!loading" class="propiedades-section">
   <div class="container">
-    <div class="propiedades-grid" *ngIf="propiedades.length > 0">
+    <!-- Mensaje de filtros activos -->
+    <div *ngIf="propiedadesFiltradas.length !== propiedades.length && propiedadesFiltradas.length > 0" class="filter-info">
+      <mat-icon>filter_list</mat-icon>
+      <span>Mostrando {{ propiedadesFiltradas.length }} de {{ propiedades.length }} propiedades</span>
+    </div>
+
+    <div class="propiedades-grid" *ngIf="propiedadesFiltradas.length > 0">
       <app-property-card 
-        *ngFor="let propiedad of propiedades; trackBy: trackByPropiedadId" 
+        *ngFor="let propiedad of propiedadesFiltradas; trackBy: trackByPropiedadId" 
         [propiedad]="propiedad">
       </app-property-card>
     </div>
 
-    <!-- No hay propiedades -->
+    <!-- No hay propiedades después del filtro -->
+    <div *ngIf="propiedadesFiltradas.length === 0 && propiedades.length > 0" class="no-propiedades">
+      <mat-icon>search_off</mat-icon>
+      <h3>No se encontraron propiedades</h3>
+      <p>No hay propiedades que coincidan con los filtros de búsqueda para {{ operacion?.nombre?.toLowerCase() || 'esta operación' }}</p>
+      <button mat-raised-button color="primary" (click)="searchService.clearSearch()" class="mt-3">
+        <mat-icon class="me-2">clear</mat-icon>
+        Limpiar filtros
+      </button>
+    </div>
+
+    <!-- No hay propiedades en absoluto -->
     <div *ngIf="propiedades.length === 0" class="no-propiedades">
       <mat-icon>home_work</mat-icon>
       <h3>No hay propiedades disponibles</h3>

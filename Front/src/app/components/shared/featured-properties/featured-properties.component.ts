@@ -28,7 +28,8 @@ export class FeaturedPropertiesComponent implements OnInit {
 
   private loadFeaturedProperties(): void {
     this.loading = true;
-    this.propiedadesService.getPropiedades().subscribe({
+    // Usar método público sin autenticación para landing page
+    this.propiedadesService.getPropiedadesPublicas().subscribe({
       next: (data) => {
         // Tomar las primeras 9 propiedades
         this.propiedades = (data || []).slice(0, this.limit);
