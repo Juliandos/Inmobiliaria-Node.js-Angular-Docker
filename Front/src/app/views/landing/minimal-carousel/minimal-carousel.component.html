@@ -1,0 +1,49 @@
+<div class="minimal-carousel-container">
+  <div class="carousel-wrapper">
+    <div 
+      class="carousel-slide"
+      *ngFor="let image of images; let i = index"
+      [class.active]="i === currentIndex"
+      [style.background-image]="'url(' + image.url + ')'">
+      <!-- Minimal Red Overlay -->
+      <div class="minimal-red-overlay"></div>
+      <div class="minimal-red-glow"></div>
+    </div>
+  </div>
+
+  <!-- Title Overlay -->
+  <div class="title-overlay" *ngIf="title">
+    <h1 class="carousel-title">{{ title }}</h1>
+  </div>
+
+  <!-- Minimal Navigation -->
+  <button 
+    mat-icon-button 
+    class="minimal-nav minimal-nav-prev"
+    (click)="previousImage()"
+    *ngIf="images.length > 1"
+    aria-label="Imagen anterior">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+  
+  <button 
+    mat-icon-button 
+    class="minimal-nav minimal-nav-next"
+    (click)="nextImage()"
+    *ngIf="images.length > 1"
+    aria-label="Siguiente imagen">
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+
+  <!-- Minimal Indicators -->
+  <div class="minimal-indicators" *ngIf="images.length > 1">
+    <button
+      *ngFor="let image of images; let i = index"
+      class="minimal-indicator"
+      [class.active]="i === currentIndex"
+      (click)="goToImage(i)"
+      [attr.aria-label]="'Ir a imagen ' + (i + 1)">
+    </button>
+  </div>
+</div>
+

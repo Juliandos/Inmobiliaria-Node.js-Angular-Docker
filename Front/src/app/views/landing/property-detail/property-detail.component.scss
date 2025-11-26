@@ -1,0 +1,308 @@
+@import '../variables';
+
+// Mobile First
+.loading-section {
+  padding: 100px 20px;
+  text-align: center;
+  color: $color-primary-red;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: $text-color-secondary;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.property-detail-container {
+  width: 100%;
+}
+
+// Section Minimal Carousel
+.section-minimal-carousel {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+// Artistic Dividers
+.artistic-divider {
+  width: 100%;
+  height: 2px;
+  margin: 40px 0;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    $color-black-transparent-30 20%,
+    $color-black-transparent-50 50%,
+    $color-black-transparent-30 80%,
+    transparent 100%
+  );
+  position: relative;
+
+  &.thick {
+    height: 4px;
+    margin: 60px 0;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      $color-red-transparent-20 15%,
+      $color-black-transparent-50 30%,
+      $color-black-transparent-70 50%,
+      $color-black-transparent-50 70%,
+      $color-red-transparent-20 85%,
+      transparent 100%
+    );
+    box-shadow: 0 2px 10px $color-red-transparent-10;
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: $color-primary-red;
+    box-shadow: 0 0 15px $color-red-transparent-50;
+  }
+
+  &::before {
+    left: 10%;
+  }
+
+  &::after {
+    right: 10%;
+  }
+
+  &.thick::before,
+  &.thick::after {
+    width: 12px;
+    height: 12px;
+    box-shadow: 0 0 20px $color-primary-red, 0 0 30px $color-red-transparent-50;
+  }
+}
+
+// Property Images Carousel Section
+.section-images-carousel {
+  width: 100%;
+  padding: 0;
+}
+
+// Property Info Section
+.property-info-section {
+  padding: 60px 20px;
+  background-color: $bg-secondary;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: $text-color-primary;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 1rem;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: $gradient-red;
+    border-radius: 2px;
+  }
+}
+
+// Property Table
+.info-table-container {
+  background-color: $bg-primary;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: $shadow-md;
+}
+
+.property-table {
+  width: 100%;
+  background-color: transparent;
+
+  th.mat-header-cell {
+    background-color: $color-red-transparent-10;
+    color: $text-color-primary;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 16px;
+    border-bottom: 2px solid $color-primary-red;
+  }
+
+  td.mat-cell {
+    padding: 16px;
+    border-bottom: 1px solid $border-color-dark;
+  }
+
+  tr.mat-row:hover {
+    background-color: $color-red-transparent-10;
+  }
+}
+
+.table-cell-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  mat-icon {
+    color: $color-primary-red;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  span {
+    font-weight: 500;
+    color: $text-color-primary;
+  }
+}
+
+.value-cell {
+  font-weight: 600;
+  color: $text-color-secondary;
+  font-size: 1rem;
+}
+
+// Description Section
+.description-container {
+  background-color: $bg-primary;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: $shadow-md;
+}
+
+.description-content {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 20px;
+  background-color: $bg-secondary;
+  border-radius: 8px;
+  border: 1px solid $border-color-dark;
+  line-height: 1.8;
+  font-size: 1rem;
+  color: $text-color-secondary;
+
+  p {
+    margin: 0;
+    text-align: justify;
+  }
+
+  .no-description {
+    color: $text-color-secondary;
+    font-style: italic;
+    text-align: center;
+  }
+
+  // Custom Scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $bg-secondary;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $color-primary-red;
+    border-radius: 4px;
+
+    &:hover {
+      background: $hover-red;
+    }
+  }
+}
+
+// Map Section
+.section-map {
+  padding: 60px 20px;
+  background-color: $bg-primary;
+}
+
+.not-found-section {
+  padding: 100px 20px;
+  text-align: center;
+
+  mat-icon {
+    font-size: 120px;
+    width: 120px;
+    height: 120px;
+    color: $text-color-secondary;
+    margin-bottom: 2rem;
+    opacity: 0.5;
+  }
+
+  h2 {
+    font-size: 2rem;
+    color: $text-color-primary;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: $text-color-secondary;
+    margin-bottom: 2rem;
+  }
+}
+
+// Tablet and Desktop
+@media (min-width: 768px) {
+  .info-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .description-content {
+    max-height: 500px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .property-info-section {
+    padding: 80px 20px;
+  }
+
+  .section-map {
+    padding: 80px 20px;
+  }
+
+  .description-content {
+    max-height: 600px;
+  }
+}
+

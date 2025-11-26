@@ -1,0 +1,61 @@
+<div class="property-images-carousel-container">
+  <div class="carousel-wrapper">
+    <div 
+      class="carousel-slide"
+      *ngFor="let image of images; let i = index"
+      [class.active]="i === currentIndex">
+      <img [src]="image.url" [alt]="'Imagen ' + (i + 1)" class="property-image">
+      <!-- Sales Artistic Overlay -->
+      <div class="sales-overlay"></div>
+      <div class="sales-red-glow"></div>
+      <div class="sales-black-frame"></div>
+    </div>
+  </div>
+
+  <!-- Sales Decorative Elements -->
+  <div class="sales-corner top-left"></div>
+  <div class="sales-corner top-right"></div>
+  <div class="sales-corner bottom-left"></div>
+  <div class="sales-corner bottom-right"></div>
+
+  <!-- Navigation Arrows -->
+  <button 
+    mat-icon-button 
+    class="sales-nav sales-nav-prev"
+    (click)="previousImage()"
+    *ngIf="images.length > 1"
+    aria-label="Imagen anterior">
+    <mat-icon>chevron_left</mat-icon>
+    <div class="nav-sales-glow"></div>
+  </button>
+  
+  <button 
+    mat-icon-button 
+    class="sales-nav sales-nav-next"
+    (click)="nextImage()"
+    *ngIf="images.length > 1"
+    aria-label="Siguiente imagen">
+    <mat-icon>chevron_right</mat-icon>
+    <div class="nav-sales-glow"></div>
+  </button>
+
+  <!-- Thumbnails -->
+  <div class="thumbnails-container" *ngIf="images.length > 1">
+    <div
+      *ngFor="let image of images; let i = index"
+      class="thumbnail"
+      [class.active]="i === currentIndex"
+      (click)="goToImage(i)">
+      <img [src]="image.url" [alt]="'Miniatura ' + (i + 1)">
+      <div class="thumbnail-overlay"></div>
+    </div>
+  </div>
+
+  <!-- Image Counter -->
+  <div class="image-counter" *ngIf="images.length > 1">
+    <span class="current">{{ currentIndex + 1 }}</span>
+    <span class="separator">/</span>
+    <span class="total">{{ images.length }}</span>
+  </div>
+</div>
+

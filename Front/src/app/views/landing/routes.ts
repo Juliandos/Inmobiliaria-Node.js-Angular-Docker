@@ -38,6 +38,13 @@ export const routes: Routes = [
         data: {
           title: 'Propiedades Disponibles'
         }
+      },
+      {
+        path: 'propiedad/:id',
+        loadComponent: () => import('./property-detail/property-detail.component').then(m => m.PropertyDetailComponent),
+        data: {
+          title: 'Detalle de Propiedad'
+        }
       }
     ]
   }

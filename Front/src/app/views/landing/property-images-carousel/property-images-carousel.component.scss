@@ -1,0 +1,402 @@
+@import '../variables';
+
+// Mobile First - Property Images Carousel
+.property-images-carousel-container {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  min-height: 400px;
+  overflow: hidden;
+  background-color: $color-black;
+  margin: 0 auto;
+}
+
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  z-index: 1;
+
+  &.active {
+    opacity: 1;
+    z-index: 2;
+  }
+}
+
+.property-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+// Sales Artistic Overlay
+.sales-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    $color-black-transparent-50 0%,
+    $color-red-transparent-20 50%,
+    $color-black-transparent-50 100%
+  );
+  z-index: 3;
+  pointer-events: none;
+}
+
+.sales-red-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    ellipse at center,
+    $color-red-transparent-30 0%,
+    transparent 60%
+  );
+  z-index: 3;
+  pointer-events: none;
+  animation: salesGlow 6s ease-in-out infinite;
+}
+
+.sales-black-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 4px solid $color-black-transparent-80;
+  z-index: 4;
+  pointer-events: none;
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8);
+}
+
+// Sales Decorative Corners
+.sales-corner {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  z-index: 5;
+  pointer-events: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid $color-primary-red;
+    border-radius: 50%;
+    animation: salesCornerRotate 10s linear infinite;
+    box-shadow: 0 0 20px $color-red-transparent-50;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 25%;
+    left: 25%;
+    border: 2px solid $color-black;
+    border-radius: 50%;
+    animation: salesCornerRotate 8s linear infinite reverse;
+  }
+
+  &.top-left {
+    top: -40px;
+    left: -40px;
+  }
+
+  &.top-right {
+    top: -40px;
+    right: -40px;
+  }
+
+  &.bottom-left {
+    bottom: -40px;
+    left: -40px;
+  }
+
+  &.bottom-right {
+    bottom: -40px;
+    right: -40px;
+  }
+}
+
+// Navigation Arrows - Sales Style
+.sales-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background-color: $color-black-transparent-80;
+  color: $text-color-on-black;
+  backdrop-filter: blur(10px);
+  border: 2px solid $color-primary-red;
+  transition: $transition-all;
+  overflow: visible;
+
+  &:hover {
+    background-color: $color-primary-red;
+    color: $text-color-on-red;
+    box-shadow: 0 0 30px $color-red-transparent-80, $shadow-red;
+    transform: translateY(-50%) scale(1.15);
+  }
+
+  mat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.sales-nav-prev {
+  left: 20px;
+}
+
+.sales-nav-next {
+  right: 20px;
+}
+
+.nav-sales-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    $color-red-transparent-50 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: $transition-all;
+  z-index: -1;
+}
+
+.sales-nav:hover .nav-sales-glow {
+  opacity: 1;
+  animation: navSalesGlow 1.5s ease-in-out infinite;
+}
+
+// Thumbnails
+.thumbnails-container {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+  padding: 12px;
+  background-color: $color-black-transparent-80;
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid $color-red-transparent-30;
+}
+
+.thumbnail {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: $transition-all;
+  position: relative;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .thumbnail-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $color-black-transparent-50;
+    transition: $transition-all;
+  }
+
+  &:hover {
+    border-color: $color-primary-red;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px $color-red-transparent-50;
+
+    .thumbnail-overlay {
+      background-color: transparent;
+    }
+  }
+
+  &.active {
+    border-color: $color-primary-red;
+    box-shadow: 0 0 20px $color-primary-red, 0 0 30px $color-red-transparent-50;
+    transform: scale(1.15);
+
+    .thumbnail-overlay {
+      background-color: transparent;
+    }
+  }
+}
+
+// Image Counter
+.image-counter {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  background-color: $color-black-transparent-90;
+  color: $text-color-on-black;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid $color-red-transparent-50;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 15px $color-red-transparent-30;
+
+  .current {
+    color: $color-primary-red;
+    font-size: 16px;
+  }
+
+  .separator {
+    margin: 0 4px;
+    opacity: 0.7;
+  }
+
+  .total {
+    opacity: 0.8;
+  }
+}
+
+// Animations
+@keyframes salesGlow {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes salesCornerRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes navSalesGlow {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 0.8;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .property-images-carousel-container {
+    height: 50vh;
+    min-height: 300px;
+  }
+
+  .sales-corner {
+    width: 50px;
+    height: 50px;
+
+    &.top-left {
+      top: -25px;
+      left: -25px;
+    }
+
+    &.top-right {
+      top: -25px;
+      right: -25px;
+    }
+
+    &.bottom-left {
+      bottom: -25px;
+      left: -25px;
+    }
+
+    &.bottom-right {
+      bottom: -25px;
+      right: -25px;
+    }
+  }
+
+  .sales-nav {
+    padding: 4px;
+    
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  .sales-nav-prev {
+    left: 8px;
+  }
+
+  .sales-nav-next {
+    right: 8px;
+  }
+
+  .thumbnails-container {
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .thumbnail {
+    width: 50px;
+    height: 50px;
+  }
+
+  .image-counter {
+    top: 12px;
+    right: 12px;
+    padding: 6px 12px;
+    font-size: 12px;
+
+    .current {
+      font-size: 14px;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .property-images-carousel-container {
+    height: 70vh;
+    min-height: 500px;
+  }
+}
+

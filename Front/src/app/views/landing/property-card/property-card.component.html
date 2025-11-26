@@ -1,0 +1,62 @@
+<mat-card class="property-card" [routerLink]="['/landing/propiedad', propiedad.id]">
+  <!-- Property Image -->
+  <div class="property-image-container">
+    <img [src]="getMainImage()" [alt]="propiedad.titulo" class="property-image">
+    <div class="image-overlay"></div>
+    <div class="property-type-chip" *ngIf="propiedad.tipo">
+      <mat-chip>{{ propiedad.tipo.nombre }}</mat-chip>
+    </div>
+  </div>
+
+  <mat-card-header>
+    <mat-card-title class="property-title">{{ propiedad.titulo }}</mat-card-title>
+    <mat-card-subtitle *ngIf="propiedad.tipo" class="property-subtitle">
+      {{ propiedad.tipo.nombre }}
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- Property Details -->
+    <div class="property-details">
+      <div class="detail-item" *ngIf="propiedad.habitaciones">
+        <mat-icon>bed</mat-icon>
+        <span>{{ propiedad.habitaciones }}</span>
+      </div>
+      <div class="detail-item" *ngIf="propiedad.banos">
+        <mat-icon>bathtub</mat-icon>
+        <span>{{ propiedad.banos }}</span>
+      </div>
+      <div class="detail-item" *ngIf="propiedad.parqueadero">
+        <mat-icon>garage</mat-icon>
+        <span>{{ propiedad.parqueadero }}</span>
+      </div>
+      <div class="detail-item" *ngIf="propiedad.area">
+        <mat-icon>square_foot</mat-icon>
+        <span>{{ formatArea(propiedad.area) }}</span>
+      </div>
+    </div>
+
+    <!-- Price -->
+    <div class="property-price">
+      <mat-icon>attach_money</mat-icon>
+      <strong>{{ formatPrice(propiedad.precio) }}</strong>
+    </div>
+
+    <!-- Description Preview -->
+    <p class="property-description" *ngIf="propiedad.descripcion">
+      {{ propiedad.descripcion | slice:0:100 }}{{ propiedad.descripcion.length > 100 ? '...' : '' }}
+    </p>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-button color="primary" [routerLink]="['/landing/propiedad', propiedad.id]">
+      <mat-icon>visibility</mat-icon>
+      Ver Detalles
+    </button>
+    <button mat-button color="accent">
+      <mat-icon>contact_mail</mat-icon>
+      Contactar
+    </button>
+  </mat-card-actions>
+</mat-card>
+

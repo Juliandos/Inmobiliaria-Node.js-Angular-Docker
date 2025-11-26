@@ -16,63 +16,10 @@
 <div *ngIf="!loading" class="propiedades-section">
   <div class="container">
     <div class="propiedades-grid">
-      <mat-card *ngFor="let propiedad of propiedades" class="propiedad-card">
-        
-        <!-- Imagen Placeholder -->
-        <div class="propiedad-image">
-          <mat-icon>home</mat-icon>
-        </div>
-
-        <mat-card-header>
-          <mat-card-title>{{ propiedad.titulo }}</mat-card-title>
-          <mat-card-subtitle *ngIf="propiedad.tipo?.nombre">
-            <mat-chip class="tipo-chip">{{ propiedad.tipo?.nombre }}</mat-chip>
-          </mat-card-subtitle>
-        </mat-card-header>
-
-        <mat-card-content>
-          <p *ngIf="propiedad.descripcion" class="descripcion">
-            {{ propiedad.descripcion | slice:0:100 }}{{ propiedad.descripcion && propiedad.descripcion.length > 100 ? '...' : '' }}
-          </p>
-
-          <!-- Detalles -->
-          <div class="propiedad-detalles">
-            <div class="detalle-item" *ngIf="propiedad.habitaciones">
-              <mat-icon>bed</mat-icon>
-              <span>{{ propiedad.habitaciones }} Hab</span>
-            </div>
-            <div class="detalle-item" *ngIf="propiedad.banos">
-              <mat-icon>bathtub</mat-icon>
-              <span>{{ propiedad.banos }} Baños</span>
-            </div>
-            <div class="detalle-item" *ngIf="propiedad.parqueadero">
-              <mat-icon>garage</mat-icon>
-              <span>{{ propiedad.parqueadero }} Parq</span>
-            </div>
-            <div class="detalle-item" *ngIf="propiedad.area">
-              <mat-icon>square_foot</mat-icon>
-              <span>{{ formatArea(propiedad.area) }}</span>
-            </div>
-          </div>
-
-          <!-- Precio -->
-          <div class="propiedad-precio">
-            <mat-icon>attach_money</mat-icon>
-            <strong>{{ formatPrice(propiedad.precio) }}</strong>
-          </div>
-        </mat-card-content>
-
-        <mat-card-actions>
-          <button mat-button color="primary">
-            <mat-icon>visibility</mat-icon>
-            Ver Detalles
-          </button>
-          <button mat-button color="accent">
-            <mat-icon>contact_mail</mat-icon>
-            Contactar
-          </button>
-        </mat-card-actions>
-      </mat-card>
+      <app-property-card 
+        *ngFor="let propiedad of propiedades" 
+        [propiedad]="propiedad">
+      </app-property-card>
     </div>
 
     <!-- No hay propiedades -->

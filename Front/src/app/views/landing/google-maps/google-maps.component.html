@@ -1,0 +1,26 @@
+<div class="google-maps-container" [style.height]="height">
+  <div class="map-wrapper">
+    <!-- Google Maps Embed -->
+    <iframe
+      [src]="mapUrl"
+      width="100%"
+      [height]="height"
+      style="border:0;"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      class="google-map-iframe"
+      title="Mapa de ubicación">
+    </iframe>
+
+    <!-- Artistic Red Border -->
+    <div class="map-artistic-border"></div>
+    
+    <!-- Decorative Red Corners -->
+    <div class="map-corner top-left"></div>
+    <div class="map-corner top-right"></div>
+    <div class="map-corner bottom-left"></div>
+    <div class="map-corner bottom-right"></div>
+  </div>
+</div>
+

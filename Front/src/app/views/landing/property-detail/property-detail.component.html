@@ -1,0 +1,105 @@
+<!-- Loading -->
+<div *ngIf="loading" class="loading-section">
+  <mat-icon class="spin">refresh</mat-icon>
+  <p>Cargando propiedad...</p>
+</div>
+
+<!-- Property Detail Content -->
+<div *ngIf="!loading && propiedad" class="property-detail-container">
+  
+  <!-- Minimal Carousel with Title -->
+  <div class="section-minimal-carousel">
+    <app-minimal-carousel 
+      [title]="propiedad.titulo"
+      [images]="carouselImages">
+    </app-minimal-carousel>
+  </div>
+
+  <!-- Divider with Artistic Red Style -->
+  <div class="artistic-divider thick"></div>
+
+  <!-- Property Images Carousel -->
+  <div class="section-images-carousel">
+    <app-property-images-carousel 
+      [images]="getPropertyImages()">
+    </app-property-images-carousel>
+  </div>
+
+  <!-- Divider with Artistic Red Style -->
+  <div class="artistic-divider thick"></div>
+
+  <!-- Property Information Section -->
+  <div class="property-info-section">
+    <div class="container">
+      <div class="info-grid">
+        
+        <!-- Property Details Table -->
+        <div class="info-table-container">
+          <h2 class="section-title">Información de la Propiedad</h2>
+          <table mat-table [dataSource]="propertyData" class="property-table">
+            
+            <ng-container matColumnDef="label">
+              <th mat-header-cell *matHeaderCellDef>Característica</th>
+              <td mat-cell *matCellDef="let row">
+                <div class="table-cell-content">
+                  <mat-icon>{{ row.icon }}</mat-icon>
+                  <span>{{ row.label }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="value">
+              <th mat-header-cell *matHeaderCellDef>Valor</th>
+              <td mat-cell *matCellDef="let row" class="value-cell">
+                {{ row.value }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
+
+        <!-- Description Section -->
+        <div class="description-container">
+          <h2 class="section-title">Descripción</h2>
+          <div class="description-content">
+            <p *ngIf="propiedad.descripcion; else noDescription">
+              {{ propiedad.descripcion }}
+            </p>
+            <ng-template #noDescription>
+              <p class="no-description">No hay descripción disponible para esta propiedad.</p>
+            </ng-template>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Divider with Artistic Red Style -->
+  <div class="artistic-divider thick"></div>
+
+  <!-- Google Maps Section -->
+  <div class="section-map">
+    <div class="container">
+      <h2 class="section-title">Ubicación</h2>
+      <app-google-maps 
+        [address]="propiedad.titulo"
+        [height]="'500px'">
+      </app-google-maps>
+    </div>
+  </div>
+
+</div>
+
+<!-- Not Found -->
+<div *ngIf="!loading && !propiedad" class="not-found-section">
+  <mat-icon>home_work</mat-icon>
+  <h2>Propiedad no encontrada</h2>
+  <p>La propiedad que buscas no existe o ha sido eliminada.</p>
+  <button mat-raised-button color="primary" routerLink="/landing/propiedades">
+    Ver Todas las Propiedades
+  </button>
+</div>
+
