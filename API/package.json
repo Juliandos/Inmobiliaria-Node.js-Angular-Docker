@@ -10,7 +10,8 @@
     "seed": "tsx seed.ts",
     "clean-db": "tsx clean-db.ts",
     "reset-db": "tsx clean-db.ts && tsx seed.ts",
-    "fix-passwords": "tsx fix-passwords.ts"
+    "fix-passwords": "tsx fix-passwords.ts",
+    "migrate-operacion": "tsx migrate-operacion.ts"
   },
   "repository": {
     "type": "git",

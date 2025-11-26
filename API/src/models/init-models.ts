@@ -3,6 +3,8 @@ import { imagenes_propiedad as _imagenes_propiedad } from "./imagenes_propiedad"
 import type { imagenes_propiedadAttributes, imagenes_propiedadCreationAttributes } from "./imagenes_propiedad";
 import { modulos as _modulos } from "./modulos";
 import type { modulosAttributes, modulosCreationAttributes } from "./modulos";
+import { operacion as _operacion } from "./operacion";
+import type { operacionAttributes, operacionCreationAttributes } from "./operacion";
 import { permisos as _permisos } from "./permisos";
 import type { permisosAttributes, permisosCreationAttributes } from "./permisos";
 import { propiedades as _propiedades } from "./propiedades";
@@ -17,6 +19,7 @@ import type { usuariosAttributes, usuariosCreationAttributes } from "./usuarios"
 export {
   _imagenes_propiedad as imagenes_propiedad,
   _modulos as modulos,
+  _operacion as operacion,
   _permisos as permisos,
   _propiedades as propiedades,
   _roles as roles,
@@ -29,6 +32,8 @@ export type {
   imagenes_propiedadCreationAttributes,
   modulosAttributes,
   modulosCreationAttributes,
+  operacionAttributes,
+  operacionCreationAttributes,
   permisosAttributes,
   permisosCreationAttributes,
   propiedadesAttributes,
@@ -44,6 +49,7 @@ export type {
 export function initModels(sequelize: Sequelize) {
   const imagenes_propiedad = _imagenes_propiedad.initModel(sequelize);
   const modulos = _modulos.initModel(sequelize);
+  const operacion = _operacion.initModel(sequelize);
   const permisos = _permisos.initModel(sequelize);
   const propiedades = _propiedades.initModel(sequelize);
   const roles = _roles.initModel(sequelize);
@@ -62,10 +68,13 @@ export function initModels(sequelize: Sequelize) {
   tipos_propiedad.hasMany(propiedades, { as: "propiedades", foreignKey: "tipo_id"});
   propiedades.belongsTo(usuarios, { as: "usuario", foreignKey: "usuario_id"});
   usuarios.hasMany(propiedades, { as: "propiedades", foreignKey: "usuario_id"});
+  propiedades.belongsTo(operacion, { as: "operacion", foreignKey: "operacion_id"});
+  operacion.hasMany(propiedades, { as: "propiedades", foreignKey: "operacion_id"});
 
   return {
     imagenes_propiedad: imagenes_propiedad,
     modulos: modulos,
+    operacion: operacion,
     permisos: permisos,
     propiedades: propiedades,
     roles: roles,

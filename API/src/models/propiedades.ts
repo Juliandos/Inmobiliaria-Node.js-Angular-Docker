@@ -1,6 +1,7 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 import type { imagenes_propiedad, imagenes_propiedadId } from './imagenes_propiedad';
+import type { operacion, operacionId } from './operacion';
 import type { tipos_propiedad, tipos_propiedadId } from './tipos_propiedad';
 import type { usuarios, usuariosId } from './usuarios';
 
@@ -15,13 +16,14 @@ export interface propiedadesAttributes {
   parqueadero?: number;
   tipo_id?: number;
   usuario_id?: number;
+  operacion_id?: number;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export type propiedadesPk = "id";
 export type propiedadesId = propiedades[propiedadesPk];
-export type propiedadesOptionalAttributes = "id" | "descripcion" | "precio" | "area" | "habitaciones" | "banos" | "parqueadero" | "tipo_id" | "usuario_id" | "createdAt" | "updatedAt";
+export type propiedadesOptionalAttributes = "id" | "descripcion" | "precio" | "area" | "habitaciones" | "banos" | "parqueadero" | "tipo_id" | "usuario_id" | "operacion_id" | "createdAt" | "updatedAt";
 export type propiedadesCreationAttributes = Optional<propiedadesAttributes, propiedadesOptionalAttributes>;
 
 export class propiedades extends Model<propiedadesAttributes, propiedadesCreationAttributes> implements propiedadesAttributes {
@@ -35,6 +37,7 @@ export class propiedades extends Model<propiedadesAttributes, propiedadesCreatio
   parqueadero?: number;
   tipo_id?: number;
   usuario_id?: number;
+  operacion_id?: number;
   createdAt!: Date;
   updatedAt!: Date;
 
@@ -60,6 +63,11 @@ export class propiedades extends Model<propiedadesAttributes, propiedadesCreatio
   getUsuario!: Sequelize.BelongsToGetAssociationMixin<usuarios>;
   setUsuario!: Sequelize.BelongsToSetAssociationMixin<usuarios, usuariosId>;
   createUsuario!: Sequelize.BelongsToCreateAssociationMixin<usuarios>;
+  // propiedades belongsTo operacion via operacion_id
+  operacion!: operacion;
+  getOperacion!: Sequelize.BelongsToGetAssociationMixin<operacion>;
+  setOperacion!: Sequelize.BelongsToSetAssociationMixin<operacion, operacionId>;
+  createOperacion!: Sequelize.BelongsToCreateAssociationMixin<operacion>;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof propiedades {
     return propiedades.init({
@@ -118,6 +126,14 @@ export class propiedades extends Model<propiedadesAttributes, propiedadesCreatio
         key: 'id'
       }
     },
+    operacion_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'operacion',
+        key: 'id'
+      }
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -153,6 +169,13 @@ export class propiedades extends Model<propiedadesAttributes, propiedadesCreatio
         using: "BTREE",
         fields: [
           { name: "usuario_id" },
+        ]
+      },
+      {
+        name: "operacion_id",
+        using: "BTREE",
+        fields: [
+          { name: "operacion_id" },
         ]
       },
     ]
