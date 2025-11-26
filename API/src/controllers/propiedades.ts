@@ -2,13 +2,14 @@ import { Request, Response } from "express";
 import { models } from "../db/database"; // Asegúrate de exportar los modelos desde database.ts
 import { handleHttp } from "../utils/error.handle";
 
-// ✅ Obtener todas las propiedades con usuario y tipo
+// ✅ Obtener todas las propiedades con usuario, tipo y operación
 const getPropiedades = async (req: Request, res: Response) => {
   try {
     const propiedades = await models.propiedades.findAll({
       include: [
         { model: models.usuarios, as: "usuario" },
         { model: models.tipos_propiedad, as: "tipo" },
+        { model: models.operacion, as: "operacion" },
         { model: models.imagenes_propiedad, as: "imagenes_propiedads" },
       ],
     });
@@ -27,6 +28,7 @@ const getPropiedad = async (req: Request, res: Response) => {
       include: [
         { model: models.usuarios, as: "usuario" },
         { model: models.tipos_propiedad, as: "tipo" },
+        { model: models.operacion, as: "operacion" },
         { model: models.imagenes_propiedad, as: "imagenes_propiedads" },
       ],
     });
@@ -47,6 +49,7 @@ const createPropiedad = async (req: Request, res: Response) => {
       include: [
         { model: models.usuarios, as: "usuario" },
         { model: models.tipos_propiedad, as: "tipo" },
+        { model: models.operacion, as: "operacion" },
         { model: models.imagenes_propiedad, as: "imagenes_propiedads" },
       ],
     });
@@ -69,6 +72,7 @@ const updatePropiedad = async (req: Request, res: Response) => {
       include: [
         { model: models.usuarios, as: "usuario" },
         { model: models.tipos_propiedad, as: "tipo" },
+        { model: models.operacion, as: "operacion" },
         { model: models.imagenes_propiedad, as: "imagenes_propiedads" },
       ],
     });

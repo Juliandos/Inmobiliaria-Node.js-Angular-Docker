@@ -20,6 +20,7 @@ async function cleanDatabase() {
     await models.permisos.destroy({ where: {}, force: true });
     await models.usuarios.destroy({ where: {}, force: true });
     await models.tipos_propiedad.destroy({ where: {}, force: true });
+    await models.operacion.destroy({ where: {}, force: true });
     await models.modulos.destroy({ where: {}, force: true });
     await models.roles.destroy({ where: {}, force: true });
     
