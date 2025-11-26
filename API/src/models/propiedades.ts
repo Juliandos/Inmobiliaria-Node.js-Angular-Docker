@@ -14,6 +14,7 @@ export interface propiedadesAttributes {
   habitaciones?: number;
   banos?: number;
   parqueadero?: number;
+  ciudad?: string;
   tipo_id?: number;
   usuario_id?: number;
   operacion_id?: number;
@@ -23,7 +24,7 @@ export interface propiedadesAttributes {
 
 export type propiedadesPk = "id";
 export type propiedadesId = propiedades[propiedadesPk];
-export type propiedadesOptionalAttributes = "id" | "descripcion" | "precio" | "area" | "habitaciones" | "banos" | "parqueadero" | "tipo_id" | "usuario_id" | "operacion_id" | "createdAt" | "updatedAt";
+export type propiedadesOptionalAttributes = "id" | "descripcion" | "precio" | "area" | "habitaciones" | "banos" | "parqueadero" | "ciudad" | "tipo_id" | "usuario_id" | "operacion_id" | "createdAt" | "updatedAt";
 export type propiedadesCreationAttributes = Optional<propiedadesAttributes, propiedadesOptionalAttributes>;
 
 export class propiedades extends Model<propiedadesAttributes, propiedadesCreationAttributes> implements propiedadesAttributes {
@@ -35,6 +36,7 @@ export class propiedades extends Model<propiedadesAttributes, propiedadesCreatio
   habitaciones?: number;
   banos?: number;
   parqueadero?: number;
+  ciudad?: string;
   tipo_id?: number;
   usuario_id?: number;
   operacion_id?: number;
@@ -109,6 +111,11 @@ export class propiedades extends Model<propiedadesAttributes, propiedadesCreatio
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0
+    },
+    ciudad: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+      comment: 'Ciudad donde se encuentra la propiedad'
     },
     tipo_id: {
       type: DataTypes.INTEGER,

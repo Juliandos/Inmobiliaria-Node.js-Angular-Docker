@@ -12,6 +12,7 @@
     "reset-db": "tsx clean-db.ts && tsx seed.ts",
     "fix-passwords": "tsx fix-passwords.ts",
     "migrate-operacion": "tsx migrate-operacion.ts",
+    "migrate-ciudad": "tsx migrate-ciudad.ts",
     "list-images": "tsx list-images.ts"
   },
   "repository": {

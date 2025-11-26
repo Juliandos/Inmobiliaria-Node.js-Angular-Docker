@@ -280,11 +280,11 @@ async function seedDatabase() {
     const usuarioSecretarioData = usuarioSecretario.toJSON();
     
     await models.propiedades.bulkCreate([
-      { titulo: 'Casa en Zona Norte', descripcion: 'Hermosa casa de 3 habitaciones con jardín', precio: 250000000.00, area: 180.00, habitaciones: 3, banos: 2, parqueadero: 2, tipo_id: tipoCasaData.id, usuario_id: usuarioJefeData.id, operacion_id: operacionVentaData.id },
-      { titulo: 'Apartamento Centro', descripcion: 'Moderno apartamento en el centro de la ciudad', precio: 180000000.00, area: 85.50, habitaciones: 2, banos: 1, parqueadero: 1, tipo_id: tipoAptoData.id, usuario_id: usuarioJefeData.id, operacion_id: operacionArriendoData.id },
-      { titulo: 'Local Comercial', descripcion: 'Local comercial en zona comercial', precio: 120000000.00, area: 120.00, habitaciones: 0, banos: 1, parqueadero: 0, tipo_id: tipoLocalData.id, usuario_id: usuarioSecretarioData.id, operacion_id: operacionVentaData.id },
-      { titulo: 'Oficina Ejecutiva', descripcion: 'Oficina moderna para empresas', precio: 85000000.00, area: 65.00, habitaciones: 0, banos: 1, parqueadero: 1, tipo_id: tipoOficinaData.id, usuario_id: usuarioSecretarioData.id, operacion_id: operacionArriendoData.id },
-      { titulo: 'Casa Campestre', descripcion: 'Casa de descanso en las afueras', precio: 320000000.00, area: 250.00, habitaciones: 4, banos: 3, parqueadero: 3, tipo_id: tipoCasaData.id, usuario_id: usuarioJefeData.id, operacion_id: operacionVentaData.id }
+      { titulo: 'Casa en Zona Norte', descripcion: 'Hermosa casa de 3 habitaciones con jardín', precio: 250000000.00, area: 180.00, habitaciones: 3, banos: 2, parqueadero: 2, ciudad: 'Popayán', tipo_id: tipoCasaData.id, usuario_id: usuarioJefeData.id, operacion_id: operacionVentaData.id },
+      { titulo: 'Apartamento Centro', descripcion: 'Moderno apartamento en el centro de la ciudad', precio: 180000000.00, area: 85.50, habitaciones: 2, banos: 1, parqueadero: 1, ciudad: 'Popayán', tipo_id: tipoAptoData.id, usuario_id: usuarioJefeData.id, operacion_id: operacionArriendoData.id },
+      { titulo: 'Local Comercial', descripcion: 'Local comercial en zona comercial', precio: 120000000.00, area: 120.00, habitaciones: 0, banos: 1, parqueadero: 0, ciudad: 'Cali', tipo_id: tipoLocalData.id, usuario_id: usuarioSecretarioData.id, operacion_id: operacionVentaData.id },
+      { titulo: 'Oficina Ejecutiva', descripcion: 'Oficina moderna para empresas', precio: 85000000.00, area: 65.00, habitaciones: 0, banos: 1, parqueadero: 1, ciudad: 'Bogotá', tipo_id: tipoOficinaData.id, usuario_id: usuarioSecretarioData.id, operacion_id: operacionArriendoData.id },
+      { titulo: 'Casa Campestre', descripcion: 'Casa de descanso en las afueras', precio: 320000000.00, area: 250.00, habitaciones: 4, banos: 3, parqueadero: 3, ciudad: 'Popayán', tipo_id: tipoCasaData.id, usuario_id: usuarioJefeData.id, operacion_id: operacionVentaData.id }
     ]);
     
     console.log('✅ 5 propiedades creadas');
