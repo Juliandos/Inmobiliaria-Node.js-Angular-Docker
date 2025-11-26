@@ -11,7 +11,8 @@
     "clean-db": "tsx clean-db.ts",
     "reset-db": "tsx clean-db.ts && tsx seed.ts",
     "fix-passwords": "tsx fix-passwords.ts",
-    "migrate-operacion": "tsx migrate-operacion.ts"
+    "migrate-operacion": "tsx migrate-operacion.ts",
+    "list-images": "tsx list-images.ts"
   },
   "repository": {
     "type": "git",
