@@ -21,6 +21,28 @@
 
     <!-- Navigation Menu - Center -->
     <nav class="header-nav" [class.mobile-open]="mobileMenuOpen">
+      <!-- Botón desplegable de Operaciones -->
+      <div class="nav-dropdown">
+        <button 
+          mat-button 
+          [matMenuTriggerFor]="operacionesMenu"
+          class="nav-link dropdown-trigger"
+          [disabled]="loadingOperaciones || operacionesMenuItems.length === 0">
+          <span>Operaciones</span>
+          <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+        </button>
+        <mat-menu #operacionesMenu="matMenu" class="operaciones-menu">
+          <button 
+            mat-menu-item 
+            *ngFor="let operacionItem of operacionesMenuItems"
+            (click)="navigateToOperacion(operacionItem.route)">
+            <mat-icon>business_center</mat-icon>
+            <span>{{ operacionItem.label }}</span>
+          </button>
+        </mat-menu>
+      </div>
+      
+      <!-- Links estáticos -->
       <a 
         *ngFor="let item of menuItems" 
         [routerLink]="item.route"

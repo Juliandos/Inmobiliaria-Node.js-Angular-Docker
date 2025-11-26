@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Propiedad {
@@ -59,6 +59,16 @@ export class PropiedadesService {
 
   getPropiedades(): Observable<Propiedad[]> {
     return this.http.get<Propiedad[]>(this.apiUrl, { headers: this.getAuthHeaders() });
+  }
+
+  // Obtener propiedades por operación con límite (para landing page)
+  // No requiere autenticación ya que es público
+  getPropiedadesByOperacion(operacionId: number, limit: number = 10): Observable<Propiedad[]> {
+    let params = new HttpParams();
+    params = params.set('operacion_id', operacionId.toString());
+    params = params.set('limit', limit.toString());
+    
+    return this.http.get<Propiedad[]>(this.apiUrl, { params });
   }
 
   getPropiedad(id: number): Observable<Propiedad> {

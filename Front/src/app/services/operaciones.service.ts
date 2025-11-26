@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, throwError, shareReplay } from 'rxjs';
 
 export interface Operacion {
   id: number;
@@ -21,6 +21,9 @@ export interface UpdateOperacionRequest {
 })
 export class OperacionesService {
   private apiUrl = 'http://localhost:3001/operacion';
+  
+  // Cache para operaciones públicas (sin autenticación)
+  private operacionesPublicasCache$: Observable<Operacion[]> | null = null;
 
   constructor(private http: HttpClient) {}
 
@@ -31,7 +34,7 @@ export class OperacionesService {
     });
   }
 
-  /** Obtener todas las operaciones con sus propiedades */
+  /** Obtener todas las operaciones con sus propiedades (requiere autenticación) */
   getOperaciones(): Observable<Operacion[]> {
     return this.http.get<Operacion[]>(this.apiUrl, { headers: this.getAuthHeaders() }).pipe(
       catchError(err => {
@@ -39,6 +42,26 @@ export class OperacionesService {
         return throwError(() => err);
       })
     );
+  }
+
+  /** Obtener todas las operaciones públicas (sin autenticación, con cache) */
+  getOperacionesPublicas(): Observable<Operacion[]> {
+    if (!this.operacionesPublicasCache$) {
+      this.operacionesPublicasCache$ = this.http.get<Operacion[]>(this.apiUrl).pipe(
+        shareReplay(1), // Cachea el resultado
+        catchError(err => {
+          console.error('Error obteniendo operaciones públicas', err);
+          this.operacionesPublicasCache$ = null; // Reset cache en caso de error
+          return throwError(() => err);
+        })
+      );
+    }
+    return this.operacionesPublicasCache$;
+  }
+
+  /** Limpiar cache de operaciones públicas (útil cuando se crea/actualiza una operación) */
+  clearOperacionesPublicasCache(): void {
+    this.operacionesPublicasCache$ = null;
   }
 
   /** Obtener una operación por ID */

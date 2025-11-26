@@ -1,0 +1,112 @@
+@import '../variables';
+
+// Page Header
+.page-header {
+  background: $gradient-red;
+  color: $text-color-on-red;
+  padding: 60px 20px;
+  text-align: center;
+  animation: fadeIn 0.6s ease;
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+
+  p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+  }
+}
+
+// Loading Section
+.loading-section {
+  padding: 80px 20px;
+  text-align: center;
+  color: $color-primary-red;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: $text-color-secondary;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+// Propiedades Section
+.propiedades-section {
+  padding: 60px 20px;
+  background-color: $bg-secondary;
+  min-height: 60vh;
+
+  .propiedades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    
+    // Asegurar que las cards se muestren
+    app-property-card {
+      display: block;
+      width: 100%;
+    }
+  }
+
+  .no-propiedades {
+    text-align: center;
+    padding: 80px 20px;
+
+    mat-icon {
+      font-size: 120px;
+      width: 120px;
+      height: 120px;
+      color: $text-color-secondary;
+      margin-bottom: 2rem;
+      opacity: 0.5;
+    }
+
+    h3 {
+      font-size: 2rem;
+      color: $text-color-secondary;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: $text-color-secondary;
+    }
+  }
+}
+
+// Container
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+

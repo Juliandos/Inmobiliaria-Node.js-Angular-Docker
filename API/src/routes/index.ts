@@ -13,10 +13,20 @@ const router = Router();
 
 // Middleware global con excepción
 router.use((req, res, next) => {
-  if (req.path.startsWith("/auth")) {
-    // Deja pasar libremente las rutas de auth
+  // Rutas públicas (sin autenticación)
+  const isPublicRoute = 
+    // Rutas de autenticación
+    req.path.startsWith("/auth") ||
+    // GET /propiedades y GET /propiedades/:id (público para landing page)
+    (req.method === 'GET' && (req.path === "/propiedades" || req.path.startsWith("/propiedades/"))) ||
+    // GET /operacion y GET /operacion/:id (público para landing page)
+    (req.method === 'GET' && (req.path === "/operacion" || req.path.startsWith("/operacion/")));
+  
+  if (isPublicRoute) {
+    // Deja pasar libremente las rutas públicas
     return next();
   }
+  
   // Para las demás, exige token
   return verifyToken(req, res, next);
 });

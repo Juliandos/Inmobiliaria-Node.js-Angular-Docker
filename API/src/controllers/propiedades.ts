@@ -3,16 +3,34 @@ import { models } from "../db/database"; // Asegúrate de exportar los modelos d
 import { handleHttp } from "../utils/error.handle";
 
 // ✅ Obtener todas las propiedades con usuario, tipo y operación
+// Soporta query params: operacion_id (filtrar por operación) y limit (limitar resultados)
 const getPropiedades = async (req: Request, res: Response) => {
   try {
-    const propiedades = await models.propiedades.findAll({
+    const { operacion_id, limit } = req.query;
+    
+    // Construir el objeto de consulta
+    const queryOptions: any = {
       include: [
         { model: models.usuarios, as: "usuario" },
         { model: models.tipos_propiedad, as: "tipo" },
         { model: models.operacion, as: "operacion" },
         { model: models.imagenes_propiedad, as: "imagenes_propiedads" },
       ],
-    });
+    };
+
+    // Filtrar por operacion_id si se proporciona
+    if (operacion_id) {
+      queryOptions.where = {
+        operacion_id: parseInt(operacion_id as string)
+      };
+    }
+
+    // Limitar resultados si se proporciona limit
+    if (limit) {
+      queryOptions.limit = parseInt(limit as string);
+    }
+    
+    const propiedades = await models.propiedades.findAll(queryOptions);
     
     return res.json(propiedades.map((p) => p.toJSON()));
   } catch (e) {

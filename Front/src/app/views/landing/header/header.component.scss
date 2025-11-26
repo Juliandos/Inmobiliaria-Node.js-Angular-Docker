@@ -71,6 +71,9 @@
   transition: $transition-all;
   border-radius: 4px;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 
   &:hover {
     background-color: $color-red-transparent-30;
@@ -81,6 +84,112 @@
   &.active {
     background-color: $color-red-transparent-50;
     color: $text-color-on-red;
+  }
+}
+
+// Dropdown de Operaciones
+.nav-dropdown {
+  position: relative;
+  display: inline-block;
+
+  .dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: $text-color-on-black;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+    transition: $transition-all;
+    
+    .dropdown-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      transition: $transition-all;
+      margin-left: 2px;
+    }
+
+    &:hover {
+      background-color: $color-red-transparent-30;
+      color: $color-primary-red;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &[aria-expanded="true"] {
+      background-color: $color-red-transparent-50;
+      color: $color-primary-red;
+      
+      .dropdown-icon {
+        transform: rotate(180deg);
+      }
+    }
+
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Estilos para el menú de operaciones
+::ng-deep .operaciones-menu {
+  margin-top: 8px;
+  z-index: 1001 !important;
+  
+  .mat-mdc-menu-panel {
+    background-color: $bg-header !important;
+    backdrop-filter: blur(10px) !important;
+    box-shadow: $shadow-lg !important;
+    border-radius: 8px !important;
+    min-width: 200px !important;
+    max-width: 300px !important;
+  }
+  
+  .mat-mdc-menu-content {
+    padding: 8px 0 !important;
+    background-color: transparent !important;
+  }
+
+  .mat-mdc-menu-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 12px 20px !important;
+    min-height: 48px !important;
+    color: $text-color-on-black !important;
+    transition: $transition-all !important;
+    cursor: pointer !important;
+
+    mat-icon {
+      color: $color-primary-red !important;
+      margin-right: 0 !important;
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    span {
+      font-size: 14px !important;
+      font-weight: 500 !important;
+    }
+
+    &:hover {
+      background-color: $color-red-transparent-30 !important;
+      color: $color-primary-red !important;
+    }
+
+    &:active {
+      background-color: $color-red-transparent-50 !important;
+    }
   }
 }
 
@@ -202,6 +311,15 @@
     text-align: center;
     padding: 12px;
     border-radius: 8px;
+  }
+
+  .nav-dropdown {
+    width: 100%;
+
+    .dropdown-trigger {
+      width: 100%;
+      justify-content: center;
+    }
   }
 }
 
