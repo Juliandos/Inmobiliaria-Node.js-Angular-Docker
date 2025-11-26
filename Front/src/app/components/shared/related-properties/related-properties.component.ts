@@ -2,7 +2,7 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { PropiedadesService, Propiedad } from '../../../services/propiedades.service';
-import { PropertyCardComponent } from '../property-card/property-card.component';
+import { PropertyCardMiniComponent } from '../property-card-mini/property-card-mini.component';
 
 @Component({
   selector: 'app-related-properties',
@@ -10,7 +10,7 @@ import { PropertyCardComponent } from '../property-card/property-card.component'
   imports: [
     CommonModule,
     MatIconModule,
-    PropertyCardComponent
+    PropertyCardMiniComponent
   ],
   templateUrl: './related-properties.component.html',
   styleUrls: ['./related-properties.component.scss']

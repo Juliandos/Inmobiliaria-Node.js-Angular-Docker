@@ -111,9 +111,9 @@
 
 .property-card-item {
   flex: 0 0 auto;
-  width: 320px;
-  min-width: 280px;
-  max-width: 380px;
+  width: 240px;
+  min-width: 220px;
+  max-width: 280px;
   transition: $transition-all;
 
   &:hover {
@@ -161,8 +161,8 @@
   }
 
   .property-card-item {
-    width: 280px;
-    min-width: 260px;
+    width: 200px;
+    min-width: 180px;
   }
 }
 
@@ -172,7 +172,7 @@
   }
 
   .property-card-item {
-    width: 350px;
+    width: 260px;
   }
 }
 

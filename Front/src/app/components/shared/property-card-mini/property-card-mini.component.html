@@ -1,0 +1,27 @@
+<mat-card class="property-card-mini" [routerLink]="['/landing/propiedad', propiedad.id]">
+  <!-- Property Image -->
+  <div class="property-image-container">
+    <img [src]="getMainImage()" [alt]="propiedad.titulo" class="property-image">
+    <div class="image-overlay"></div>
+  </div>
+
+  <!-- Property Info -->
+  <div class="property-info">
+    <h3 class="property-title">{{ propiedad.titulo }}</h3>
+    
+    <div class="property-meta">
+      <span class="property-type" *ngIf="propiedad.tipo">
+        {{ propiedad.tipo.nombre }}
+      </span>
+      <span class="property-area" *ngIf="propiedad.area">
+        <mat-icon>square_foot</mat-icon>
+        {{ formatArea(propiedad.area) }}
+      </span>
+    </div>
+
+    <div class="property-price">
+      {{ formatPrice(propiedad.precio) }}
+    </div>
+  </div>
+</mat-card>
+

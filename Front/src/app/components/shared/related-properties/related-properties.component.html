@@ -11,11 +11,11 @@
     <!-- Properties List -->
     <div *ngIf="!loading && propiedades.length > 0" class="properties-scroll-container">
       <div class="properties-list">
-        <app-property-card
+        <app-property-card-mini
           *ngFor="let propiedad of propiedades; trackBy: trackByPropiedadId"
           [propiedad]="propiedad"
           class="property-card-item">
-        </app-property-card>
+        </app-property-card-mini>
       </div>
     </div>
 
