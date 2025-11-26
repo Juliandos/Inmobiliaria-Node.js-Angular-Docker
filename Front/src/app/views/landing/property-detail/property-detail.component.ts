@@ -78,6 +78,7 @@ export class PropertyDetailComponent implements OnInit {
       { label: 'Tipo', value: this.propiedad.tipo?.nombre || 'N/A', icon: 'category' },
       { label: 'Precio', value: this.formatPrice(this.propiedad.precio), icon: 'attach_money' },
       { label: 'Área', value: this.formatArea(this.propiedad.area), icon: 'square_foot' },
+      { label: 'Ciudad', value: this.propiedad.ciudad || 'N/A', icon: 'location_city' },
       { label: 'Habitaciones', value: String(this.propiedad.habitaciones || 0), icon: 'bed' },
       { label: 'Baños', value: String(this.propiedad.banos || 0), icon: 'bathtub' },
       { label: 'Parqueaderos', value: String(this.propiedad.parqueadero || 0), icon: 'garage' },

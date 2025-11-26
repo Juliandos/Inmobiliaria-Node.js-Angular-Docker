@@ -9,16 +9,16 @@
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
 
-      <!-- Ubicación Field -->
+      <!-- Ciudad Field -->
       <mat-form-field appearance="outline" class="search-field">
-        <mat-label>UBICACIÓN</mat-label>
+        <mat-label>CIUDAD</mat-label>
         <mat-select formControlName="ubicacion">
-          <mat-option value="">Todas las ubicaciones</mat-option>
+          <mat-option value="">Todas las ciudades</mat-option>
           <mat-option *ngFor="let ubicacion of ubicaciones" [value]="ubicacion">
             {{ ubicacion }}
           </mat-option>
         </mat-select>
-        <mat-icon matPrefix>location_on</mat-icon>
+        <mat-icon matPrefix>location_city</mat-icon>
       </mat-form-field>
 
       <!-- Search Button -->

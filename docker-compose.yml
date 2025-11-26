@@ -16,8 +16,9 @@
 # - Volumes: Persistencia de datos (base de datos, etc.)
 #
 # ============================================
-
-version: '3.8'
+# NOTA: La línea 'version' ya no es necesaria en Docker Compose v2+
+# Docker Compose detecta automáticamente la versión del archivo
+# ============================================
 
 # ============================================
 # SERVICIOS (Contenedores)

@@ -141,10 +141,11 @@ export class OperacionPropiedadesComponent implements OnInit, OnDestroy {
       );
     }
 
-    // Filtrar por ubicación (si está disponible en la descripción o título)
+    // Filtrar por ubicación/ciudad
     if (searchParams.ubicacion?.trim()) {
       const ubicacion = searchParams.ubicacion.toLowerCase().trim();
       filtered = filtered.filter(p => 
+        p.ciudad?.toLowerCase().includes(ubicacion) ||
         p.titulo?.toLowerCase().includes(ubicacion) ||
         p.descripcion?.toLowerCase().includes(ubicacion)
       );

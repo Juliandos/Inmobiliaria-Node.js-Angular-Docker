@@ -82,10 +82,11 @@ export class SearchFilterComponent {
           );
         }
 
-        // Filtrar por ubicación (si está disponible en la descripción o título)
+        // Filtrar por ubicación/ciudad
         if (searchParams.ubicacion) {
           const ubicacion = searchParams.ubicacion.toLowerCase();
           resultados = resultados.filter(p => 
+            p.ciudad?.toLowerCase().includes(ubicacion) ||
             p.titulo?.toLowerCase().includes(ubicacion) ||
             p.descripcion?.toLowerCase().includes(ubicacion)
           );

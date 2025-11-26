@@ -289,21 +289,41 @@ async function seedDatabase() {
     
     console.log('✅ 5 propiedades creadas');
 
-    // ✅ 7. Crear Imágenes de ejemplo
+    // ✅ 7. Crear Imágenes de ejemplo (Cloudinary)
     console.log('📝 Creando imágenes de ejemplo...');
     
     const propiedades = await models.propiedades.findAll({ order: [['id', 'ASC']] });
     
+    // Imágenes de Cloudinary proporcionadas
+    const imagenesCloudinary = [
+      'https://res.cloudinary.com/dkwedfebn/image/upload/v1764169427/propiedades/ysbhyxh9qntd3rdff9ml.jpg',
+      'https://res.cloudinary.com/dkwedfebn/image/upload/v1764169437/propiedades/pb8afyuuaqvsn8dwbagq.jpg',
+      'https://res.cloudinary.com/dkwedfebn/image/upload/v1764169448/propiedades/nxrayfvk7wyglr8jsgtp.jpg',
+      'https://res.cloudinary.com/dkwedfebn/image/upload/v1764169457/propiedades/yhiz1s3ram90o4gkqm1q.jpg',
+      'https://res.cloudinary.com/dkwedfebn/image/upload/v1764169475/propiedades/mtkryinbopsbeadq6hju.jpg',
+      'https://res.cloudinary.com/dkwedfebn/image/upload/v1764169488/propiedades/yfr6jo8dglwfk43gf6qf.jpg',
+      'https://res.cloudinary.com/dkwedfebn/image/upload/v1764169757/propiedades/hsmaokcerndktdiflet8.jpg',
+      'https://res.cloudinary.com/dkwedfebn/image/upload/v1764169764/propiedades/zbogihivlg5tmojb9rgd.jpg'
+    ];
+    
     if (propiedades.length >= 5) {
+      // Distribuir imágenes entre las propiedades
       await models.imagenes_propiedad.bulkCreate([
-        { propiedad_id: propiedades[0].id, url: 'https://example.com/casa1-frente.jpg' },
-        { propiedad_id: propiedades[0].id, url: 'https://example.com/casa1-interior.jpg' },
-        { propiedad_id: propiedades[1].id, url: 'https://example.com/apt1-sala.jpg' },
-        { propiedad_id: propiedades[2].id, url: 'https://example.com/local1-frente.jpg' },
-        { propiedad_id: propiedades[3].id, url: 'https://example.com/oficina1.jpg' },
-        { propiedad_id: propiedades[4].id, url: 'https://example.com/casa-campestre.jpg' }
+        // Propiedad 1: Casa en Zona Norte (2 imágenes)
+        { propiedad_id: propiedades[0].id, url: imagenesCloudinary[0] },
+        { propiedad_id: propiedades[0].id, url: imagenesCloudinary[1] },
+        // Propiedad 2: Apartamento Centro (2 imágenes)
+        { propiedad_id: propiedades[1].id, url: imagenesCloudinary[2] },
+        { propiedad_id: propiedades[1].id, url: imagenesCloudinary[3] },
+        // Propiedad 3: Local Comercial (1 imagen)
+        { propiedad_id: propiedades[2].id, url: imagenesCloudinary[4] },
+        // Propiedad 4: Oficina Ejecutiva (1 imagen)
+        { propiedad_id: propiedades[3].id, url: imagenesCloudinary[5] },
+        // Propiedad 5: Casa Campestre (2 imágenes)
+        { propiedad_id: propiedades[4].id, url: imagenesCloudinary[6] },
+        { propiedad_id: propiedades[4].id, url: imagenesCloudinary[7] }
       ]);
-      console.log('✅ 6 imágenes creadas');
+      console.log('✅ 8 imágenes creadas desde Cloudinary');
     } else {
       console.warn('⚠️ No se pudieron crear imágenes: no hay suficientes propiedades');
     }
@@ -317,7 +337,7 @@ async function seedDatabase() {
     console.log('- 4 usuarios (password: 123456)');
     console.log(`- ${permisosCreados} permisos configurados`);
     console.log('- 5 propiedades de ejemplo');
-    console.log('- 6 imágenes de ejemplo');
+    console.log('- 8 imágenes de ejemplo (Cloudinary)');
 
     console.log('\n👥 Usuarios de prueba:');
     console.log('- admin@test.com / 123456 (Administrador - todos los permisos)');
