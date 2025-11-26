@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { PropiedadesService, Propiedad } from '../../../services/propiedades.service';
 import { OperacionesService, Operacion } from '../../../services/operaciones.service';
-import { PropertyCardComponent } from '../property-card/property-card.component';
+import { PropertyCardComponent } from '../../components/shared/property-card/property-card.component';
 import { shareReplay, catchError } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 import { RouterLink } from '@angular/router';

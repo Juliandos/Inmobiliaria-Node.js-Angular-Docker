@@ -7,9 +7,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider';
 import { PropiedadesService, Propiedad } from '../../../services/propiedades.service';
-import { MinimalCarouselComponent } from '../minimal-carousel/minimal-carousel.component';
-import { PropertyImagesCarouselComponent } from '../property-images-carousel/property-images-carousel.component';
-import { GoogleMapsComponent } from '../google-maps/google-maps.component';
+import { MinimalCarouselComponent } from '../../components/landing/minimal-carousel/minimal-carousel.component';
+import { PropertyImagesCarouselComponent } from '../../components/landing/property-images-carousel/property-images-carousel.component';
+import { GoogleMapsComponent } from '../../components/landing/google-maps/google-maps.component';
 
 @Component({
   selector: 'app-property-detail',

@@ -2,10 +2,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { LandingHeaderComponent } from '../header/header.component';
-import { LandingFooterComponent } from '../footer/footer.component';
-import { SearchFilterComponent } from '../search-filter/search-filter.component';
-import { HeroCarouselComponent } from '../hero-carousel/hero-carousel.component';
+import { LandingHeaderComponent } from '../../components/shared/header/header.component';
+import { LandingFooterComponent } from '../../components/shared/footer/footer.component';
+import { SearchFilterComponent } from '../../components/shared/search-filter/search-filter.component';
+import { HeroCarouselComponent } from '../../components/landing/hero-carousel/hero-carousel.component';
 
 @Component({
   selector: 'app-landing-layout',

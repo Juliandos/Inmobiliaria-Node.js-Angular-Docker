@@ -1,10 +1,10 @@
-@import '../variables';
+@import '../../../views/landing/variables';
 
 // Mobile First - Minimalist Carousel
 .minimal-carousel-container {
   position: relative;
   width: 100%;
-  height: 20vh;
+  height: 15vh;
   min-height: 120px;
   max-height: 180px;
   overflow: hidden;
@@ -190,14 +190,14 @@
 @media (min-width: 768px) {
   .minimal-carousel-container {
     width: 80%;
-    height: 20vh;
+    height: 15vh;
     min-height: 150px;
     max-height: 200px;
   }
 
   .carousel-title {
-    font-size: 2rem;
-    letter-spacing: 4px;
+    font-size: 2.2rem;
+    letter-spacing: 5px;
   }
 
   .minimal-nav {
@@ -212,8 +212,8 @@
   }
 
   .carousel-title {
-    font-size: 2.2rem;
-    letter-spacing: 5px;
+    font-size: 2.5rem;
+    letter-spacing: 6px;
   }
 }
 
