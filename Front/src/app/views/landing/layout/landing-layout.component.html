@@ -2,8 +2,8 @@
   <!-- Header -->
   <app-landing-header></app-landing-header>
 
-  <!-- Hero Carousel with Floating Search Filter -->
-  <div class="hero-section">
+  <!-- Hero Carousel with Floating Search Filter - Solo en ciertas rutas -->
+  <div class="hero-section" *ngIf="showHeroSection">
     <app-hero-carousel></app-hero-carousel>
     <div class="floating-search-wrapper">
       <app-search-filter></app-search-filter>

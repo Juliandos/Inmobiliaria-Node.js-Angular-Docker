@@ -35,11 +35,13 @@ export class PropiedadesPublicasComponent implements OnInit {
     this.loading = true;
     this.propiedadesService.getPropiedades().subscribe({
       next: (data) => {
-        this.propiedades = data;
+        console.log('Propiedades cargadas:', data);
+        this.propiedades = data || [];
         this.loading = false;
       },
       error: (err) => {
         console.error('Error cargando propiedades:', err);
+        this.propiedades = [];
         this.loading = false;
       }
     });
@@ -57,6 +59,10 @@ export class PropiedadesPublicasComponent implements OnInit {
   formatArea(area?: number): string {
     if (!area) return 'N/A';
     return `${area} m²`;
+  }
+
+  trackByPropiedadId(index: number, propiedad: Propiedad): number {
+    return propiedad.id;
   }
 }
 

@@ -15,9 +15,9 @@
 <!-- Propiedades Grid -->
 <div *ngIf="!loading" class="propiedades-section">
   <div class="container">
-    <div class="propiedades-grid">
+    <div class="propiedades-grid" *ngIf="propiedades.length > 0">
       <app-property-card 
-        *ngFor="let propiedad of propiedades" 
+        *ngFor="let propiedad of propiedades; trackBy: trackByPropiedadId" 
         [propiedad]="propiedad">
       </app-property-card>
     </div>
