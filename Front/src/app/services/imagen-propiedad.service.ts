@@ -112,7 +112,7 @@ export class ImagenesPropiedadService {
     );
   }
 
-  // ✅ Eliminar una imagen (ahora elimina también de Cloudinary)
+  // ✅ Eliminar una imagen (ahora elimina también de S3)
   deleteImagenPropiedad(id: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`, { 
       headers: this.getAuthHeaders() 

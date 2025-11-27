@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { models } from "../db/database"; // Asegúrate de exportar los modelos desde database.ts
 import { handleHttp } from "../utils/error.handle";
-import cloudinary from "../utils/cloudinary";
+import { uploadToS3, deleteFromS3, isS3Url } from "../utils/s3";
 
 // ✅ Obtener todas las propiedades con usuario, tipo y operación
 // Soporta query params: operacion_id (filtrar por operación) y limit (limitar resultados)
@@ -65,27 +65,20 @@ const createPropiedad = async (req: Request, res: Response) => {
     // Crear la propiedad primero
     const propiedad = await models.propiedades.create(req.body);
     
-    // Si hay imágenes, subirlas a Cloudinary
+    // Si hay imágenes, subirlas a S3
     const files = req.files as Express.Multer.File[];
     if (files && files.length > 0) {
       for (const file of files) {
         try {
-          const result = await new Promise<any>((resolve, reject) => {
-            cloudinary.uploader
-              .upload_stream({ folder: "propiedades" }, (error, uploadResult) => {
-                if (error) return reject(error);
-                resolve(uploadResult);
-              })
-              .end(file.buffer);
-          });
+          const url = await uploadToS3(file.buffer, file.originalname, "propiedades");
 
           // Guardar la URL de la imagen en la base de datos
           await models.imagenes_propiedad.create({
             propiedad_id: propiedad.id,
-            url: result.secure_url,
+            url: url,
           });
         } catch (imageError) {
-          console.error("Error subiendo imagen a Cloudinary:", imageError);
+          console.error("Error subiendo imagen a S3:", imageError);
           // Continuar aunque falle una imagen
         }
       }
@@ -128,15 +121,12 @@ const updatePropiedad = async (req: Request, res: Response) => {
       for (const imagenId of imagenes_a_eliminar) {
         const imagen = await models.imagenes_propiedad.findByPk(imagenId);
         if (imagen && imagen.propiedad_id === parseInt(id)) {
-          // Eliminar de Cloudinary si existe
-          if (imagen.url && imagen.url.includes("cloudinary")) {
+          // Eliminar de S3 si existe
+          if (imagen.url && isS3Url(imagen.url)) {
             try {
-              const urlParts = imagen.url.split("/");
-              const publicIdWithExtension = urlParts[urlParts.length - 1];
-              const publicId = `propiedades/${publicIdWithExtension.split(".")[0]}`;
-              await cloudinary.uploader.destroy(publicId);
+              await deleteFromS3(imagen.url);
             } catch (deleteError) {
-              console.error("Error eliminando imagen de Cloudinary:", deleteError);
+              console.error("Error eliminando imagen de S3:", deleteError);
             }
           }
           // Eliminar de la base de datos
@@ -150,27 +140,20 @@ const updatePropiedad = async (req: Request, res: Response) => {
       where: { id },
     });
 
-    // Si hay nuevas imágenes, subirlas a Cloudinary
+    // Si hay nuevas imágenes, subirlas a S3
     const files = req.files as Express.Multer.File[];
     if (files && files.length > 0) {
       for (const file of files) {
         try {
-          const result = await new Promise<any>((resolve, reject) => {
-            cloudinary.uploader
-              .upload_stream({ folder: "propiedades" }, (error, uploadResult) => {
-                if (error) return reject(error);
-                resolve(uploadResult);
-              })
-              .end(file.buffer);
-          });
+          const url = await uploadToS3(file.buffer, file.originalname, "propiedades");
 
           // Guardar la URL de la imagen en la base de datos
           await models.imagenes_propiedad.create({
             propiedad_id: parseInt(id),
-            url: result.secure_url,
+            url: url,
           });
         } catch (imageError) {
-          console.error("Error subiendo imagen a Cloudinary:", imageError);
+          console.error("Error subiendo imagen a S3:", imageError);
           // Continuar aunque falle una imagen
         }
       }
@@ -191,7 +174,7 @@ const updatePropiedad = async (req: Request, res: Response) => {
   }
 };
 
-// ✅ Eliminar una propiedad por ID y sus imágenes de Cloudinary
+// ✅ Eliminar una propiedad por ID y sus imágenes de S3
 const deletePropiedad = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -205,18 +188,15 @@ const deletePropiedad = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Propiedad no encontrada" });
     }
 
-    // Eliminar todas las imágenes de Cloudinary antes de eliminar la propiedad
+    // Eliminar todas las imágenes de S3 antes de eliminar la propiedad
     if (propiedad.imagenes_propiedads && propiedad.imagenes_propiedads.length > 0) {
       for (const imagen of propiedad.imagenes_propiedads) {
         const imagenData = imagen.toJSON();
-        if (imagenData.url && imagenData.url.includes("cloudinary")) {
+        if (imagenData.url && isS3Url(imagenData.url)) {
           try {
-            const urlParts = imagenData.url.split("/");
-            const publicIdWithExtension = urlParts[urlParts.length - 1];
-            const publicId = `propiedades/${publicIdWithExtension.split(".")[0]}`;
-            await cloudinary.uploader.destroy(publicId);
-          } catch (cloudinaryError) {
-            console.error("Error eliminando imagen de Cloudinary:", cloudinaryError);
+            await deleteFromS3(imagenData.url);
+          } catch (s3Error) {
+            console.error("Error eliminando imagen de S3:", s3Error);
             // Continuar aunque falle eliminar una imagen
           }
         }

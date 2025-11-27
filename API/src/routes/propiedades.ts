@@ -15,6 +15,6 @@ router.get("/", getPropiedades); // Leer todas
 router.get("/:id", getPropiedad); // Leer una por ID
 router.post("/", upload.array("imagenes", 10), createPropiedad); // Crear con imágenes opcionales
 router.put("/:id", upload.array("imagenes", 10), updatePropiedad); // Actualizar con imágenes opcionales
-router.delete("/:id", deletePropiedad); // Borrar (elimina imágenes de Cloudinary automáticamente)
+router.delete("/:id", deletePropiedad); // Borrar (elimina imágenes de S3 automáticamente)
 
 export { router };

@@ -166,7 +166,7 @@
           </mat-form-field>
           <div class="mt-1 small text-warning">
             <mat-icon style="font-size: 16px;" class="me-1">warning</mat-icon>
-            Si la imagen anterior está en Cloudinary, será eliminada automáticamente
+            Si la imagen anterior está en S3, será eliminada automáticamente
           </div>
         </div>
       </div>
@@ -229,13 +229,13 @@
             matTooltip="Abrir imagen">
             open_in_new
           </mat-icon>
-          <!-- Badge para indicar si es de Cloudinary -->
+          <!-- Badge para indicar si es de S3 -->
           <span 
-            *ngIf="imagen.url.includes('cloudinary')" 
+            *ngIf="isS3Image(imagen.url)" 
             class="badge bg-success position-absolute bottom-0 start-0"
             style="font-size: 10px;"
-            matTooltip="Imagen alojada en Cloudinary">
-            Cloud
+            matTooltip="Imagen alojada en AWS S3">
+            S3
           </span>
         </div>
       </td>
@@ -283,7 +283,7 @@
             mat-icon-button 
             color="warn" 
             (click)="onDeleteImagen(imagen.id)"
-            matTooltip="Eliminar imagen (también de Cloudinary)"
+            matTooltip="Eliminar imagen (también de S3)"
             *hasPermission="{ modulo: 'imagenes_propiedad', operacion: 'd' }">
             <mat-icon>delete</mat-icon>
           </button>

@@ -1,7 +1,7 @@
-// Script para listar todas las imágenes de propiedades desde Cloudinary
+// Script para listar todas las imágenes de propiedades desde la base de datos
 import "dotenv/config";
 import { models } from "./src/db/database";
-import cloudinary from "./src/utils/cloudinary";
+import { isS3Url } from "./src/utils/s3";
 
 async function listImages() {
   try {
@@ -26,38 +26,28 @@ async function listImages() {
         console.log(`   Propiedad: ${imgData.propiedad?.titulo || 'N/A'}`);
         console.log(`   URL: ${imgData.url}`);
         console.log(`   Creada: ${imgData.createdAt}`);
-        console.log(`   Es Cloudinary: ${imgData.url?.includes('cloudinary') ? '✅ Sí' : '❌ No'}`);
+        console.log(`   Es S3: ${imgData.url && isS3Url(imgData.url) ? '✅ Sí' : '❌ No'}`);
       });
       console.log(`\n✅ Total: ${imagenes.length} imágenes\n`);
     }
 
-    // Opción 2: Listar desde Cloudinary directamente
-    console.log('\n☁️  Imágenes en Cloudinary (carpeta "propiedades"):');
+    // Opción 2: Resumen de imágenes por tipo de almacenamiento
+    console.log('\n📊 Resumen por tipo de almacenamiento:');
     console.log('='.repeat(60));
     
-    try {
-      const result = await cloudinary.search
-        .expression('folder:propiedades')
-        .sort_by([['created_at', 'desc']])
-        .max_results(100)
-        .execute();
-
-      if (result.resources && result.resources.length > 0) {
-        result.resources.forEach((resource: any, index: number) => {
-          console.log(`\n${index + 1}. Public ID: ${resource.public_id}`);
-          console.log(`   URL: ${resource.secure_url}`);
-          console.log(`   Tamaño: ${(resource.bytes / 1024).toFixed(2)} KB`);
-          console.log(`   Formato: ${resource.format}`);
-          console.log(`   Creada: ${resource.created_at}`);
-        });
-        console.log(`\n✅ Total en Cloudinary: ${result.resources.length} imágenes\n`);
-      } else {
-        console.log('❌ No hay imágenes en Cloudinary en la carpeta "propiedades".\n');
-      }
-    } catch (cloudinaryError: any) {
-      console.error('❌ Error consultando Cloudinary:', cloudinaryError.message);
-      console.log('💡 Verifica que las credenciales de Cloudinary estén configuradas correctamente.\n');
-    }
+    const imagenesS3 = imagenes.filter(img => {
+      const url = img.toJSON().url;
+      return url && isS3Url(url);
+    });
+    
+    const imagenesOtros = imagenes.filter(img => {
+      const url = img.toJSON().url;
+      return url && !isS3Url(url);
+    });
+    
+    console.log(`\n✅ Imágenes en S3: ${imagenesS3.length}`);
+    console.log(`📎 Otras URLs: ${imagenesOtros.length}`);
+    console.log(`\n💡 Para listar objetos directamente desde S3, usa la consola de AWS o el AWS CLI.\n`);
 
     await models.sequelize?.close();
   } catch (error: any) {

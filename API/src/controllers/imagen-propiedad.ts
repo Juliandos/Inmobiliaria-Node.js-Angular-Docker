@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { models } from "../db/database";
 import { handleHttp } from "../utils/error.handle";
-import cloudinary from "../utils/cloudinary";
+import { uploadToS3, deleteFromS3, isS3Url } from "../utils/s3";
 
 // ✅ Obtener todas las imágenes con la propiedad asociada
 const getImagenesPropiedad = async (req: Request, res: Response) => {
@@ -45,21 +45,18 @@ const createImagenPropiedad = async (req: Request, res: Response) => {
     const urls: string[] = [];
 
     for (const file of files) {
-      const result = await new Promise<any>((resolve, reject) => {
-        cloudinary.uploader
-          .upload_stream({ folder: "propiedades" }, (error, uploadResult) => {
-            if (error) return reject(error);
-            resolve(uploadResult);
-          })
-          .end(file.buffer);
-      });
+      try {
+        const url = await uploadToS3(file.buffer, file.originalname, "propiedades");
+        urls.push(url);
 
-      urls.push(result.secure_url);
-
-      await models.imagenes_propiedad.create({
-        propiedad_id,
-        url: result.secure_url,
-      });
+        await models.imagenes_propiedad.create({
+          propiedad_id,
+          url: url,
+        });
+      } catch (uploadError) {
+        console.error("Error subiendo imagen a S3:", uploadError);
+        // Continuar con las siguientes imágenes aunque falle una
+      }
     }
 
     return res.status(201).json({ urls });
@@ -87,39 +84,30 @@ const updateImagenPropiedad = async (req: Request, res: Response) => {
 
     const files = req.files as Express.Multer.File[];
     if (files && files.length > 0) {
-      if (imagenExistente.url) {
+      if (imagenExistente.url && isS3Url(imagenExistente.url)) {
         try {
-          const urlParts = imagenExistente.url.split("/");
-          const publicIdWithExtension = urlParts[urlParts.length - 1];
-          const publicId = `propiedades/${publicIdWithExtension.split(".")[0]}`;
-          await cloudinary.uploader.destroy(publicId);
+          await deleteFromS3(imagenExistente.url);
         } catch (deleteError) {
-          console.error("Error eliminando imagen anterior:", deleteError);
+          console.error("Error eliminando imagen anterior de S3:", deleteError);
         }
       }
 
       const file = files[0];
-      const result = await new Promise<any>((resolve, reject) => {
-        cloudinary.uploader
-          .upload_stream({ folder: "propiedades" }, (error, uploadResult) => {
-            if (error) return reject(error);
-            resolve(uploadResult);
-          })
-          .end(file.buffer);
-      });
-
-      updateData.url = result.secure_url;
+      try {
+        const url = await uploadToS3(file.buffer, file.originalname, "propiedades");
+        updateData.url = url;
+      } catch (uploadError) {
+        console.error("Error subiendo imagen a S3:", uploadError);
+        throw uploadError;
+      }
     }
 
     if (req.body.url && !files?.length) {
-      if (imagenExistente.url && imagenExistente.url.includes("cloudinary")) {
+      if (imagenExistente.url && isS3Url(imagenExistente.url)) {
         try {
-          const urlParts = imagenExistente.url.split("/");
-          const publicIdWithExtension = urlParts[urlParts.length - 1];
-          const publicId = `propiedades/${publicIdWithExtension.split(".")[0]}`;
-          await cloudinary.uploader.destroy(publicId);
+          await deleteFromS3(imagenExistente.url);
         } catch (deleteError) {
-          console.error("Error eliminando imagen anterior:", deleteError);
+          console.error("Error eliminando imagen anterior de S3:", deleteError);
         }
       }
       updateData.url = req.body.url;
@@ -154,14 +142,11 @@ const deleteImagenPropiedad = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Imagen no encontrada" });
     }
 
-    if (imagen.url && imagen.url.includes("cloudinary")) {
+    if (imagen.url && isS3Url(imagen.url)) {
       try {
-        const urlParts = imagen.url.split("/");
-        const publicIdWithExtension = urlParts[urlParts.length - 1];
-        const publicId = `propiedades/${publicIdWithExtension.split(".")[0]}`;
-        await cloudinary.uploader.destroy(publicId);
-      } catch (cloudinaryError) {
-        console.error("Error eliminando de Cloudinary:", cloudinaryError);
+        await deleteFromS3(imagen.url);
+      } catch (s3Error) {
+        console.error("Error eliminando de S3:", s3Error);
       }
     }
 

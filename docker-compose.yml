@@ -100,10 +100,11 @@ services:
       DB_PASS: ${API_DB_PASS:-${MYSQL_ROOT_PASSWORD:-123456}}  # Usa MYSQL_ROOT_PASSWORD si DB_PASS no está definido
       JWT_SECRET: ${API_JWT_SECRET:-cambiar_este_secret_por_uno_seguro}
       JWT_REFRESH_SECRET: ${API_JWT_REFRESH_SECRET:-cambiar_este_refresh_secret}
-      CLOUDINARY_CLOUD_NAME: ${API_CLOUDINARY_CLOUD_NAME:-}
-      CLOUDINARY_API_KEY: ${API_CLOUDINARY_API_KEY:-}
-      CLOUDINARY_API_SECRET: ${API_CLOUDINARY_API_SECRET:-}
       NODE_ENV: ${API_NODE_ENV:-development}
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME:-inmobiliaria-propiedades}
     
     # Puertos
     ports:

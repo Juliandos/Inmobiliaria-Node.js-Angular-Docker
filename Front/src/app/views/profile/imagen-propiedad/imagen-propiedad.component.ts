@@ -216,7 +216,7 @@ export class ImagenPropiedadComponent implements OnInit {
   }
 
   onDeleteImagen(id: number): void {
-    if (confirm('¿Eliminar imagen? Esta acción también la eliminará de Cloudinary si está alojada ahí.')) {
+    if (confirm('¿Eliminar imagen? Esta acción también la eliminará de S3 si está alojada ahí.')) {
       this.imagenesPropiedadService.deleteImagenPropiedad(id).subscribe({
         next: (response) => {
           this.imagenes = this.imagenes.filter(img => img.id !== id);
@@ -254,8 +254,8 @@ export class ImagenPropiedadComponent implements OnInit {
     return img.propiedad?.titulo || `Propiedad ${img.propiedad_id}`;
   }
 
-  // Verificar si la imagen está alojada en Cloudinary
-  isCloudinaryImage(url: string): boolean {
-    return url.includes('cloudinary');
+  // Verificar si la imagen está alojada en S3
+  isS3Image(url: string): boolean {
+    return url.includes('s3.amazonaws.com') || url.includes('s3.');
   }
 }
