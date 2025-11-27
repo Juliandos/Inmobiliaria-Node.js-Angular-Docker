@@ -9,6 +9,11 @@ API/node_modules/
 API/package-lock.json
 
 # Variables de entorno (NUNCA subir archivos .env)
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
 API/.env
 API/.env.local
 API/.env.*.local
