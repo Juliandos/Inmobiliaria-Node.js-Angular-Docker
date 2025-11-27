@@ -38,10 +38,14 @@ set /p ejecutar_seed=
 
 if /i "%ejecutar_seed%"=="S" (
     echo.
-    echo Ejecutando seed...
-    wsl bash -c "cd '/mnt/c/Users/ASUS/Desktop/rescate asus/Yo/Paginas Web/Propio/Inmobiliaria Node Docker Angular' && docker compose exec api npm run seed"
+    echo ========================================
+    echo   Ejecutando migraciones y seed...
+    echo ========================================
     echo.
-    echo Seed completado!
+    
+    wsl bash -c "cd '/mnt/c/Users/ASUS/Desktop/rescate asus/Yo/Paginas Web/Propio/Inmobiliaria Node Docker Angular' && docker compose exec api npm run seed-with-migrations"
+    echo.
+    echo Migraciones y seed completados!
 )
 
 echo.

@@ -15,20 +15,21 @@ timeout /t 2 /nobreak >nul
 echo    Puerto 3306 liberado
 echo.
 
-echo [3/4] Iniciando contenedores MySQL y API...
+echo [3/5] Iniciando contenedores MySQL y API...
 wsl bash -c "cd '/mnt/c/Users/ASUS/Desktop/rescate asus/Yo/Paginas Web/Propio/Inmobiliaria Node Docker Angular' && docker compose up -d mysql api"
 
 echo.
-echo [4/4] Esperando a que MySQL esté listo...
+echo [4/5] Esperando a que MySQL esté listo...
 timeout /t 15 /nobreak >nul
 
 echo.
+echo [5/5] Ejecutando migraciones y seed de la base de datos...
 echo ========================================
-echo   Ejecutando seed de la base de datos...
+echo   Ejecutando migraciones y seed...
 echo ========================================
 echo.
 
-wsl bash -c "cd '/mnt/c/Users/ASUS/Desktop/rescate asus/Yo/Paginas Web/Propio/Inmobiliaria Node Docker Angular' && docker compose exec api npm run seed"
+wsl bash -c "cd '/mnt/c/Users/ASUS/Desktop/rescate asus/Yo/Paginas Web/Propio/Inmobiliaria Node Docker Angular' && docker compose exec api npm run seed-with-migrations"
 
 echo.
 echo ========================================
