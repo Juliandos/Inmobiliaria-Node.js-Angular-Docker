@@ -1,0 +1,24 @@
+{
+    "Role": {
+        "Path": "/aws-service-role/ecs.amazonaws.com/",
+        "RoleName": "AWSServiceRoleForECS",
+        "RoleId": "AROAQ2VUGZEQJP2AC4ST6",
+        "Arn": "arn:aws:iam::057286248736:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+        "CreateDate": "2025-11-27T17:09:12+00:00",
+        "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": "ecs.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                }
+            ]
+        },
+        "Description": "Policy to enable Amazon ECS to manage your EC2 instances and related resources.",
+        "MaxSessionDuration": 3600,
+        "RoleLastUsed": {}
+    }
+}

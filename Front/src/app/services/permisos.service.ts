@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
+import { API_CONFIG } from '../config/api.config';
 
 export interface Permiso {
   id: number;
@@ -54,8 +55,8 @@ export interface Modulo {
   providedIn: 'root'
 })
 export class PermisosService {
-  private apiUrl = 'http://localhost:3001/permisos';
-  private modulosUrl = 'http://localhost:3001/modulos';
+  private apiUrl = API_CONFIG.endpoints.permisos;
+  private modulosUrl = API_CONFIG.endpoints.modulos;
 
   constructor(private http: HttpClient) {}
 

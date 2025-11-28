@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
+import { API_CONFIG } from '../config/api.config';
 
 export interface Modulo {
   id: number;
@@ -22,7 +23,7 @@ export interface UpdateModuloRequest {
   providedIn: 'root'
 })
 export class ModulosService {
-  private apiUrl = 'http://localhost:3001/modulos';
+  private apiUrl = API_CONFIG.endpoints.modulos;
 
   constructor(private http: HttpClient) {}
 

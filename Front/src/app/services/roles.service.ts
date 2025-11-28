@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_CONFIG } from '../config/api.config';
 
 export interface Rol {
   id: number;
@@ -20,7 +21,7 @@ export interface UpdateRolRequest {
   providedIn: 'root'
 })
 export class RolesService {
-  private apiUrl = 'http://localhost:3001/roles';
+  private apiUrl = API_CONFIG.endpoints.roles;
 
   constructor(private http: HttpClient) {}
 

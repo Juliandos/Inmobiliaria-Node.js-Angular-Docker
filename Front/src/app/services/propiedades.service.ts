@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_CONFIG } from '../config/api.config';
 
 export interface Propiedad {
   id: number;
@@ -51,7 +52,7 @@ export interface UpdatePropiedadRequest {
 
 @Injectable({ providedIn: 'root' })
 export class PropiedadesService {
-  private apiUrl = 'http://localhost:3001/propiedades';
+  private apiUrl = API_CONFIG.endpoints.propiedades;
   
   constructor(private http: HttpClient) {}
 

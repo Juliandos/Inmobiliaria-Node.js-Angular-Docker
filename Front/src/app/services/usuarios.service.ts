@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_CONFIG } from '../config/api.config';
 
 export interface Usuario {
   id: number;
@@ -35,7 +36,7 @@ export interface UpdateUsuarioRequest {
   providedIn: 'root'
 })
 export class UsuariosService {
-  private apiUrl = 'http://localhost:3001/usuarios';
+  private apiUrl = API_CONFIG.endpoints.usuarios;
 
   constructor(private http: HttpClient) {}
 

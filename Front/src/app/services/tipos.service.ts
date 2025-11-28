@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
+import { API_CONFIG } from '../config/api.config';
 
 export interface TipoPropiedad {
   id: number;
@@ -20,7 +21,7 @@ export interface UpdateTipoPropiedadRequest {
   providedIn: 'root'
 })
 export class TiposPropiedadService {
-  private apiUrl = 'http://localhost:3001/tipo-propiedad';
+  private apiUrl = API_CONFIG.endpoints.tipos;
 
   constructor(private http: HttpClient) {}
 

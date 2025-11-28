@@ -19,6 +19,7 @@ app.use((req, res, next) => {
 
 initModels(sequelize);  // Inicia asociaciones de Sequelize
 
-app.use(router);
+// Agregar prefijo /api a todas las rutas
+app.use('/api', router);
 
 app.listen(port, () => console.log(`Servidor escuchando en puerto ${port}`));

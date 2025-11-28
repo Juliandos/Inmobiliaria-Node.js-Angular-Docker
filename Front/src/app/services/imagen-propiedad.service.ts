@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
+import { API_CONFIG } from '../config/api.config';
 
 export interface ImagenPropiedad {
   id: number;
@@ -29,7 +30,7 @@ export interface UpdateImagenPropiedadRequest {
   providedIn: 'root'
 })
 export class ImagenesPropiedadService {
-  private apiUrl = 'http://localhost:3001/imagen-propiedad';
+  private apiUrl = API_CONFIG.endpoints.imagenes;
 
   constructor(private http: HttpClient) {}
 

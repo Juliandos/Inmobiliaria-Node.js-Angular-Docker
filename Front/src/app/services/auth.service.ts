@@ -4,10 +4,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { tap, switchMap, map } from 'rxjs/operators';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:3001/auth';
+  private apiUrl = API_CONFIG.endpoints.auth;
   private permisos: any[] = [];
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -65,7 +66,7 @@ export class AuthService {
 
   /** 📌 CARGAR PERMISOS POR ROL */
   loadPermissionsByRole(rolId: number): Observable<any[]> {
-    return this.http.get<any[]>(`http://localhost:3001/permisos/rol/${rolId}`, {
+    return this.http.get<any[]>(`${API_CONFIG.endpoints.permisos}/rol/${rolId}`, {
       headers: this.getAuthHeaders()
     }).pipe(
       tap((permisos) => {

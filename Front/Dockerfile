@@ -31,6 +31,16 @@ RUN npm ci
 # Copiar el resto del código fuente
 COPY . .
 
+# Argumento de build para la URL de la API
+ARG API_URL=http://localhost:3001
+
+# Crear archivo de entorno de producción con la URL de la API
+RUN echo "// Environment configuration for production" > src/environments/environment.prod.ts && \
+    echo "export const environment = {" >> src/environments/environment.prod.ts && \
+    echo "  production: true," >> src/environments/environment.prod.ts && \
+    echo "  apiUrl: '${API_URL}'" >> src/environments/environment.prod.ts && \
+    echo "};" >> src/environments/environment.prod.ts
+
 # Compilar la aplicación Angular
 # ng build: Compila Angular y genera archivos en /app/dist
 # --configuration production: Compilación optimizada para producción

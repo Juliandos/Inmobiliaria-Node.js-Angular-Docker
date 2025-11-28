@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, throwError, shareReplay } from 'rxjs';
+import { API_CONFIG } from '../config/api.config';
 
 export interface Operacion {
   id: number;
@@ -20,7 +21,7 @@ export interface UpdateOperacionRequest {
   providedIn: 'root'
 })
 export class OperacionesService {
-  private apiUrl = 'http://localhost:3001/operacion';
+  private apiUrl = API_CONFIG.endpoints.operaciones;
   
   // Cache para operaciones públicas (sin autenticación)
   private operacionesPublicasCache$: Observable<Operacion[]> | null = null;
