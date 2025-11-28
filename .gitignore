@@ -167,3 +167,15 @@ test-results/
 .dynamodb/
 .tern-port
 
+# ========== Archivos de AWS ==========
+# Instalador de AWS CLI (no debe estar en el repo)
+aws/dist/
+aws/install
+aws/THIRD_PARTY_LICENSES
+# Mantener solo los archivos de configuración JSON
+!aws/*.json
+!aws/README.md
+
+# Archivos con información sensible de AWS (credenciales, secrets, endpoints)
+RESUMEN_DESPLIEGUE_AWS.md
+
