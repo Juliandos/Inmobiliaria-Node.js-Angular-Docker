@@ -16,7 +16,9 @@
     "migrate-propiedades": "tsx migrate-propiedades-columns.ts",
     "migrate-all": "npm run migrate-propiedades && npm run migrate-operacion && npm run migrate-ciudad",
     "seed-with-migrations": "npm run migrate-all && npm run seed",
-    "list-images": "tsx list-images.ts"
+    "list-images": "tsx list-images.ts",
+    "consultar-db": "tsx consultar-db.ts",
+    "mostrar-credenciales": "tsx mostrar-credenciales.ts"
   },
   "repository": {
     "type": "git",

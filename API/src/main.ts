@@ -19,6 +19,15 @@ app.use((req, res, next) => {
 
 initModels(sequelize);  // Inicia asociaciones de Sequelize
 
+// Health check endpoint (sin prefijo /api para que funcione con ALB health checks)
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'API is running',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Agregar prefijo /api a todas las rutas
 app.use('/api', router);
 

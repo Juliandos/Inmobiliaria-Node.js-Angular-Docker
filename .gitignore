@@ -178,4 +178,9 @@ aws/THIRD_PARTY_LICENSES
 
 # Archivos con información sensible de AWS (credenciales, secrets, endpoints)
 RESUMEN_DESPLIEGUE_AWS.md
+valores-aws-config.txt
+
+# Archivos temporales y de configuración local
+temp_*.json
+*.local
 
