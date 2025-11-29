@@ -177,8 +177,8 @@ aws/THIRD_PARTY_LICENSES
 !aws/README.md
 
 # Archivos con información sensible de AWS (credenciales, secrets, endpoints)
-RESUMEN_DESPLIEGUE_AWS.md
-valores-aws-config.txt
+devops/RESUMEN_DESPLIEGUE_AWS.md
+devops/valores-aws-config.txt
 
 # Archivos temporales y de configuración local
 temp_*.json

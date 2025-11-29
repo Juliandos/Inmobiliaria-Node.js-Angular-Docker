@@ -103,7 +103,7 @@
 ## 📝 Archivos de Configuración Sensibles (NO ELIMINAR, pero agregar a .gitignore)
 
 ### Archivos con Información Sensible
-- ⚠️ `valores-aws-config.txt` - **NO ELIMINAR** pero agregar a `.gitignore`
+- ⚠️ `devops/valores-aws-config.txt` - **NO ELIMINAR** pero agregar a `.gitignore`
   - Contiene: VPC ID, Subnet IDs, Security Group IDs, Endpoints, Account ID
   - Es útil para referencia local pero no debe estar en Git
 
@@ -117,8 +117,8 @@
 
 ### Archivos de Configuración del Proyecto
 - ✅ `docker-compose.yml` - Para desarrollo local
-- ✅ `docker-restart-with-seed.bat` - Para desarrollo local
-- ✅ `docker-start-safe.bat` - Para desarrollo local
+- ✅ `devops/docker-restart-with-seed.bat` - Para desarrollo local
+- ✅ `devops/docker-start-safe.bat` - Para desarrollo local
 - ✅ `.gitignore` - Configuración de Git
 - ✅ `env.example` - Ejemplo de variables de entorno
 
