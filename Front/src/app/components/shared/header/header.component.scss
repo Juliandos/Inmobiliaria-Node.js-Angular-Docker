@@ -306,6 +306,19 @@
         margin-right: 12px;
         color: $color-primary-red;
       }
+
+      &.active-theme {
+        background-color: $color-red-transparent-20;
+        
+        mat-icon {
+          color: $color-primary-red;
+        }
+        
+        span {
+          color: $color-primary-red;
+          font-weight: 600;
+        }
+      }
     }
   }
 }

@@ -9,6 +9,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { OperacionesService, Operacion } from '../../../services/operaciones.service';
+import { ThemeStore } from '../../../store/theme.store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -33,6 +34,9 @@ export class LandingHeaderComponent implements OnInit, OnDestroy {
   private operacionesService = inject(OperacionesService);
   private router = inject(Router);
   private destroy$ = new Subject<void>();
+  
+  // Store de tema
+  themeStore = inject(ThemeStore);
   
   menuItems: { label: string; route: string; queryParams?: any }[] = [];
   operacionesMenuItems: { label: string; route: string }[] = [];
@@ -121,6 +125,19 @@ export class LandingHeaderComponent implements OnInit, OnDestroy {
   navigateToOperacion(route: string): void {
     this.closeMobileMenu();
     this.router.navigateByUrl(route);
+  }
+
+  // Métodos de tema
+  toggleTheme(): void {
+    this.themeStore.toggleTheme();
+  }
+
+  setLightTheme(): void {
+    this.themeStore.setLightTheme();
+  }
+
+  setDarkTheme(): void {
+    this.themeStore.setDarkTheme();
   }
 }
 

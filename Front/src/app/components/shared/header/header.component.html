@@ -86,12 +86,12 @@
           <span>Cerrar Sesión</span>
         </button>
         <mat-divider></mat-divider>
-        <button mat-menu-item>
-          <mat-icon>brightness_4</mat-icon>
+        <button mat-menu-item (click)="setLightTheme()" [class.active-theme]="themeStore.isLight()">
+          <mat-icon>light_mode</mat-icon>
           <span>Tema Claro</span>
         </button>
-        <button mat-menu-item>
-          <mat-icon>brightness_2</mat-icon>
+        <button mat-menu-item (click)="setDarkTheme()" [class.active-theme]="themeStore.isDark()">
+          <mat-icon>dark_mode</mat-icon>
           <span>Tema Oscuro</span>
         </button>
         <mat-divider></mat-divider>

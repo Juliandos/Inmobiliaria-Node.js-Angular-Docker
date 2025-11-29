@@ -1,0 +1,86 @@
+// ============================================
+// VARIABLES DE TEMA - CLARO Y OSCURO
+// ============================================
+
+// Tema Claro (por defecto)
+:root,
+[data-theme="light"],
+.light-theme {
+  // Colores de fondo
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e8e8e8;
+  --bg-dark: #2c2c2c;
+  
+  // Colores de texto
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --text-on-dark: #ffffff;
+  
+  // Colores de borde
+  --border-color: rgba(0, 0, 0, 0.1);
+  --border-color-light: rgba(0, 0, 0, 0.05);
+  
+  // Sombras
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+  
+  // Cards
+  --card-bg: #ffffff;
+  --card-border: rgba(0, 0, 0, 0.1);
+  
+  // Inputs
+  --input-bg: #ffffff;
+  --input-border: rgba(0, 0, 0, 0.2);
+  --input-text: #000000;
+  --input-placeholder: #999999;
+}
+
+// Tema Oscuro
+[data-theme="dark"],
+.dark-theme {
+  // Colores de fondo
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #3d3d3d;
+  --bg-dark: #0d0d0d;
+  
+  // Colores de texto
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #808080;
+  --text-on-dark: #ffffff;
+  
+  // Colores de borde
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-color-light: rgba(255, 255, 255, 0.05);
+  
+  // Sombras
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
+  
+  // Cards
+  --card-bg: #2d2d2d;
+  --card-border: rgba(255, 255, 255, 0.1);
+  
+  // Inputs
+  --input-bg: #3d3d3d;
+  --input-border: rgba(255, 255, 255, 0.2);
+  --input-text: #ffffff;
+  --input-placeholder: #808080;
+}
+
+// Transición suave al cambiar de tema
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// Aplicar variables de tema a elementos comunes
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
