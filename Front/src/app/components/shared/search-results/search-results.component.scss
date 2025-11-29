@@ -31,12 +31,20 @@
   letter-spacing: 2px;
   position: relative;
   padding-bottom: 15px;
+  animation: fadeInDown 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 
   mat-icon {
     font-size: 2rem;
     width: 2rem;
     height: 2rem;
     color: $color-primary-red;
+    transition: transform $transition-normal, color $transition-normal;
+    animation: scaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+  }
+
+  &:hover mat-icon {
+    transform: scale(1.1) rotate(5deg);
+    color: $hover-red;
   }
 
   &::after {
@@ -44,7 +52,7 @@
     position: absolute;
     bottom: 0;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scaleX(0);
     width: 100px;
     height: 4px;
     background: linear-gradient(
@@ -53,6 +61,7 @@
       $color-primary-red 50%,
       transparent 100%
     );
+    animation: slideIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
   }
 }
 
@@ -104,10 +113,17 @@
 }
 
 .property-card-item {
-  transition: $transition-all;
+  transition: transform $transition-smooth;
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+
+  @for $i from 1 through 12 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.08}s;
+    }
+  }
 
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
   }
 }
 

@@ -77,17 +77,42 @@ $gradient-red: linear-gradient(135deg, $color-primary-red 0%, $color-red-dark 10
 $gradient-red-light: linear-gradient(135deg, $color-red-light 0%, $color-primary-red 100%);
 $gradient-black: linear-gradient(135deg, $color-black 0%, $color-black-lighter 100%);
 
-// TRANSICIONES
-$transition-fast: 0.2s ease;
-$transition-normal: 0.3s ease;
-$transition-slow: 0.5s ease;
-$transition-all: all 0.3s ease;
+// TRANSICIONES - Optimizadas para efectos más suaves y profesionales
+$transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slower: 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-all: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+$transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
 // EFECTOS DE ANIMACIÓN
 @keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
@@ -103,6 +128,28 @@ $transition-all: all 0.3s ease;
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -124,21 +171,47 @@ $transition-all: all 0.3s ease;
   }
 }
 
-// MIXINS ÚTILES
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+// MIXINS ÚTILES - Mejorados para efectos más profesionales
 @mixin hover-lift {
-  transition: $transition-all;
+  transition: transform $transition-normal, box-shadow $transition-normal;
   
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: $shadow-md;
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+@mixin hover-lift-smooth {
+  transition: transform $transition-smooth, box-shadow $transition-smooth;
+  
+  &:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: $shadow-xl;
   }
 }
 
 @mixin hover-glow-red {
-  transition: $transition-all;
+  transition: box-shadow $transition-normal;
   
   &:hover {
-    box-shadow: $shadow-red;
+    box-shadow: $shadow-red, 0 0 20px $color-red-transparent-30;
+  }
+}
+
+@mixin hover-scale {
+  transition: transform $transition-normal;
+  
+  &:hover {
+    transform: scale(1.05);
   }
 }
 
@@ -147,5 +220,27 @@ $transition-all: all 0.3s ease;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+@mixin fade-in-animation($delay: 0s) {
+  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) $delay both;
+}
+
+@mixin fade-in-up-animation($delay: 0s) {
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) $delay both;
+}
+
+@mixin smooth-transition {
+  transition: $transition-smooth;
+}
+
+@mixin card-hover-effect {
+  transition: transform $transition-normal, box-shadow $transition-normal, border-color $transition-normal;
+  
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: $shadow-xl, $shadow-red;
+    border-color: $color-primary-red;
+  }
 }
 

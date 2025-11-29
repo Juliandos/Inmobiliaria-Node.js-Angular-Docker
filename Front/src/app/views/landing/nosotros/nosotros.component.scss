@@ -6,11 +6,12 @@
   color: $text-color-on-red;
   padding: 60px 20px;
   text-align: center;
-  animation: fadeIn 0.6s ease;
+  animation: fadeInDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 
   h1 {
     font-size: 3rem;
     margin-bottom: 1rem;
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
     
     @media (max-width: 768px) {
       font-size: 2rem;
@@ -20,6 +21,7 @@
   p {
     font-size: 1.2rem;
     opacity: 0.9;
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
   }
 }
 
@@ -31,8 +33,9 @@
   .about-card {
     max-width: 900px;
     margin: 0 auto;
-    transition: $transition-all;
-    @include hover-lift;
+    transition: transform $transition-smooth, box-shadow $transition-smooth;
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+    @include hover-lift-smooth;
 
     p {
       font-size: 1.1rem;
@@ -61,8 +64,17 @@
   }
 
   .mv-card {
-    transition: $transition-all;
-    @include hover-lift;
+    transition: transform $transition-smooth, box-shadow $transition-smooth;
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) both;
+    @include hover-lift-smooth;
+
+    &:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+
+    &:nth-child(2) {
+      animation-delay: 0.4s;
+    }
 
     mat-card-header {
       display: flex;
@@ -75,13 +87,13 @@
         height: 48px;
         color: $color-primary-red;
         margin-right: 1rem;
-        transition: $transition-all;
+        transition: color $transition-normal, transform $transition-normal;
       }
     }
 
     &:hover .mv-icon {
       color: $hover-red;
-      transform: scale(1.1);
+      transform: scale(1.15) rotate(5deg);
     }
 
     p {
@@ -114,8 +126,15 @@
 
   .value-card {
     text-align: center;
-    transition: $transition-all;
-    @include hover-lift;
+    transition: transform $transition-smooth, box-shadow $transition-smooth;
+    animation: scaleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+    @include hover-lift-smooth;
+
+    @for $i from 1 through 6 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.1}s;
+      }
+    }
 
     .value-icon {
       font-size: 56px;
@@ -123,12 +142,13 @@
       height: 56px;
       color: $color-primary-red;
       margin-bottom: 1rem;
-      transition: $transition-all;
+      transition: color $transition-normal, transform $transition-normal;
     }
 
     &:hover .value-icon {
       color: $hover-red;
-      animation: pulse 1s ease infinite;
+      transform: scale(1.2) rotate(10deg);
+      animation: pulse 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     }
 
     h3 {

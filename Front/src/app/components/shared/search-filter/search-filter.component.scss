@@ -27,21 +27,33 @@
   padding: 20px;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  transition: $transition-all;
+  transition: box-shadow $transition-normal, transform $transition-normal;
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px $color-red-transparent-20;
+    transform: translateY(-3px);
   }
 }
 
 .search-field {
   width: 100%;
+  transition: transform $transition-normal;
+
+  &:focus-within {
+    transform: scale(1.02);
+  }
 
   ::ng-deep {
     .mat-mdc-text-field-wrapper {
       background-color: rgba(255, 255, 255, 0.9);
       border-radius: 8px;
+      transition: background-color $transition-normal, box-shadow $transition-normal;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 1);
+        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.15);
+      }
     }
 
     .mat-mdc-form-field-label {
@@ -49,14 +61,21 @@
       font-size: 12px;
       letter-spacing: 1px;
       color: $text-color-primary;
+      transition: color $transition-normal;
     }
 
     .mat-mdc-input-element {
       color: $text-color-primary;
+      transition: color $transition-normal;
     }
 
     .mat-mdc-form-field-focus-overlay {
       background-color: rgba(220, 53, 69, 0.1);
+      transition: background-color $transition-normal;
+    }
+
+    .mat-mdc-form-field.mat-focused .mat-mdc-form-field-focus-overlay {
+      background-color: rgba(220, 53, 69, 0.15);
     }
   }
 }
@@ -68,22 +87,52 @@
   font-weight: 600;
   background-color: $color-primary-red !important;
   color: $text-color-on-red !important;
-  transition: $transition-all;
+  transition: background-color $transition-normal, transform $transition-normal, box-shadow $transition-normal;
   border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width $transition-normal, height $transition-normal;
+  }
 
   &:hover {
     background-color: $hover-red !important;
-    transform: translateY(-2px);
-    box-shadow: $shadow-md;
+    transform: translateY(-3px);
+    box-shadow: $shadow-lg, $shadow-red;
+
+    &::before {
+      width: 300px;
+      height: 300px;
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px);
   }
 
   mat-icon {
     margin-right: 8px;
+    transition: transform $transition-normal;
+  }
+
+  &:hover mat-icon {
+    transform: scale(1.1);
   }
 
   &:disabled {
     opacity: 0.7;
     cursor: not-allowed;
+    transform: none !important;
   }
 }
 

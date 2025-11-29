@@ -55,11 +55,26 @@
   color: $text-color-light;
   text-decoration: none;
   padding: 8px 0;
-  transition: $transition-normal;
+  transition: color $transition-normal, transform $transition-normal;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    width: 3px;
+    height: 0;
+    background-color: $color-primary-red;
+    transition: height $transition-normal;
+  }
 
   &:hover {
     color: $text-color-on-black;
-    transform: translateX(5px);
+    transform: translateX(8px);
+
+    &::before {
+      height: 100%;
+    }
   }
 
   .link-icon {
@@ -74,11 +89,12 @@
     font-size: 12px;
     font-weight: 700;
     flex-shrink: 0;
-    transition: $transition-all;
+    transition: background-color $transition-normal, transform $transition-normal, box-shadow $transition-normal;
 
     &:hover {
       background-color: $hover-red;
-      transform: scale(1.1);
+      transform: scale(1.15) rotate(5deg);
+      box-shadow: $shadow-md;
     }
   }
 }
@@ -132,8 +148,9 @@
   gap: 15px;
   max-width: 300px;
   margin: 0 auto;
-  transition: $transition-all;
-  @include hover-lift;
+  transition: transform $transition-smooth, box-shadow $transition-smooth;
+  animation: scaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+  @include hover-lift-smooth;
 }
 
 .footer-logo-circle {
@@ -146,11 +163,12 @@
   justify-content: center;
   border: 4px solid $color-white;
   box-shadow: $shadow-lg;
-  transition: $transition-all;
+  transition: transform $transition-smooth, box-shadow $transition-smooth;
 
   &:hover {
     @include hover-glow-red;
-    transform: scale(1.05);
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: $shadow-xl, $shadow-red;
   }
 
   .footer-logo-letter {
@@ -236,17 +254,31 @@
   justify-content: center;
   color: $text-color-on-red;
   text-decoration: none;
-  transition: $transition-all;
+  background-color: $color-primary-red;
+  transition: transform $transition-normal, box-shadow $transition-normal, background-color $transition-normal;
+  animation: scaleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+
+  @for $i from 1 through 5 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.1}s;
+    }
+  }
 
   &:hover {
-    @include hover-lift;
-    box-shadow: $shadow-md;
+    transform: translateY(-5px) scale(1.1) rotate(5deg);
+    box-shadow: $shadow-lg, $shadow-red;
+    background-color: $hover-red;
   }
 
   mat-icon {
     font-size: 24px;
     width: 24px;
     height: 24px;
+    transition: transform $transition-normal;
+  }
+
+  &:hover mat-icon {
+    transform: scale(1.2);
   }
 }
 

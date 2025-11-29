@@ -6,11 +6,12 @@
   color: $text-color-on-red;
   padding: 60px 20px;
   text-align: center;
-  animation: fadeIn 0.6s ease;
+  animation: fadeInDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 
   h1 {
     font-size: 3rem;
     margin-bottom: 1rem;
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
     
     @media (max-width: 768px) {
       font-size: 2rem;
@@ -20,6 +21,7 @@
   p {
     font-size: 1.2rem;
     opacity: 0.9;
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
   }
 }
 
@@ -52,14 +54,25 @@
     }
 
     button {
-      transition: $transition-all;
+      transition: background-color $transition-normal, transform $transition-normal, box-shadow $transition-normal;
 
       &:hover {
         background-color: $hover-red !important;
+        transform: translateY(-2px);
+        box-shadow: $shadow-md;
+      }
+
+      &:active {
+        transform: translateY(0);
       }
 
       mat-icon {
         margin-right: 8px;
+        transition: transform $transition-normal;
+      }
+
+      &:hover mat-icon {
+        transform: scale(1.1);
       }
     }
   }
@@ -78,11 +91,18 @@
 
     .info-card {
       margin-bottom: 1rem;
-      transition: $transition-all;
+      transition: transform $transition-smooth, box-shadow $transition-normal;
+      animation: slideInRight 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+
+      @for $i from 1 through 5 {
+        &:nth-child(#{$i}) {
+          animation-delay: #{$i * 0.1}s;
+        }
+      }
 
       &:hover {
-        transform: translateX(5px);
-        box-shadow: $shadow-sm;
+        transform: translateX(8px);
+        box-shadow: $shadow-md;
       }
 
       .info-content {
