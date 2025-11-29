@@ -1,5 +1,12 @@
 @import '../variables';
 
+// Wrapper principal con fondo negro
+.nosotros-wrapper {
+  // background-color: $color-black;
+  padding-top: 95px;
+  min-height: 100vh;
+}
+
 // Page Header
 .page-header {
   background: $gradient-red;

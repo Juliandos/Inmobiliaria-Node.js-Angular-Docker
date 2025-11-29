@@ -1,5 +1,11 @@
 @import '../variables';
 
+// Wrapper principal
+.contacto-wrapper {
+  padding-top: 95px;
+  min-height: 100vh;
+}
+
 // Page Header
 .page-header {
   background: $gradient-red;
