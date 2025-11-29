@@ -1,0 +1,238 @@
+<div class="avaluos-wrapper">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="container">
+      <div class="header-content">
+        <mat-icon class="header-icon">psychology</mat-icon>
+        <h1>Avalúos IA</h1>
+        <p>Obtén una estimación inteligente del valor de tu propiedad</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="container">
+      
+      <!-- Formulario Section -->
+      <section class="form-section">
+        <mat-card class="avaluo-form-card">
+          <mat-card-header>
+            <mat-icon class="card-icon">edit_note</mat-icon>
+            <mat-card-title>Información de la Propiedad</mat-card-title>
+            <mat-card-subtitle>Complete los datos para generar el avalúo</mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <form [formGroup]="avaluoForm" (ngSubmit)="onGenerateAvaluo()">
+              <div class="form-grid">
+                
+                <!-- Título -->
+                <div class="form-field full-width">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Título o nombre de la propiedad</mat-label>
+                    <input matInput formControlName="titulo" placeholder="Ej: Apartamento en Chapinero">
+                    <mat-icon matPrefix>home</mat-icon>
+                    <mat-error *ngIf="avaluoForm.get('titulo')?.hasError('required')">
+                      El título es requerido
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- Ciudad y Barrio -->
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Ciudad*</mat-label>
+                    <input matInput formControlName="ciudad" placeholder="Ej: Bogotá">
+                    <mat-icon matPrefix>location_city</mat-icon>
+                    <mat-error *ngIf="avaluoForm.get('ciudad')?.hasError('required')">
+                      La ciudad es requerida
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Barrio o zona</mat-label>
+                    <input matInput formControlName="barrio" placeholder="Ej: Chapinero Alto">
+                    <mat-icon matPrefix>place</mat-icon>
+                  </mat-form-field>
+                </div>
+
+                <!-- Tipo y Estrato -->
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Tipo de propiedad</mat-label>
+                    <mat-select formControlName="tipo_id">
+                      <mat-option [value]="null">Seleccionar tipo</mat-option>
+                      <mat-option *ngFor="let tipo of tipos" [value]="tipo.id">
+                        {{ tipo.nombre }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-icon matPrefix>category</mat-icon>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Estrato</mat-label>
+                    <mat-select formControlName="estrato">
+                      <mat-option [value]="null">Seleccionar</mat-option>
+                      <mat-option *ngFor="let e of [1,2,3,4,5,6]" [value]="e">
+                        Estrato {{ e }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-icon matPrefix>star</mat-icon>
+                  </mat-form-field>
+                </div>
+
+                <!-- Área y Antigüedad -->
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Área (m²)*</mat-label>
+                    <input matInput formControlName="area" type="number" step="0.01" placeholder="120">
+                    <mat-icon matPrefix>square_foot</mat-icon>
+                    <mat-error *ngIf="avaluoForm.get('area')?.hasError('required')">
+                      El área es requerida
+                    </mat-error>
+                    <mat-error *ngIf="avaluoForm.get('area')?.hasError('min')">
+                      El área debe ser mayor a 0
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Antigüedad (años)</mat-label>
+                    <input matInput formControlName="antiguedad" type="number" placeholder="5">
+                    <mat-icon matPrefix>calendar_today</mat-icon>
+                  </mat-form-field>
+                </div>
+
+                <!-- Habitaciones, Baños, Parqueadero -->
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Habitaciones</mat-label>
+                    <input matInput formControlName="habitaciones" type="number" placeholder="3">
+                    <mat-icon matPrefix>bed</mat-icon>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Baños</mat-label>
+                    <input matInput formControlName="banos" type="number" placeholder="2">
+                    <mat-icon matPrefix>bathtub</mat-icon>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Parqueaderos</mat-label>
+                    <input matInput formControlName="parqueadero" type="number" placeholder="1">
+                    <mat-icon matPrefix>garage</mat-icon>
+                  </mat-form-field>
+                </div>
+
+                <!-- Precio Estimado -->
+                <div class="form-field">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Precio estimado (opcional)</mat-label>
+                    <input matInput formControlName="precio_estimado" type="number" placeholder="250000000">
+                    <mat-icon matPrefix>attach_money</mat-icon>
+                    <mat-hint>Si conoces un precio de referencia</mat-hint>
+                  </mat-form-field>
+                </div>
+
+                <!-- Descripción -->
+                <div class="form-field full-width">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Descripción adicional</mat-label>
+                    <textarea 
+                      matInput 
+                      formControlName="descripcion" 
+                      rows="3" 
+                      placeholder="Describe características especiales: vista, acabados, remodelaciones, etc.">
+                    </textarea>
+                    <mat-icon matPrefix>description</mat-icon>
+                  </mat-form-field>
+                </div>
+
+              </div>
+
+              <!-- Botones -->
+              <div class="form-actions">
+                <button 
+                  mat-raised-button 
+                  type="button" 
+                  class="reset-button"
+                  (click)="resetForm()">
+                  <mat-icon>refresh</mat-icon>
+                  Limpiar
+                </button>
+                <button 
+                  mat-raised-button 
+                  color="primary" 
+                  type="submit"
+                  class="generate-button"
+                  [disabled]="avaluoForm.invalid || isGenerating()">
+                  <mat-icon *ngIf="!isGenerating()">auto_awesome</mat-icon>
+                  <mat-spinner *ngIf="isGenerating()" diameter="20"></mat-spinner>
+                  {{ isGenerating() ? 'Generando...' : 'Generar Avalúo IA' }}
+                </button>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </section>
+
+      <!-- Resultado Section -->
+      <section class="result-section">
+        <mat-card class="result-card" [class.has-result]="avaluoResult()">
+          <mat-card-header>
+            <mat-icon class="card-icon">analytics</mat-icon>
+            <mat-card-title>Resultado del Avalúo</mat-card-title>
+            <mat-card-subtitle>Análisis generado por Inteligencia Artificial</mat-card-subtitle>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <!-- Placeholder cuando no hay resultado -->
+            <div class="result-placeholder" *ngIf="!avaluoResult() && !isGenerating()">
+              <mat-icon class="placeholder-icon">psychology</mat-icon>
+              <h3>Tu avalúo aparecerá aquí</h3>
+              <p>Completa el formulario y haz clic en "Generar Avalúo IA" para obtener una estimación del valor de tu propiedad.</p>
+              <div class="features-list">
+                <div class="feature">
+                  <mat-icon>speed</mat-icon>
+                  <span>Análisis instantáneo</span>
+                </div>
+                <div class="feature">
+                  <mat-icon>location_on</mat-icon>
+                  <span>Datos del mercado local</span>
+                </div>
+                <div class="feature">
+                  <mat-icon>trending_up</mat-icon>
+                  <span>Estimación de valor</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loading state -->
+            <div class="result-loading" *ngIf="isGenerating()">
+              <mat-spinner diameter="60"></mat-spinner>
+              <h3>Analizando tu propiedad...</h3>
+              <p>Nuestra IA está procesando la información para generar el avalúo.</p>
+            </div>
+
+            <!-- Resultado -->
+            <div class="result-content" *ngIf="avaluoResult() && !isGenerating()">
+              <pre class="avaluo-text">{{ avaluoResult() }}</pre>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </section>
+
+    </div>
+  </div>
+</div>
+

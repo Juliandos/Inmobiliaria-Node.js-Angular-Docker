@@ -1,0 +1,428 @@
+@import '../variables';
+
+// Wrapper principal
+.avaluos-wrapper {
+  padding-top: 95px;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+}
+
+// Page Header
+.page-header {
+  background: $gradient-red;
+  color: $text-color-on-red;
+  padding: 60px 20px;
+  text-align: center;
+  animation: fadeInDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  // Efecto de partículas/círculos decorativos
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, $color-white-transparent-10 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: pulse 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .header-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+    animation: scaleIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+
+  p {
+    font-size: 1.2rem;
+    opacity: 0.95;
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+// Main Content
+.main-content {
+  padding: 40px 20px 60px;
+  background-color: var(--bg-secondary);
+}
+
+// Container
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+// Form Section
+.form-section {
+  margin-bottom: 40px;
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+}
+
+.avaluo-form-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform $transition-smooth, box-shadow $transition-smooth;
+  @include hover-lift-smooth;
+
+  mat-card-header {
+    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--card-border);
+
+    .card-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: $color-primary-red;
+    }
+
+    mat-card-title {
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    mat-card-subtitle {
+      color: var(--text-secondary);
+      margin: 4px 0 0 0;
+    }
+  }
+
+  mat-card-content {
+    padding: 32px;
+  }
+}
+
+// Form Grid
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+
+  @media (max-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-field {
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+
+  mat-form-field {
+    width: 100%;
+
+    ::ng-deep {
+      .mat-mdc-text-field-wrapper {
+        background-color: var(--input-bg);
+        border-radius: 8px;
+        transition: box-shadow $transition-normal, background-color $transition-normal;
+
+        &:hover {
+          background-color: var(--input-bg);
+          box-shadow: $shadow-sm;
+        }
+      }
+
+      .mat-mdc-form-field-label {
+        color: var(--input-placeholder);
+      }
+
+      .mat-mdc-input-element {
+        color: var(--input-text);
+      }
+
+      .mat-mdc-form-field-icon-prefix {
+        color: var(--text-secondary);
+        padding-right: 8px;
+      }
+
+      .mdc-text-field--focused {
+        .mat-mdc-form-field-icon-prefix {
+          color: $color-primary-red;
+        }
+      }
+    }
+  }
+}
+
+// Form Actions
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+  }
+}
+
+.reset-button {
+  color: var(--text-secondary);
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  transition: all $transition-normal;
+
+  &:hover {
+    background-color: var(--bg-tertiary);
+    border-color: var(--text-secondary);
+  }
+
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+.generate-button {
+  background: $gradient-red !important;
+  color: white !important;
+  padding: 0 32px;
+  height: 48px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all $transition-normal;
+  box-shadow: $shadow-red;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg, $shadow-red;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  mat-icon {
+    margin-right: 8px;
+  }
+
+  mat-spinner {
+    margin-right: 8px;
+    
+    ::ng-deep circle {
+      stroke: white;
+    }
+  }
+}
+
+// Result Section
+.result-section {
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
+}
+
+.result-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: 400px;
+  transition: all $transition-smooth;
+
+  &.has-result {
+    border-color: $color-primary-red;
+    box-shadow: $shadow-red;
+  }
+
+  mat-card-header {
+    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--card-border);
+
+    .card-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: $color-primary-red;
+    }
+
+    mat-card-title {
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    mat-card-subtitle {
+      color: var(--text-secondary);
+      margin: 4px 0 0 0;
+    }
+  }
+
+  mat-card-content {
+    padding: 32px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// Placeholder
+.result-placeholder {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+
+  .placeholder-icon {
+    font-size: 80px;
+    width: 80px;
+    height: 80px;
+    color: var(--text-tertiary);
+    margin-bottom: 24px;
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  p {
+    max-width: 400px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
+  }
+
+  .features-list {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+
+    @media (max-width: 576px) {
+      flex-direction: column;
+      gap: 16px;
+    }
+  }
+
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background-color: var(--bg-tertiary);
+    border-radius: 24px;
+    transition: all $transition-normal;
+
+    &:hover {
+      background-color: $color-red-transparent-10;
+      color: $color-primary-red;
+
+      mat-icon {
+        color: $color-primary-red;
+      }
+    }
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: var(--text-secondary);
+      transition: color $transition-normal;
+    }
+
+    span {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  }
+}
+
+// Loading state
+.result-loading {
+  text-align: center;
+  padding: 60px 20px;
+
+  mat-spinner {
+    margin: 0 auto 24px;
+
+    ::ng-deep circle {
+      stroke: $color-primary-red;
+    }
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: var(--text-secondary);
+  }
+}
+
+// Result Content
+.result-content {
+  width: 100%;
+  animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.avaluo-text {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+  padding: 32px;
+  border-radius: 12px;
+  border-left: 4px solid $color-primary-red;
+  line-height: 1.8;
+  color: var(--text-primary);
+  font-size: 1rem;
+  box-shadow: $shadow-sm;
+  margin: 0;
+
+  // Estilos para el markdown simulado
+  strong {
+    color: var(--text-primary);
+  }
+}
+
+// Utility
+.w-100 {
+  width: 100%;
+}
+

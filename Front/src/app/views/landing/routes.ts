@@ -33,6 +33,13 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'avaluos-ia',
+        loadComponent: () => import('./avaluos-ia/avaluos-ia.component').then(m => m.AvaluosIaComponent),
+        data: {
+          title: 'Avalúos IA'
+        }
+      },
+      {
         path: 'propiedades',
         loadComponent: () => import('./propiedades-publicas/propiedades-publicas.component').then(m => m.PropiedadesPublicasComponent),
         data: {

@@ -65,6 +65,7 @@ export class LandingHeaderComponent implements OnInit, OnDestroy {
     
     // Menú estático (siempre visible)
     this.menuItems = [
+      { label: 'Avalúos IA', route: '/landing/avaluos-ia' },
       { label: 'Nosotros', route: '/landing/nosotros' },
       { label: 'Contacto', route: '/landing/contacto' }
     ];

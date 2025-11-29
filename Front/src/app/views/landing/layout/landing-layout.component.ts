@@ -38,12 +38,13 @@ export class LandingLayoutComponent implements OnInit {
   }
 
   checkRoute(url: string): void {
-    // Ocultar hero-section en detalle de propiedad, nosotros y contacto
+    // Ocultar hero-section en detalle de propiedad, nosotros, contacto y avaluos-ia
     const isPropertyDetail = url.includes('/propiedad/');
     const isNosotros = url.includes('/nosotros');
     const isContacto = url.includes('/contacto');
+    const isAvaluosIA = url.includes('/avaluos-ia');
     
-    this.showHeroSection = !isPropertyDetail && !isNosotros && !isContacto;
+    this.showHeroSection = !isPropertyDetail && !isNosotros && !isContacto && !isAvaluosIA;
   }
 }
 
