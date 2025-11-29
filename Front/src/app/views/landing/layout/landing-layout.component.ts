@@ -24,6 +24,7 @@ import { HeroCarouselComponent } from '../../../components/landing/hero-carousel
 export class LandingLayoutComponent implements OnInit {
   private router = inject(Router);
   showHeroSection = true;
+  isOperacionRoute = false;
 
   ngOnInit(): void {
     // Detectar cambios de ruta
@@ -39,7 +40,11 @@ export class LandingLayoutComponent implements OnInit {
 
   checkRoute(url: string): void {
     // Ocultar hero-section en la vista de detalle de propiedad
-    this.showHeroSection = !url.includes('/propiedad/');
+    const isPropertyDetail = url.includes('/propiedad/');
+    const isOperacion = url.includes('/operacion/');
+    
+    this.isOperacionRoute = isOperacion;
+    this.showHeroSection = !isPropertyDetail;
   }
 }
 

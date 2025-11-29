@@ -14,8 +14,16 @@
   position: relative;
   width: 100%;
   height: 80vh;
-  min-height: 400px;
+  min-height: 500px;
   animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity $transition-slow, transform $transition-slow;
+  z-index: 2;
+
+  &.hero-exit {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
+    pointer-events: none;
+  }
 }
 
 .floating-search-wrapper {
@@ -30,6 +38,13 @@
   z-index: 50;
   pointer-events: none;
   animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+  transition: opacity $transition-slow, transform $transition-slow;
+
+  &.search-exit {
+    opacity: 0;
+    transform: translateY(-30px);
+    pointer-events: none;
+  }
 
   app-search-filter {
     pointer-events: all;
@@ -42,6 +57,27 @@
   position: relative;
   z-index: 1;
   background-color: $bg-primary;
+  transition: z-index $transition-normal;
+  
+  // Compensar el header fixed (altura aproximada del header)
+  padding-top: 0;
+  
+  // Cuando el contenido está sobre el carrusel, no necesita padding-top
+  &.content-overlay {
+    padding-top: 0;
+  }
+  
+  &.content-overlay {
+    z-index: 3;
+    animation: slideUpOverlay 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    // Cuando está sobre el carrusel, asegurar que esté por encima
+    ::ng-deep router-outlet + * {
+      position: relative;
+      z-index: 1;
+      animation: slideUpOverlay 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
   
   // Transición suave para cambios de ruta
   ::ng-deep router-outlet + * {
@@ -49,11 +85,23 @@
   }
 }
 
+// Animación para que el contenido se sobreponga al carrusel
+@keyframes slideUpOverlay {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 // Tablet
 @media (min-width: 768px) {
   .hero-section {
-    height: 70vh;
-    min-height: 500px;
+    height: 90vh;
+    min-height: 600px;
   }
 }
 
@@ -61,7 +109,7 @@
 @media (min-width: 1024px) {
   .hero-section {
     height: 80vh;
-    min-height: 600px;
+    min-height: 700px;
   }
 }
 

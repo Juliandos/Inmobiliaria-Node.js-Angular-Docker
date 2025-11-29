@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,6 +9,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { OperacionesService, Operacion } from '../../../services/operaciones.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-landing-header',
@@ -27,9 +29,10 @@ import { OperacionesService, Operacion } from '../../../services/operaciones.ser
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class LandingHeaderComponent implements OnInit {
+export class LandingHeaderComponent implements OnInit, OnDestroy {
   private operacionesService = inject(OperacionesService);
   private router = inject(Router);
+  private destroy$ = new Subject<void>();
   
   menuItems: { label: string; route: string; queryParams?: any }[] = [];
   operacionesMenuItems: { label: string; route: string }[] = [];
@@ -38,6 +41,7 @@ export class LandingHeaderComponent implements OnInit {
   isLoggedIn = false; // Esto se conectará con el servicio de autenticación después
   mobileMenuOpen = false;
   loadingOperaciones = true;
+  isScrolled = false;
   
   // Normalizar nombre para URL (sin acentos, espacios a guiones, minúsculas)
   normalizeRouteName(nombre: string): string {
@@ -58,6 +62,20 @@ export class LandingHeaderComponent implements OnInit {
       { label: 'Nosotros', route: '/landing/nosotros' },
       { label: 'Contacto', route: '/landing/contacto' }
     ];
+
+    // Inicializar estado de scroll
+    this.onWindowScroll();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    this.isScrolled = scrollPosition > 10;
   }
 
   private loadOperaciones(): void {

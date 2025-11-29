@@ -2,25 +2,34 @@
 
 // Mobile First - Base styles
 .landing-header {
-  background-color: $bg-header;
-  padding: 12px 0;
-  position: sticky;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 8px 0;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
-  backdrop-filter: blur(10px);
-  box-shadow: $shadow-md;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   width: 100%;
-  transition: background-color $transition-normal, box-shadow $transition-normal, padding $transition-normal;
+  transition: background-color $transition-normal, box-shadow $transition-normal, padding $transition-normal, border-bottom-width $transition-normal;
+  border-bottom: 2px solid $color-red-lighter;
 
   &.mobile-menu-active {
-    position: relative;
+    position: fixed;
   }
 
-  // Efecto de scroll mejorado
+  // Efecto de scroll - borde desaparece
   &.scrolled {
     padding: 8px 0;
-    box-shadow: $shadow-lg;
-    background-color: rgba(0, 0, 0, 0.95);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.85);
+    border-bottom-width: 0px;
+  }
+
+  // Cuando está en la parte superior
+  &.at-top {
+    border-bottom-width: 2px;
   }
 }
 
