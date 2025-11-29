@@ -3,15 +3,15 @@
   <app-landing-header></app-landing-header>
 
   <!-- Hero Carousel with Floating Search Filter - Solo en ciertas rutas -->
-  <div class="hero-section" *ngIf="showHeroSection" [class.hero-exit]="isOperacionRoute">
-    <app-hero-carousel [class.carousel-exit]="isOperacionRoute"></app-hero-carousel>
-    <div class="floating-search-wrapper" [class.search-exit]="isOperacionRoute">
+  <div class="hero-section" *ngIf="showHeroSection">
+    <app-hero-carousel></app-hero-carousel>
+    <div class="floating-search-wrapper">
       <app-search-filter></app-search-filter>
     </div>
   </div>
 
   <!-- Main Content -->
-  <main class="main-content" [class.content-overlay]="isOperacionRoute">
+  <main class="main-content">
     <router-outlet></router-outlet>
   </main>
 

@@ -24,27 +24,26 @@ import { HeroCarouselComponent } from '../../../components/landing/hero-carousel
 export class LandingLayoutComponent implements OnInit {
   private router = inject(Router);
   showHeroSection = true;
-  isOperacionRoute = false;
 
   ngOnInit(): void {
+    // Verificar ruta inicial
+    this.checkRoute(this.router.url);
+    
     // Detectar cambios de ruta
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
-        this.checkRoute(event.url);
+        this.checkRoute(event.urlAfterRedirects || event.url);
       });
-
-    // Verificar ruta inicial
-    this.checkRoute(this.router.url);
   }
 
   checkRoute(url: string): void {
-    // Ocultar hero-section en la vista de detalle de propiedad
+    // Ocultar hero-section en detalle de propiedad, nosotros y contacto
     const isPropertyDetail = url.includes('/propiedad/');
-    const isOperacion = url.includes('/operacion/');
+    const isNosotros = url.includes('/nosotros');
+    const isContacto = url.includes('/contacto');
     
-    this.isOperacionRoute = isOperacion;
-    this.showHeroSection = !isPropertyDetail;
+    this.showHeroSection = !isPropertyDetail && !isNosotros && !isContacto;
   }
 }
 
