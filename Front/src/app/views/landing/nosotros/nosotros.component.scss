@@ -1,10 +1,10 @@
 @import '../variables';
 
-// Wrapper principal con fondo negro
+// Wrapper principal
 .nosotros-wrapper {
-  // background-color: $color-black;
   padding-top: 95px;
   min-height: 100vh;
+  background-color: var(--bg-primary);
 }
 
 // Page Header
@@ -35,19 +35,21 @@
 // About Section
 .about-section {
   padding: 60px 20px;
-  background-color: $bg-primary;
+  background-color: var(--bg-primary);
 
   .about-card {
     max-width: 900px;
     margin: 0 auto;
     transition: transform $transition-smooth, box-shadow $transition-smooth;
     animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
     @include hover-lift-smooth;
 
     p {
       font-size: 1.1rem;
       line-height: 1.8;
-      color: $text-color-secondary;
+      color: var(--text-secondary);
       margin-bottom: 1rem;
     }
   }
@@ -56,7 +58,7 @@
 // Mission Vision Section
 .mission-vision-section {
   padding: 60px 20px;
-  background-color: $bg-secondary;
+  background-color: var(--section-alt-bg);
 
   .mv-grid {
     display: grid;
@@ -73,6 +75,8 @@
   .mv-card {
     transition: transform $transition-smooth, box-shadow $transition-smooth;
     animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) both;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
     @include hover-lift-smooth;
 
     &:nth-child(1) {
@@ -92,21 +96,25 @@
         font-size: 48px;
         width: 48px;
         height: 48px;
-        color: $color-primary-red;
+        color: var(--btn-primary-bg);
         margin-right: 1rem;
         transition: color $transition-normal, transform $transition-normal;
+      }
+      
+      mat-card-title {
+        color: var(--text-primary);
       }
     }
 
     &:hover .mv-icon {
-      color: $hover-red;
+      color: var(--btn-primary-hover);
       transform: scale(1.15) rotate(5deg);
     }
 
     p {
       font-size: 1rem;
       line-height: 1.6;
-      color: $text-color-secondary;
+      color: var(--text-secondary);
     }
   }
 }
@@ -114,13 +122,13 @@
 // Values Section
 .values-section {
   padding: 80px 20px;
-  background-color: $bg-primary;
+  background-color: var(--bg-primary);
 
   .section-title {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 3rem;
-    color: $text-color-primary;
+    color: var(--text-primary);
   }
 
   .values-grid {
@@ -135,6 +143,8 @@
     text-align: center;
     transition: transform $transition-smooth, box-shadow $transition-smooth;
     animation: scaleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
     @include hover-lift-smooth;
 
     @for $i from 1 through 6 {
@@ -147,13 +157,13 @@
       font-size: 56px;
       width: 56px;
       height: 56px;
-      color: $color-primary-red;
+      color: var(--btn-primary-bg);
       margin-bottom: 1rem;
       transition: color $transition-normal, transform $transition-normal;
     }
 
     &:hover .value-icon {
-      color: $hover-red;
+      color: var(--btn-primary-hover);
       transform: scale(1.2) rotate(10deg);
       animation: pulse 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     }
@@ -161,11 +171,11 @@
     h3 {
       font-size: 1.3rem;
       margin-bottom: 0.5rem;
-      color: $text-color-primary;
+      color: var(--text-primary);
     }
 
     p {
-      color: $text-color-secondary;
+      color: var(--text-secondary);
     }
   }
 }
@@ -176,4 +186,3 @@
   margin: 0 auto;
   padding: 0 20px;
 }
-

@@ -29,7 +29,8 @@
 .loading-section {
   padding: 80px 20px;
   text-align: center;
-  color: $color-primary-red;
+  color: var(--btn-primary-bg);
+  background-color: var(--bg-primary);
 
   mat-icon {
     font-size: 64px;
@@ -41,7 +42,7 @@
 
   p {
     font-size: 1.2rem;
-    color: $text-color-secondary;
+    color: var(--text-secondary);
   }
 }
 
@@ -61,7 +62,7 @@
 // Propiedades Section
 .propiedades-section {
   padding: 60px 20px;
-  background-color: $bg-secondary;
+  background-color: var(--section-alt-bg);
   min-height: 60vh;
 
   .propiedades-grid {
@@ -84,6 +85,8 @@
     flex-direction: column;
     transition: transform $transition-smooth, box-shadow $transition-smooth;
     animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
 
     @for $i from 1 through 12 {
       &:nth-child(#{$i}) {
@@ -93,7 +96,7 @@
 
     &:hover {
       transform: translateY(-6px) scale(1.02);
-      box-shadow: $shadow-xl, $shadow-red;
+      box-shadow: var(--shadow-card-hover), 0 4px 12px rgba(220, 53, 69, 0.2);
     }
 
     .propiedad-image {
@@ -122,14 +125,14 @@
 
       mat-card-title {
         font-size: 1.4rem;
-        color: $text-color-primary;
+        color: var(--text-primary);
       }
 
       .tipo-chip {
         margin-top: 0.5rem;
         font-size: 0.9rem;
-        background-color: $color-red-transparent-10 !important;
-        color: $color-primary-red !important;
+        background-color: var(--property-badge-bg) !important;
+        color: var(--property-badge-text) !important;
       }
     }
 
@@ -137,7 +140,7 @@
       flex-grow: 1;
 
       .descripcion {
-        color: $text-color-secondary;
+        color: var(--text-secondary);
         line-height: 1.6;
         margin-bottom: 1rem;
         min-height: 60px;
@@ -149,30 +152,30 @@
         gap: 1rem;
         margin-bottom: 1rem;
         padding: 1rem 0;
-        border-top: 1px solid $border-color-dark;
-        border-bottom: 1px solid $border-color-dark;
+        border-top: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--border-color);
 
         .detalle-item {
           display: flex;
           align-items: center;
           gap: 0.3rem;
-          color: $text-color-secondary;
+          color: var(--text-secondary);
           transition: $transition-fast;
 
           &:hover {
-            color: $color-primary-red;
+            color: var(--btn-primary-bg);
           }
 
           mat-icon {
             font-size: 20px;
             width: 20px;
             height: 20px;
-            color: $color-primary-red;
+            color: var(--btn-primary-bg);
             transition: $transition-fast;
           }
 
           &:hover mat-icon {
-            color: $hover-red;
+            color: var(--btn-primary-hover);
             transform: scale(1.1);
           }
 
@@ -186,7 +189,7 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        color: #2ecc71;
+        color: var(--property-price-color);
         font-size: 1.5rem;
         font-weight: 700;
 
@@ -207,12 +210,12 @@
         transition: $transition-all;
 
         &[color="primary"]:hover {
-          background-color: $hover-red !important;
+          background-color: var(--btn-primary-hover) !important;
         }
 
         &[color="accent"]:hover {
-          background-color: $color-primary-red !important;
-          color: $text-color-on-red !important;
+          background-color: var(--btn-primary-bg) !important;
+          color: var(--text-on-primary) !important;
         }
 
         mat-icon {
@@ -230,20 +233,20 @@
       font-size: 120px;
       width: 120px;
       height: 120px;
-      color: $text-color-secondary;
+      color: var(--text-tertiary);
       margin-bottom: 2rem;
       opacity: 0.5;
     }
 
     h3 {
       font-size: 2rem;
-      color: $text-color-secondary;
+      color: var(--text-secondary);
       margin-bottom: 1rem;
     }
 
     p {
       font-size: 1.2rem;
-      color: $text-color-secondary;
+      color: var(--text-secondary);
     }
   }
 }
@@ -254,4 +257,3 @@
   margin: 0 auto;
   padding: 0 20px;
 }
-

@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { OperacionesService, Operacion } from '../../../services/operaciones.service';
 import { ThemeStore } from '../../../store/theme.store';
@@ -25,6 +26,7 @@ import { takeUntil } from 'rxjs/operators';
     MatFormFieldModule,
     MatMenuModule,
     MatDividerModule,
+    MatTooltipModule,
     ReactiveFormsModule
   ],
   templateUrl: './header.component.html',

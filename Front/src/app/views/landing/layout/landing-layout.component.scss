@@ -8,6 +8,7 @@
   position: relative;
   width: 100%;
   overflow-x: hidden;
+  background-color: var(--bg-primary);
 }
 
 .hero-section {
@@ -56,8 +57,8 @@
   width: 100%;
   position: relative;
   z-index: 1;
-  background-color: $bg-primary;
-  transition: z-index $transition-normal;
+  background-color: var(--bg-primary);
+  transition: z-index $transition-normal, background-color 0.3s ease;
   
   // Compensar el header fixed (altura aproximada del header)
   padding-top: 0;
@@ -112,4 +113,3 @@
     min-height: 700px;
   }
 }
-

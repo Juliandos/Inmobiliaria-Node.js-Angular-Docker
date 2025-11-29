@@ -1,8 +1,8 @@
 @import '../../../views/landing/variables';
 
 .landing-footer {
-  background-color: $bg-dark;
-  color: $text-color-on-black;
+  background-color: var(--bg-footer);
+  color: var(--text-on-dark);
   padding: 30px 20px 15px;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .footer-title {
-  color: $text-color-on-black;
+  color: var(--text-on-dark);
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 12px;
@@ -51,13 +51,13 @@
 }
 
 .footer-link {
-  color: $text-color-light;
+  color: var(--text-secondary);
   text-decoration: none;
   font-size: 13px;
   transition: color $transition-normal;
 
   &:hover {
-    color: $color-primary-red;
+    color: var(--btn-primary-bg);
   }
 }
 
@@ -68,32 +68,34 @@
 }
 
 .footer-logo {
-  background-color: $bg-primary;
+  background-color: var(--bg-card);
   padding: 12px 16px;
   border-radius: 6px;
   display: flex;
   align-items: center;
   gap: 10px;
-  transition: transform $transition-normal;
+  transition: transform $transition-normal, box-shadow $transition-normal;
+  box-shadow: var(--shadow-sm);
 
   &:hover {
     transform: scale(1.02);
+    box-shadow: var(--shadow-md);
   }
 }
 
 .footer-logo-circle {
   width: 40px;
   height: 40px;
-  background-color: $color-primary-red;
+  background-color: var(--btn-primary-bg);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid $color-white;
+  border: 2px solid var(--text-on-dark);
   flex-shrink: 0;
 
   .footer-logo-letter {
-    color: $text-color-on-red;
+    color: var(--text-on-primary);
     font-size: 22px;
     font-weight: 900;
   }
@@ -106,7 +108,7 @@
 }
 
 .footer-logo-ventas {
-  color: $color-black;
+  color: var(--text-primary);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -114,20 +116,20 @@
 }
 
 .footer-logo-name {
-  background-color: $color-black;
+  background-color: var(--bg-dark);
   padding: 2px 6px;
   margin: 2px 0;
 }
 
 .footer-logo-hamilton {
-  color: $color-primary-red;
+  color: var(--btn-primary-bg);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.5px;
 }
 
 .footer-logo-inmobiliaria {
-  color: $color-black;
+  color: var(--text-primary);
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.5px;
@@ -148,7 +150,7 @@
   }
 
   .contact-role {
-    color: $color-primary-red;
+    color: var(--btn-primary-bg);
     font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
@@ -156,13 +158,13 @@
   }
 
   .contact-name {
-    color: $text-color-on-black;
+    color: var(--text-on-dark);
     font-size: 13px;
     font-weight: 500;
   }
 
   .contact-phone {
-    color: $text-color-light;
+    color: var(--text-secondary);
     font-size: 12px;
     text-decoration: none;
     display: inline-flex;
@@ -181,14 +183,14 @@
     }
 
     &:hover {
-      color: $color-primary-red;
+      color: var(--btn-primary-bg);
     }
   }
 }
 
 // Bottom Section - Compacto
 .footer-bottom {
-  border-top: 1px solid $border-color-light;
+  border-top: 1px solid var(--border-color);
   padding-top: 15px;
 }
 
@@ -208,7 +210,7 @@
 }
 
 .copyright {
-  color: $text-color-light;
+  color: var(--text-secondary);
   font-size: 11px;
   margin: 0;
 }
@@ -224,12 +226,12 @@
   }
 
   .dev-label {
-    color: $text-color-light;
+    color: var(--text-secondary);
     font-size: 11px;
   }
 
   .dev-name {
-    color: $text-color-on-black;
+    color: var(--text-on-dark);
     font-size: 11px;
     font-weight: 500;
   }
@@ -243,11 +245,11 @@
     width: 24px;
     height: 24px;
     border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--bg-tertiary);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: $text-color-light;
+    color: var(--text-secondary);
     text-decoration: none;
     transition: background-color $transition-normal, color $transition-normal;
 
@@ -258,8 +260,8 @@
     }
 
     &:hover {
-      background-color: $color-primary-red;
-      color: $text-color-on-red;
+      background-color: var(--btn-primary-bg);
+      color: var(--text-on-primary);
     }
   }
 }

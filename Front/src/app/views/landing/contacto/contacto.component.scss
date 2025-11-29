@@ -4,6 +4,7 @@
 .contacto-wrapper {
   padding-top: 95px;
   min-height: 100vh;
+  background-color: var(--bg-primary);
 }
 
 // Page Header
@@ -34,7 +35,7 @@
 // Contact Section
 .contact-section {
   padding: 60px 20px;
-  background-color: $bg-secondary;
+  background-color: var(--section-alt-bg);
 
   .contact-grid {
     display: grid;
@@ -50,6 +51,47 @@
 
   .contact-form-card {
     height: fit-content;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+
+    mat-card-header {
+      mat-card-title {
+        color: var(--text-primary);
+      }
+    }
+
+    mat-card-content {
+      ::ng-deep {
+        .mat-mdc-form-field {
+          .mat-mdc-text-field-wrapper {
+            background-color: var(--input-bg);
+          }
+          
+          .mat-mdc-form-field-label,
+          .mdc-floating-label {
+            color: var(--input-placeholder);
+          }
+          
+          .mat-mdc-input-element {
+            color: var(--input-text);
+          }
+          
+          .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+          .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+          .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+            border-color: var(--input-border);
+          }
+          
+          &.mat-focused {
+            .mdc-notched-outline__leading,
+            .mdc-notched-outline__notch,
+            .mdc-notched-outline__trailing {
+              border-color: var(--input-focus-border) !important;
+            }
+          }
+        }
+      }
+    }
 
     .w-100 {
       width: 100%;
@@ -63,9 +105,9 @@
       transition: background-color $transition-normal, transform $transition-normal, box-shadow $transition-normal;
 
       &:hover {
-        background-color: $hover-red !important;
+        background-color: var(--btn-primary-hover) !important;
         transform: translateY(-2px);
-        box-shadow: $shadow-md;
+        box-shadow: var(--shadow-md);
       }
 
       &:active {
@@ -87,11 +129,11 @@
     h2 {
       font-size: 2rem;
       margin-bottom: 1rem;
-      color: $text-color-primary;
+      color: var(--text-primary);
     }
 
     p {
-      color: $text-color-secondary;
+      color: var(--text-secondary);
       line-height: 1.6;
     }
 
@@ -99,6 +141,8 @@
       margin-bottom: 1rem;
       transition: transform $transition-smooth, box-shadow $transition-normal;
       animation: slideInRight 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
 
       @for $i from 1 through 5 {
         &:nth-child(#{$i}) {
@@ -108,7 +152,7 @@
 
       &:hover {
         transform: translateX(8px);
-        box-shadow: $shadow-md;
+        box-shadow: var(--shadow-md);
       }
 
       .info-content {
@@ -120,33 +164,33 @@
           font-size: 40px;
           width: 40px;
           height: 40px;
-          color: $color-primary-red;
+          color: var(--btn-primary-bg);
           transition: $transition-all;
         }
 
         &:hover .info-icon {
-          color: $hover-red;
+          color: var(--btn-primary-hover);
           transform: scale(1.1);
         }
 
         h3 {
           margin: 0 0 0.5rem 0;
           font-size: 1.2rem;
-          color: $text-color-primary;
+          color: var(--text-primary);
         }
 
         p {
           margin: 0;
-          color: $text-color-secondary;
+          color: var(--text-secondary);
         }
       }
     }
 
     .business-hours {
-      background-color: $bg-primary;
+      background-color: var(--bg-tertiary);
       padding: 1.5rem;
       border-radius: 8px;
-      box-shadow: $shadow-sm;
+      box-shadow: var(--shadow-sm);
       transition: $transition-all;
       @include hover-lift;
 
@@ -155,16 +199,16 @@
         align-items: center;
         gap: 0.5rem;
         margin-bottom: 1rem;
-        color: $text-color-primary;
+        color: var(--text-primary);
 
         mat-icon {
-          color: $color-primary-red;
+          color: var(--btn-primary-bg);
         }
       }
 
       p {
         margin: 0.5rem 0;
-        color: $text-color-secondary;
+        color: var(--text-secondary);
       }
     }
 
@@ -184,4 +228,3 @@
   margin: 0 auto;
   padding: 0 20px;
 }
-

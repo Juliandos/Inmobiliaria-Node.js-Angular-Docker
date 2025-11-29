@@ -53,7 +53,7 @@
       </a>
     </nav>
 
-    <!-- Right Section: Search + User Menu -->
+    <!-- Right Section: Search + Theme + User Menu -->
     <div class="header-right">
       <!-- Search Input -->
       <mat-form-field appearance="outline" class="search-field">
@@ -65,6 +65,16 @@
           placeholder="Buscar...">
         <mat-icon matSuffix (click)="onSearch()" class="search-icon">search</mat-icon>
       </mat-form-field>
+
+      <!-- Theme Toggle Button -->
+      <button 
+        mat-icon-button 
+        class="theme-toggle-button"
+        (click)="toggleTheme()"
+        [attr.aria-label]="themeStore.isDark() ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
+        [matTooltip]="themeStore.isDark() ? 'Tema claro' : 'Tema oscuro'">
+        <mat-icon>{{ themeStore.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
 
       <!-- User Menu Button -->
       <button 

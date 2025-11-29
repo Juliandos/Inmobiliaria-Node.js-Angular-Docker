@@ -22,16 +22,17 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: var(--bg-overlay);
   backdrop-filter: blur(20px);
   padding: 20px;
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
   transition: box-shadow $transition-normal, transform $transition-normal;
   animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px $color-red-transparent-20;
+    box-shadow: var(--shadow-xl), 0 0 20px rgba(220, 53, 69, 0.15);
     transform: translateY(-3px);
   }
 }
@@ -46,13 +47,12 @@
 
   ::ng-deep {
     .mat-mdc-text-field-wrapper {
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: var(--input-bg);
       border-radius: 8px;
       transition: background-color $transition-normal, box-shadow $transition-normal;
 
       &:hover {
-        background-color: rgba(255, 255, 255, 1);
-        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.15);
+        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.1);
       }
     }
 
@@ -60,22 +60,35 @@
       font-weight: 600;
       font-size: 12px;
       letter-spacing: 1px;
-      color: $text-color-primary;
+      color: var(--input-placeholder);
       transition: color $transition-normal;
     }
 
     .mat-mdc-input-element {
-      color: $text-color-primary;
+      color: var(--input-text);
       transition: color $transition-normal;
     }
 
     .mat-mdc-form-field-focus-overlay {
-      background-color: rgba(220, 53, 69, 0.1);
+      background-color: rgba(220, 53, 69, 0.05);
       transition: background-color $transition-normal;
     }
 
     .mat-mdc-form-field.mat-focused .mat-mdc-form-field-focus-overlay {
-      background-color: rgba(220, 53, 69, 0.15);
+      background-color: rgba(220, 53, 69, 0.1);
+    }
+    
+    // Outline styles
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+      border-color: var(--input-border);
+    }
+    
+    .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+    .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+    .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+      border-color: var(--input-focus-border) !important;
     }
   }
 }
@@ -85,8 +98,8 @@
   height: 56px;
   font-size: 16px;
   font-weight: 600;
-  background-color: $color-primary-red !important;
-  color: $text-color-on-red !important;
+  background-color: var(--btn-primary-bg) !important;
+  color: var(--btn-primary-text) !important;
   transition: background-color $transition-normal, transform $transition-normal, box-shadow $transition-normal;
   border-radius: 8px;
   position: relative;
@@ -106,9 +119,9 @@
   }
 
   &:hover {
-    background-color: $hover-red !important;
+    background-color: var(--btn-primary-hover) !important;
     transform: translateY(-3px);
-    box-shadow: $shadow-lg, $shadow-red;
+    box-shadow: var(--shadow-lg), 0 4px 12px rgba(220, 53, 69, 0.3);
 
     &::before {
       width: 300px;
@@ -186,4 +199,3 @@
     min-width: 160px;
   }
 }
-

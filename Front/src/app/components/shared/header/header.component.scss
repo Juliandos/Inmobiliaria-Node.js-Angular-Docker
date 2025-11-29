@@ -2,7 +2,7 @@
 
 // Mobile First - Base styles
 .landing-header {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--bg-header);
   padding: 8px 0;
   position: fixed;
   top: 0;
@@ -10,10 +10,10 @@
   right: 0;
   z-index: 1000;
   backdrop-filter: blur(15px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-header);
   width: 100%;
   transition: background-color $transition-normal, box-shadow $transition-normal, padding $transition-normal, border-bottom-width $transition-normal;
-  border-bottom: 2px solid $color-red-lighter;
+  border-bottom: 2px solid $color-primary-red;
 
   &.mobile-menu-active {
     position: fixed;
@@ -22,8 +22,8 @@
   // Efecto de scroll - borde desaparece
   &.scrolled {
     padding: 8px 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    background-color: rgba(0, 0, 0, 0.85);
+    box-shadow: var(--shadow-lg);
+    background-color: var(--bg-header-scrolled);
     border-bottom-width: 0px;
   }
 
@@ -80,7 +80,7 @@
 
 .nav-link {
   background-color: transparent;
-  color: $text-color-on-black;
+  color: var(--nav-link-color);
   padding: 8px 12px;
   text-decoration: none;
   font-size: 13px;
@@ -101,13 +101,13 @@
     transform: translateX(-50%) scaleX(0);
     width: 80%;
     height: 2px;
-    background-color: $color-primary-red;
+    background-color: var(--nav-indicator);
     transition: transform $transition-normal;
   }
 
   &:hover {
-    background-color: $color-red-transparent-30;
-    color: $color-primary-red;
+    background-color: rgba(220, 53, 69, 0.15);
+    color: var(--nav-link-hover);
     transform: translateY(-1px);
 
     &::before {
@@ -117,8 +117,8 @@
 
   &:active,
   &.active {
-    background-color: $color-red-transparent-50;
-    color: $text-color-on-red;
+    background-color: rgba(220, 53, 69, 0.25);
+    color: var(--nav-link-active);
 
     &::before {
       transform: translateX(-50%) scaleX(1);
@@ -135,7 +135,7 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    color: $text-color-on-black;
+    color: var(--nav-link-color);
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -155,8 +155,8 @@
     }
 
     &:hover {
-      background-color: $color-red-transparent-30;
-      color: $color-primary-red;
+      background-color: rgba(220, 53, 69, 0.15);
+      color: var(--nav-link-hover);
     }
 
     &:focus {
@@ -164,8 +164,8 @@
     }
 
     &[aria-expanded="true"] {
-      background-color: $color-red-transparent-50;
-      color: $color-primary-red;
+      background-color: rgba(220, 53, 69, 0.25);
+      color: var(--nav-link-active);
       
       .dropdown-icon {
         transform: rotate(180deg);
@@ -185,12 +185,13 @@
   z-index: 1001 !important;
   
   .mat-mdc-menu-panel {
-    background-color: $bg-header !important;
+    background-color: var(--bg-card) !important;
     backdrop-filter: blur(10px) !important;
-    box-shadow: $shadow-lg !important;
+    box-shadow: var(--shadow-lg) !important;
     border-radius: 8px !important;
     min-width: 200px !important;
     max-width: 300px !important;
+    border: 1px solid var(--border-color) !important;
   }
   
   .mat-mdc-menu-content {
@@ -204,12 +205,12 @@
     gap: 12px !important;
     padding: 12px 20px !important;
     min-height: 48px !important;
-    color: $text-color-on-black !important;
+    color: var(--text-primary) !important;
     transition: $transition-all !important;
     cursor: pointer !important;
 
     mat-icon {
-      color: $color-primary-red !important;
+      color: var(--btn-primary-bg) !important;
       margin-right: 0 !important;
       font-size: 20px !important;
       width: 20px !important;
@@ -222,12 +223,12 @@
     }
 
     &:hover {
-      background-color: $color-red-transparent-30 !important;
-      color: $color-primary-red !important;
+      background-color: rgba(220, 53, 69, 0.15) !important;
+      color: var(--nav-link-hover) !important;
     }
 
     &:active {
-      background-color: $color-red-transparent-50 !important;
+      background-color: rgba(220, 53, 69, 0.25) !important;
     }
   }
 }
@@ -249,45 +250,74 @@
 
   ::ng-deep {
     .mat-mdc-text-field-wrapper {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: var(--input-bg);
       padding: 0 8px;
+      border: 1px solid var(--input-border);
+      border-radius: 4px;
     }
 
     .mat-mdc-form-field-label {
-      color: $text-color-light;
+      color: var(--input-placeholder);
       font-size: 12px;
     }
 
     .mat-mdc-input-element {
-      color: $text-color-on-black;
+      color: var(--input-text);
       font-size: 13px;
     }
 
     .mat-mdc-form-field-focus-overlay {
-      background-color: rgba(255, 255, 255, 0.05);
+      background-color: transparent;
+    }
+    
+    .mdc-text-field--focused {
+      .mat-mdc-text-field-wrapper {
+        border-color: var(--input-focus-border);
+        box-shadow: var(--input-focus-shadow);
+      }
     }
   }
 
   .search-icon {
     cursor: pointer;
-    color: $text-color-light;
+    color: var(--icon-color);
     transition: $transition-fast;
     font-size: 18px;
 
     &:hover {
-      color: $color-primary-red;
+      color: var(--icon-color-hover);
     }
   }
 }
 
-.user-menu-button {
-  color: $text-color-on-black;
+// Theme Toggle Button
+.theme-toggle-button {
+  color: var(--nav-link-color);
   transition: color $transition-normal, background-color $transition-normal, transform $transition-fast;
   flex-shrink: 0;
 
   &:hover {
-    color: $color-primary-red;
-    background-color: $color-red-transparent-30;
+    color: var(--nav-link-hover);
+    background-color: rgba(220, 53, 69, 0.15);
+    transform: scale(1.1) rotate(15deg);
+  }
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    transition: transform $transition-normal;
+  }
+}
+
+.user-menu-button {
+  color: var(--nav-link-color);
+  transition: color $transition-normal, background-color $transition-normal, transform $transition-fast;
+  flex-shrink: 0;
+
+  &:hover {
+    color: var(--nav-link-hover);
+    background-color: rgba(220, 53, 69, 0.15);
     transform: scale(1.1);
   }
 
@@ -301,21 +331,32 @@
 
 .user-menu {
   ::ng-deep {
+    .mat-mdc-menu-panel {
+      background-color: var(--bg-card) !important;
+      border: 1px solid var(--border-color) !important;
+    }
+    
     .mat-mdc-menu-item {
+      color: var(--text-primary) !important;
+      
       mat-icon {
         margin-right: 12px;
-        color: $color-primary-red;
+        color: var(--btn-primary-bg);
+      }
+
+      &:hover {
+        background-color: rgba(220, 53, 69, 0.1) !important;
       }
 
       &.active-theme {
-        background-color: $color-red-transparent-20;
+        background-color: rgba(220, 53, 69, 0.15) !important;
         
         mat-icon {
-          color: $color-primary-red;
+          color: var(--btn-primary-bg);
         }
         
         span {
-          color: $color-primary-red;
+          color: var(--btn-primary-bg);
           font-weight: 600;
         }
       }
@@ -326,7 +367,7 @@
 // Mobile Menu Toggle (hamburger)
 .mobile-menu-toggle {
   display: block;
-  color: $text-color-on-black;
+  color: var(--nav-link-color);
   background: none;
   border: none;
   padding: 8px;
@@ -335,7 +376,7 @@
   flex-shrink: 0;
 
   &:hover {
-    color: $color-primary-red;
+    color: var(--nav-link-hover);
     transform: scale(1.1);
   }
 
@@ -359,12 +400,13 @@
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: $bg-header;
+  background-color: var(--bg-card);
   padding: 16px;
-  box-shadow: $shadow-lg;
+  box-shadow: var(--shadow-lg);
   gap: 8px;
   z-index: 999;
   animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-top: 1px solid var(--border-color);
 
   .nav-link {
     width: 100%;
@@ -469,4 +511,3 @@
     }
   }
 }
-

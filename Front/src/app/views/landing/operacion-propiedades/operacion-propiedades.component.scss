@@ -31,7 +31,8 @@
 .loading-section {
   padding: 80px 20px;
   text-align: center;
-  color: $color-primary-red;
+  color: var(--btn-primary-bg);
+  background-color: var(--bg-primary);
 
   mat-icon {
     font-size: 64px;
@@ -43,7 +44,7 @@
 
   p {
     font-size: 1.2rem;
-    color: $text-color-secondary;
+    color: var(--text-secondary);
   }
 }
 
@@ -63,7 +64,7 @@
 // Propiedades Section
 .propiedades-section {
   padding: 60px 20px;
-  background-color: $bg-secondary;
+  background-color: var(--section-alt-bg);
   min-height: 60vh;
   position: relative;
   z-index: 2;
@@ -74,15 +75,15 @@
     align-items: center;
     gap: 8px;
     padding: 12px 20px;
-    background-color: rgba($color-primary-red, 0.1);
-    border-left: 4px solid $color-primary-red;
+    background-color: var(--property-badge-bg);
+    border-left: 4px solid var(--btn-primary-bg);
     border-radius: 4px;
     margin-bottom: 24px;
-    color: $text-color-primary;
+    color: var(--text-primary);
     font-size: 0.95rem;
 
     mat-icon {
-      color: $color-primary-red;
+      color: var(--btn-primary-bg);
       font-size: 20px;
       width: 20px;
       height: 20px;
@@ -112,20 +113,20 @@
       font-size: 120px;
       width: 120px;
       height: 120px;
-      color: $text-color-secondary;
+      color: var(--text-tertiary);
       margin-bottom: 2rem;
       opacity: 0.5;
     }
 
     h3 {
       font-size: 2rem;
-      color: $text-color-secondary;
+      color: var(--text-secondary);
       margin-bottom: 1rem;
     }
 
     p {
       font-size: 1.2rem;
-      color: $text-color-secondary;
+      color: var(--text-secondary);
     }
   }
 }
@@ -136,4 +137,3 @@
   margin: 0 auto;
   padding: 0 20px;
 }
-
