@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment';
 export const API_CONFIG = {
   baseUrl: environment.apiUrl,
   endpoints: {
+    // NOTA: environment.apiUrl ya incluye /api, así que no agregamos /api aquí
     auth: `${environment.apiUrl}/auth`,
     propiedades: `${environment.apiUrl}/propiedades`,
     usuarios: `${environment.apiUrl}/usuarios`,

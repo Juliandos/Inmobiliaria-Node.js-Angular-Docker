@@ -1,9 +1,8 @@
 // Environment configuration for development
-// Usando CloudFront con HTTPS para acceso desde móviles
-// Para desarrollo con API local, cambia a: 'http://localhost:3001'
+// Para desarrollo local, usa: 'http://localhost:3000/api'
+// NOTA: La API usa el prefijo /api en todas las rutas (ver API/src/main.ts)
 export const environment = {
   production: false,
-  apiUrl: 'https://dd7fs4h07d7iz.cloudfront.net/api'
-  // apiUrl: 'http://localhost:3001'  // Descomenta esta línea si quieres usar API local
+  apiUrl: 'http://localhost:3000/api'  // API local para desarrollo (incluye /api)
 };
 

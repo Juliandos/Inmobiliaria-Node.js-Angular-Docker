@@ -107,8 +107,9 @@ services:
       AWS_S3_BUCKET_NAME: ${AWS_S3_BUCKET_NAME:-inmobiliaria-propiedades}
     
     # Puertos
+    # 3000:3001 = puerto 3000 en tu máquina → puerto 3001 en contenedor
     ports:
-      - "3001:3001"
+      - "3000:3001"
     
     # Dependencias: espera a que MySQL esté listo
     depends_on:
