@@ -35,10 +35,11 @@ COPY . .
 ARG API_URL=http://localhost:3001
 
 # Crear archivo de entorno de producción con la URL de la API
+# IMPORTANTE: Usar comillas dobles para que $API_URL se expanda correctamente
 RUN echo "// Environment configuration for production" > src/environments/environment.prod.ts && \
     echo "export const environment = {" >> src/environments/environment.prod.ts && \
     echo "  production: true," >> src/environments/environment.prod.ts && \
-    echo "  apiUrl: '${API_URL}'" >> src/environments/environment.prod.ts && \
+    echo "  apiUrl: \"$API_URL\"" >> src/environments/environment.prod.ts && \
     echo "};" >> src/environments/environment.prod.ts
 
 # Compilar la aplicación Angular

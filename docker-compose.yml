@@ -133,6 +133,12 @@ services:
     build:
       context: ./Front
       dockerfile: Dockerfile
+      args:
+        # Para usar con Nginx como reverse proxy (recomendado en producción)
+        # Usa ruta relativa: Nginx redirigirá /api al backend
+        API_URL: /api
+        # Si NO usas Nginx, descomenta esta línea y comenta la anterior:
+        # API_URL: http://52.87.245.94:3000/api
     
     container_name: inmobiliaria-front
     
@@ -141,6 +147,8 @@ services:
     # command: npm start  # Descomenta para desarrollo
     
     # Puertos
+    # NOTA: Si usas Nginx como reverse proxy, este puerto NO necesita ser expuesto públicamente
+    # Puedes comentar esta línea una vez que Nginx esté configurado:
     ports:
       - "4200:80"  # 4200 en tu máquina → 80 en contenedor (nginx)
     
