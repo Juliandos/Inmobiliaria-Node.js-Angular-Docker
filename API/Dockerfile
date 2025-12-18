@@ -46,15 +46,8 @@ COPY package*.json ./
 #   - "ci" = clean install (instalación limpia)
 #   - Más rápido y confiable que "npm install"
 #   - Usa package-lock.json exactamente como está
-# --only=production: Solo instala dependencias de producción (no devDependencies)
-# Esto hace la imagen más pequeña
-RUN npm ci --only=production
-
-# PASO 5: Instalar dependencias de desarrollo (para TypeScript)
-# ----------------------------------------------------------------
-# Necesitamos tsx para ejecutar TypeScript directamente
-# En producción podrías compilar primero, pero para simplicidad usamos tsx
-RUN npm install --include=dev
+# Instalamos todas las dependencias (producción + desarrollo) porque necesitamos tsx
+RUN npm ci
 
 # PASO 6: Copiar el resto del código
 # -----------------------------------
