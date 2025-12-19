@@ -36,13 +36,25 @@ const cleanFileName = (fileName: string) => {
   return file;
 };
 
-readdirSync(PATH_ROUTER).filter((fileName) => {
-  const cleanName = cleanFileName(fileName);
-  if (cleanName !== "index") {
-    import(`./${cleanName}`).then((moduleRouter) => {
-      router.use(`/${cleanName}`, moduleRouter.router);
-    });
+// Cargar rutas dinámicamente
+const loadRoutes = async () => {
+  const files = readdirSync(PATH_ROUTER);
+  
+  for (const fileName of files) {
+    const cleanName = cleanFileName(fileName);
+    if (cleanName !== "index" && fileName.endsWith('.ts')) {
+      try {
+        const moduleRouter = await import(`./${cleanName}`);
+        if (moduleRouter.router) {
+          router.use(`/${cleanName}`, moduleRouter.router);
+          console.log(`✓ Ruta cargada: /${cleanName}`);
+        }
+      } catch (error) {
+        console.error(`✗ Error cargando ruta ${cleanName}:`, error);
+      }
+    }
   }
-});
+};
 
-export { router };
+// Exportar función para cargar rutas y el router
+export { router, loadRoutes };

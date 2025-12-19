@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { sequelize } from "./db/database";
 import { initModels } from "./models/init-models";
-import { router } from "./routes";
+import { router, loadRoutes } from "./routes";
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -28,7 +28,18 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Agregar prefijo /api a todas las rutas
-app.use('/api', router);
-
-app.listen(port, () => console.log(`Servidor escuchando en puerto ${port}`));
+// Cargar rutas y luego iniciar servidor
+loadRoutes()
+  .then(() => {
+    // Agregar prefijo /api a todas las rutas
+    app.use('/api', router);
+    
+    app.listen(port, () => {
+      console.log(`Servidor escuchando en puerto ${port}`);
+      console.log(`Rutas disponibles en http://localhost:${port}/api`);
+    });
+  })
+  .catch((error) => {
+    console.error('Error al cargar rutas:', error);
+    process.exit(1);
+  });
