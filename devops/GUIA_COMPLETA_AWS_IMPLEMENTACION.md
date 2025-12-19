@@ -30,6 +30,8 @@
 - **Reverse Proxy:** Nginx
 - **Almacenamiento:** AWS S3
 - **Infraestructura:** AWS EC2
+- **IA y RAG:** LangChain + OpenAI (Nuevo)
+- **Memoria Vectorial:** ChromaDB (Nuevo)
 
 ### Requisitos del Sistema
 
@@ -73,7 +75,14 @@
 │  ┌─────────────────────────────────────────────────────┐   │
 │  │  S3 Bucket: inmobiliaria-propiedades                 │   │
 │  │  ├── propiedades/ (imágenes de propiedades)         │   │
-│  │  └── documentos-ciudad/ (PDFs para IA)              │   │
+│  │  ├── documentos-ciudad/ (POT, normativas, etc.)     │   │
+│  │  └── documentos-propiedad/ (escrituras, certificados)│   │
+│  └─────────────────────────────────────────────────────┘   │
+│                                                               │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  ChromaDB (Vector Store) - En contenedor API         │   │
+│  │  - Almacena embeddings de documentos                │   │
+│  │  - Búsqueda semántica para RAG                      │   │
 │  └─────────────────────────────────────────────────────┘   │
 │                                                               │
 │  ┌─────────────────────────────────────────────────────┐   │
@@ -774,6 +783,324 @@ sudo certbot --nginx -d tu-dominio.com -d www.tu-dominio.com
 
 ---
 
+## 🤖 Paso 10: Sistema de Avalúos con IA (Nuevo)
+
+### 10.1 Resumen de la Funcionalidad
+
+El sistema de avalúos con IA permite:
+1. **Subir documentos de la ciudad** (POT, normativas, etc.) para contexto general
+2. **Subir documentos de la propiedad** (escrituras, certificados, recibos) para contexto específico
+3. **Conversar con IA** que lee documentos de S3 y DB para dar avalúos precisos con memoria conversacional
+
+### 10.2 Opciones de Memoria Vectorial
+
+**Opción A: ChromaDB (Recomendado) ✅**
+
+**Ventajas:**
+- ✅ No requiere cambiar MySQL (mantiene tu DB actual)
+- ✅ Ligera y rápida (puede correr en el mismo contenedor)
+- ✅ Sin costos adicionales
+- ✅ Fácil de implementar
+- ✅ Persistencia en disco (sobrevive reinicios)
+
+**Desventajas:**
+- ⚠️ Requiere espacio en disco (~100MB-1GB dependiendo de documentos)
+- ⚠️ No es distribuida (solo en una instancia)
+
+**Costo:** $0 (incluido en EC2)
+
+**Opción B: PostgreSQL + pgvector**
+
+**Ventajas:**
+- ✅ Base de datos robusta y escalable
+- ✅ Soporte nativo para vectores
+- ✅ Puede compartirse entre múltiples instancias
+
+**Desventajas:**
+- ❌ Requiere cambiar de MySQL a PostgreSQL (migración compleja)
+- ❌ Costo adicional: ~$15-20/mes (RDS PostgreSQL)
+- ❌ Más complejo de configurar
+
+**Costo:** ~$15-20/mes adicionales
+
+**Opción C: Pinecone / Weaviate (Cloud)**
+
+**Ventajas:**
+- ✅ Servicio gestionado (sin mantenimiento)
+- ✅ Escalable automáticamente
+- ✅ Muy rápido
+
+**Desventajas:**
+- ❌ Costo adicional: $70-200/mes
+- ❌ Excede el presupuesto de $23/mes
+
+**Costo:** $70-200/mes
+
+**🎯 Recomendación: ChromaDB**
+
+Para mantener costos dentro del presupuesto y simplicidad, **ChromaDB es la mejor opción**.
+
+### 10.3 Estructura de S3 para Documentos
+
+**Bucket:** `inmobiliaria-propiedades` (existente)
+
+**Estructura de carpetas:**
+```
+inmobiliaria-propiedades/
+├── propiedades/
+│   └── [propiedad_id]/
+│       └── [imagen].jpg
+├── documentos-ciudad/          (NUEVO)
+│   ├── POT_2024.pdf
+│   ├── Normativa_Zonificacion.pdf
+│   └── Plan_Desarrollo.pdf
+└── documentos-propiedad/       (NUEVO)
+    └── [propiedad_id]/
+        ├── escritura_publica.pdf
+        ├── certificado_tradicion.pdf
+        ├── recibo_energia.pdf
+        └── otros_documentos.pdf
+```
+
+### 10.4 Instalar Dependencias de LangChain
+
+**Agregar al `API/package.json`:**
+
+```json
+{
+  "dependencies": {
+    "@langchain/openai": "^0.0.6",
+    "@langchain/community": "^0.0.29",
+    "langchain": "^0.1.13",
+    "chromadb": "^1.8.1",
+    "pdf-parse": "^1.1.1",
+    "openai": "^4.20.0"
+  }
+}
+```
+
+**Instalar en contenedor:**
+```bash
+cd ~/inmobiliaria
+docker-compose exec api npm install
+```
+
+### 10.5 Configurar Variables de Entorno
+
+**Agregar al `.env`:**
+
+```env
+# ============================================
+# CONFIGURACIÓN DE IA Y LANGCHAIN (NUEVO)
+# ============================================
+OPENAI_API_KEY=sk-proj-tu-api-key-aqui
+OPENAI_MODEL=gpt-4o-mini
+OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+OPENAI_TEMPERATURE=0.3
+
+# Configuración de RAG
+RAG_CHUNK_SIZE=1000
+RAG_CHUNK_OVERLAP=200
+RAG_TOP_K_RESULTS=4
+
+# Configuración de memoria conversacional
+CHAT_MAX_INTERACTIONS=10
+CHAT_MAX_MESSAGES=20
+
+# ChromaDB (almacenamiento local)
+CHROMA_DB_PATH=/app/data/chroma_db
+```
+
+**Actualizar `docker-compose.yml` para persistir ChromaDB:**
+
+```yaml
+api:
+  # ... configuración existente ...
+  volumes:
+    - ./API:/app
+    - /app/node_modules
+    - chroma-data:/app/data/chroma_db  # NUEVO: Persistir ChromaDB
+
+volumes:
+  mysql-data:
+  chroma-data:  # NUEVO: Volumen para ChromaDB
+```
+
+### 10.6 Endpoints de la API
+
+**1. Subir Documentos de la Ciudad**
+
+```typescript
+POST /api/avaluos/documentos-ciudad
+Content-Type: multipart/form-data
+
+Body:
+- file: PDF del documento
+- nombre: Nombre del documento (ej: "POT_2024")
+- descripcion: Descripción opcional
+
+Response:
+{
+  "success": true,
+  "message": "Documento subido correctamente",
+  "data": {
+    "url": "s3://inmobiliaria-propiedades/documentos-ciudad/POT_2024.pdf",
+    "nombre": "POT_2024",
+    "fecha_subida": "2024-12-19T..."
+  }
+}
+```
+
+**2. Subir Documentos de Propiedad**
+
+```typescript
+POST /api/avaluos/propiedades/:propiedadId/documentos
+Content-Type: multipart/form-data
+
+Body:
+- file: PDF del documento
+- tipo: Tipo de documento (escritura, certificado_tradicion, recibo_energia, otros)
+- descripcion: Descripción opcional
+
+Response:
+{
+  "success": true,
+  "message": "Documento subido correctamente",
+  "data": {
+    "url": "s3://inmobiliaria-propiedades/documentos-propiedad/123/escritura.pdf",
+    "tipo": "escritura",
+    "propiedad_id": 123
+  }
+}
+```
+
+**3. Conversar con IA para Avalúo**
+
+```typescript
+POST /api/avaluos/propiedades/:propiedadId/chat
+Content-Type: application/json
+Authorization: Bearer <token>
+
+Body:
+{
+  "question": "¿Cuál es el valor estimado de esta propiedad?",
+  "session_id": "sesion-123"  // Opcional, para mantener contexto
+}
+
+Response:
+{
+  "success": true,
+  "data": {
+    "answer": "Basado en los documentos analizados...",
+    "session_id": "sesion-123",
+    "sources": [
+      {
+        "tipo": "documento_ciudad",
+        "nombre": "POT_2024.pdf",
+        "relevancia": 0.85
+      },
+      {
+        "tipo": "documento_propiedad",
+        "nombre": "escritura.pdf",
+        "relevancia": 0.92
+      }
+    ],
+    "chat_history": [
+      {
+        "role": "user",
+        "content": "¿Cuál es el valor estimado?"
+      },
+      {
+        "role": "assistant",
+        "content": "Basado en los documentos..."
+      }
+    ]
+  }
+}
+```
+
+### 10.7 Flujo de Funcionamiento
+
+```
+1. Usuario sube documento de ciudad → S3
+   ↓
+2. Sistema procesa PDF → Divide en chunks → Genera embeddings → Almacena en ChromaDB
+   ↓
+3. Usuario sube documento de propiedad → S3
+   ↓
+4. Sistema procesa PDF → Divide en chunks → Genera embeddings → Almacena en ChromaDB
+   ↓
+5. Usuario hace pregunta sobre avalúo
+   ↓
+6. Sistema busca documentos relevantes en ChromaDB (RAG)
+   ↓
+7. Sistema obtiene datos de propiedad de MySQL
+   ↓
+8. Sistema construye prompt con: pregunta + documentos + datos DB + historial conversación
+   ↓
+9. Sistema envía a OpenAI GPT-4o-mini
+   ↓
+10. Sistema retorna respuesta con fuentes y actualiza memoria conversacional
+```
+
+### 10.8 Implementación en Código
+
+**Estructura de archivos sugerida:**
+
+```
+API/src/
+├── services/
+│   ├── langchain.service.ts      (NUEVO)
+│   ├── chromadb.service.ts       (NUEVO)
+│   └── s3.service.ts             (existente, actualizar)
+├── controllers/
+│   └── avaluos.controller.ts      (NUEVO)
+├── routes/
+│   └── avaluos.routes.ts         (NUEVO)
+└── models/
+    └── avaluos.models.ts         (NUEVO)
+```
+
+### 10.9 Costos Adicionales
+
+**OpenAI API:**
+- **Embeddings:** $0.02 por 1M tokens (text-embedding-3-small)
+- **GPT-4o-mini:** $0.15 por 1M tokens de entrada, $0.60 por 1M tokens de salida
+- **Estimación mensual:** $2-5/mes (dependiendo del uso)
+
+**ChromaDB:**
+- **Costo:** $0 (incluido en EC2)
+- **Espacio:** ~100MB-1GB en disco
+
+**S3 (almacenamiento adicional):**
+- **Documentos:** ~1-5GB adicionales
+- **Costo:** $0.023/GB = $0.02-0.12/mes
+
+**Total adicional:** ~$2-6/mes
+
+**Costo total del proyecto:** $18-19/mes (base) + $2-6/mes (IA) = **$20-25/mes**
+
+✅ **Dentro del presupuesto de $23/mes** (con uso moderado)
+
+### 10.10 Verificación de la Funcionalidad
+
+```bash
+# 1. Verificar que ChromaDB está funcionando
+docker-compose exec api ls -la /app/data/chroma_db
+
+# 2. Verificar que los documentos se suben a S3
+aws s3 ls s3://inmobiliaria-propiedades/documentos-ciudad/
+aws s3 ls s3://inmobiliaria-propiedades/documentos-propiedad/
+
+# 3. Probar endpoint de chat
+curl -X POST http://localhost:3000/api/avaluos/propiedades/1/chat \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"question": "¿Cuál es el valor de esta propiedad?"}'
+```
+
+---
+
 ## 🐛 Errores Comunes y Soluciones
 
 ### Error 1: "413 Request Entity Too Large" (Nginx)
@@ -1237,7 +1564,7 @@ docker-compose exec mysql mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SHOW DATABA
 
 ## 📊 Resumen de Costos
 
-### Costo Mensual Estimado
+### Costo Mensual Estimado (Base)
 
 | Servicio | Especificación | Costo Mensual |
 |----------|---------------|---------------|
@@ -1245,11 +1572,26 @@ docker-compose exec mysql mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SHOW DATABA
 | **EBS gp3** | 30GB almacenamiento | $2.50 |
 | **S3** | 10GB + requests | $0.50-1.00 |
 | **Transferencia** | 1GB salida | $0.09 |
-| **TOTAL** | | **USD 18.09-19.09/mes** |
+| **TOTAL BASE** | | **USD 18.09-19.09/mes** |
 
 **Con Free Tier (primeros 12 meses):**
 - t2.micro gratis → **Ahorro: $7.50/mes**
 - **Total con Free Tier: USD 10.59-11.59/mes**
+
+### Costo Mensual con Sistema de Avalúos IA (Nuevo)
+
+| Servicio | Especificación | Costo Mensual |
+|----------|---------------|---------------|
+| **Base (EC2 + EBS + S3)** | | $18.09-19.09 |
+| **OpenAI API** | Embeddings + GPT-4o-mini | $2.00-5.00 |
+| **S3 adicional** | Documentos (1-5GB) | $0.02-0.12 |
+| **ChromaDB** | Incluido en EC2 | $0.00 |
+| **TOTAL CON IA** | | **USD 20.11-24.21/mes** |
+
+**Con Free Tier:**
+- **Total con Free Tier + IA: USD 12.61-16.71/mes**
+
+**✅ Dentro del presupuesto de $23/mes** (con uso moderado de IA)
 
 ---
 
