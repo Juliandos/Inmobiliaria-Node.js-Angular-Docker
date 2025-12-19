@@ -55,6 +55,6 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.5.2",
-    "tsx": "^4.20.5"
+    "tsx": "^4.21.0"
   }
 }
