@@ -906,8 +906,14 @@ inmobiliaria-propiedades/
 ```bash
 cd ~/inmobiliaria
 git pull origin main  # Obtener cambios de GitHub
-docker-compose exec api npm install  # Instalar nuevas dependencias
-docker-compose restart api  # Reiniciar para aplicar cambios
+
+# Si solo agregaste dependencias al package.json:
+docker-compose exec api npm install --legacy-peer-deps
+docker-compose restart api
+
+# Si modificaste el Dockerfile o hay conflictos:
+docker-compose build --no-cache api  # Reconstruir imagen
+docker-compose up -d api  # Reiniciar contenedor
 ```
 
 **Si quieres probar en local primero (WSL - opcional):**
@@ -924,23 +930,60 @@ docker compose exec api npm install
 # ============================================
 # CONFIGURACIÓN DE IA Y LANGCHAIN (NUEVO)
 # ============================================
+# Obtén tu API key en: https://platform.openai.com/api-keys
 OPENAI_API_KEY=sk-proj-tu-api-key-aqui
 OPENAI_MODEL=gpt-4o-mini
 OPENAI_EMBEDDING_MODEL=text-embedding-3-small
 OPENAI_TEMPERATURE=0.3
 
-# Configuración de RAG
+# ============================================
+# CONFIGURACIÓN LANGSMITH (OPCIONAL)
+# ============================================
+# Obtén tu API key en: https://smith.langchain.com/
+# LangSmith es para monitoreo y debugging, no es obligatorio
+# Útil para desarrollo y debugging, desactivar en producción para ahorrar costos
+LANGSMITH_API_KEY=lsv2_pt_tu-api-key-aqui
+LANGSMITH_PROJECT=inmobiliaria-avaluos
+LANGSMITH_TRACING=false  # true en desarrollo, false en producción
+
+# ============================================
+# CONFIGURACIÓN RAG (Retrieval Augmented Generation)
+# ============================================
+# Tamaño de chunks para dividir documentos (en caracteres)
+# Recomendado: 500-2000 caracteres
 RAG_CHUNK_SIZE=1000
+
+# Overlap entre chunks (en caracteres)
+# Recomendado: 100-300 caracteres
 RAG_CHUNK_OVERLAP=200
+
+# Número de documentos a recuperar para cada pregunta
+# Recomendado: 3-5 documentos
 RAG_TOP_K_RESULTS=4
 
-# Configuración de memoria conversacional
+# ============================================
+# CONFIGURACIÓN DE MEMORIA CONVERSACIONAL
+# ============================================
+# Número máximo de interacciones (pregunta-respuesta) en una conversación
+# Recomendado: 10-20 interacciones
 CHAT_MAX_INTERACTIONS=10
+
+# Número máximo de mensajes totales (usuario + asistente)
+# Recomendado: 20-40 mensajes (interacciones * 2)
 CHAT_MAX_MESSAGES=20
 
-# ChromaDB (almacenamiento local)
+# ============================================
+# CONFIGURACIÓN DE CHROMADB
+# ============================================
+# Ruta donde se almacenan los embeddings (vector store)
+# Se crea automáticamente si no existe
 CHROMA_DB_PATH=/app/data/chroma_db
 ```
+
+**⚠️ IMPORTANTE:**
+- **OPENAI_API_KEY:** Obligatoria - Sin esto no funcionará la IA
+- **LANGSMITH:** Opcional - Solo para monitoreo/debugging
+- **Formato:** No dejes espacios alrededor del `=` (ej: `CHAT_MAX_INTERACTIONS=10` ✅, no `CHAT_MAX_INTERACTIONS = 10` ❌)
 
 **Actualizar `docker-compose.yml` para persistir ChromaDB:**
 
@@ -948,14 +991,17 @@ CHROMA_DB_PATH=/app/data/chroma_db
 api:
   # ... configuración existente ...
   volumes:
-    - ./API:/app
-    - /app/node_modules
+    # Comentar en producción para mejor rendimiento:
+    # - ./API:/app
+    # - /app/node_modules
     - chroma-data:/app/data/chroma_db  # NUEVO: Persistir ChromaDB
 
 volumes:
   mysql-data:
-  chroma-data:  # NUEVO: Volumen para ChromaDB
+  chroma-data:  # NUEVO: Volumen para ChromaDB (almacena embeddings)
 ```
+
+**⚠️ NOTA:** Si tienes `volumes` montados para desarrollo (como `./API:/app`), ChromaDB se guardará en el volumen nombrado `chroma-data` que persiste entre reinicios del contenedor.
 
 ### 10.6 Endpoints de la API
 
