@@ -42,12 +42,12 @@ COPY package*.json ./
 # PASO 4: Instalar dependencias
 # ------------------------------
 # RUN: Ejecuta un comando dentro del contenedor durante la construcción
-# npm ci: 
-#   - "ci" = clean install (instalación limpia)
-#   - Más rápido y confiable que "npm install"
-#   - Usa package-lock.json exactamente como está
+# npm install --legacy-peer-deps:
+#   - Instala dependencias ignorando conflictos de peer dependencies
+#   - Necesario para LangChain y sus dependencias que tienen conflictos con AWS SDK
+#   - En producción idealmente usaríamos npm ci, pero hay conflictos de versiones
 # Instalamos todas las dependencias (producción + desarrollo) porque necesitamos tsx
-RUN npm ci
+RUN npm install --legacy-peer-deps
 
 # PASO 6: Copiar el resto del código
 # -----------------------------------

@@ -632,6 +632,9 @@ openssl rand -base64 32
 **⚠️ NOTA:** Los comandos en esta sección están escritos para **EC2** (usa `docker-compose` con guion).
 Si estás en **local con WSL/Docker Desktop**, reemplaza `docker-compose` por `docker compose` (sin guion).
 
+**⚠️ IMPORTANTE:** Si agregaste dependencias de LangChain, el Dockerfile usa `npm install --legacy-peer-deps` 
+para resolver conflictos de peer dependencies entre LangChain y AWS SDK.
+
 ```bash
 cd ~/inmobiliaria
 
@@ -641,6 +644,9 @@ docker-compose build
 # O construir una por una
 docker-compose build api
 docker-compose build front
+
+# Si hay problemas con dependencias, reconstruir sin cache:
+docker-compose build --no-cache api
 ```
 
 **⏱️ Tiempo estimado:** 5-10 minutos (depende de la velocidad de Internet)
