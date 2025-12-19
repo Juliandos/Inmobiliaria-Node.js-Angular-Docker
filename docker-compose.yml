@@ -118,9 +118,9 @@ services:
     
     # Volúmenes: monta el código para desarrollo
     # Esto permite que los cambios se reflejen sin reconstruir
-    volumes:
-      - ./API:/app
-      - /app/node_modules  # Excluye node_modules del montaje
+    # volumes:
+    #   - ./API:/app
+    #   - /app/node_modules  # Excluye node_modules del montaje
     
     # Red
     networks:
