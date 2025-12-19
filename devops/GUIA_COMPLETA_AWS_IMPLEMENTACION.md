@@ -1005,15 +1005,20 @@ volumes:
 
 ### 10.6 Endpoints de la API
 
+**✅ IMPLEMENTADO:** Los siguientes endpoints ya están creados en:
+- `API/src/routes/avaluos.ts` - Rutas
+- `API/src/controllers/avaluos.ts` - Controladores
+
 **1. Subir Documentos de la Ciudad**
 
-```typescript
+```bash
 POST /api/avaluos/documentos-ciudad
 Content-Type: multipart/form-data
+Authorization: Bearer <token>
 
-Body:
-- file: PDF del documento
-- nombre: Nombre del documento (ej: "POT_2024")
+Body (form-data):
+- file: PDF del documento (obligatorio, máximo 50MB)
+- nombre: Nombre del documento (opcional, ej: "POT_2024")
 - descripcion: Descripción opcional
 
 Response:
@@ -1021,35 +1026,72 @@ Response:
   "success": true,
   "message": "Documento subido correctamente",
   "data": {
-    "url": "s3://inmobiliaria-propiedades/documentos-ciudad/POT_2024.pdf",
+    "url": "https://inmobiliaria-propiedades.s3.us-east-1.amazonaws.com/documentos-ciudad/POT_2024.pdf",
     "nombre": "POT_2024",
+    "descripcion": null,
+    "fecha_subida": "2024-12-19T...",
+    "tipo": "documento_ciudad"
+  }
+}
+```
+
+**Ejemplo con cURL:**
+```bash
+curl -X POST http://localhost:3000/api/avaluos/documentos-ciudad \
+  -H "Authorization: Bearer TU_TOKEN" \
+  -F "file=@/ruta/al/POT_2024.pdf" \
+  -F "nombre=POT_2024" \
+  -F "descripcion=Plan de Ordenamiento Territorial 2024"
+```
+
+**2. Subir Documentos de Propiedad**
+
+```bash
+POST /api/avaluos/propiedades/:propiedadId/documentos
+Content-Type: multipart/form-data
+Authorization: Bearer <token>
+
+Body (form-data):
+- file: PDF del documento (obligatorio, máximo 50MB)
+- tipo: Tipo de documento (obligatorio: escritura, certificado_tradicion, recibo_energia, otros)
+- descripcion: Descripción opcional
+
+Response:
+{
+  "success": true,
+  "message": "Documento subido correctamente",
+  "data": {
+    "url": "https://inmobiliaria-propiedades.s3.us-east-1.amazonaws.com/documentos-propiedad/123/escritura_1234567890.pdf",
+    "tipo": "escritura",
+    "propiedad_id": 123,
+    "descripcion": null,
     "fecha_subida": "2024-12-19T..."
   }
 }
 ```
 
-**2. Subir Documentos de Propiedad**
-
-```typescript
-POST /api/avaluos/propiedades/:propiedadId/documentos
-Content-Type: multipart/form-data
-
-Body:
-- file: PDF del documento
-- tipo: Tipo de documento (escritura, certificado_tradicion, recibo_energia, otros)
-- descripcion: Descripción opcional
-
-Response:
-{
-  "success": true,
-  "message": "Documento subido correctamente",
-  "data": {
-    "url": "s3://inmobiliaria-propiedades/documentos-propiedad/123/escritura.pdf",
-    "tipo": "escritura",
-    "propiedad_id": 123
-  }
-}
+**Ejemplo con cURL:**
+```bash
+curl -X POST http://localhost:3000/api/avaluos/propiedades/123/documentos \
+  -H "Authorization: Bearer TU_TOKEN" \
+  -F "file=@/ruta/a/escritura.pdf" \
+  -F "tipo=escritura" \
+  -F "descripcion=Escritura pública de la propiedad"
 ```
+
+**3. Listar Documentos (Pendiente de implementar completamente)**
+
+```bash
+# Listar documentos de ciudad
+GET /api/avaluos/documentos-ciudad
+Authorization: Bearer <token>
+
+# Listar documentos de una propiedad
+GET /api/avaluos/propiedades/:propiedadId/documentos
+Authorization: Bearer <token>
+```
+
+**⚠️ NOTA:** Los endpoints de listado están creados pero retornan arrays vacíos. Se pueden implementar más adelante para listar desde S3 o desde una tabla en la base de datos.
 
 **3. Conversar con IA para Avalúo**
 

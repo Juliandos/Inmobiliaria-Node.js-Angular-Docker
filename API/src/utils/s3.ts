@@ -110,12 +110,15 @@ const getContentType = (fileName: string): string => {
   const extension = fileName.split(".").pop()?.toLowerCase();
   
   const contentTypes: { [key: string]: string } = {
+    // Imágenes
     jpg: "image/jpeg",
     jpeg: "image/jpeg",
     png: "image/png",
     gif: "image/gif",
     webp: "image/webp",
     svg: "image/svg+xml",
+    // Documentos PDF (para avalúos)
+    pdf: "application/pdf",
   };
 
   return contentTypes[extension || ""] || "application/octet-stream";
