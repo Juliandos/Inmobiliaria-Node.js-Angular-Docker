@@ -1,9 +1,0 @@
-1. Primero analiza el problema, lee el código relevante y escribe un plan en tasks/("relevant_name").md
-2. El plan debe incluir una lista de tareas que puedas marcar al completarlas.
-3. Antes de empezar, confirma conmigo y verificaré el plan.
-4. Luego, trabaja en las tareas marcándolas como completadas mientras avanzas.
-5. En cada paso, explica detalladamente los cambios realizados.
-6. Mantén cada tarea y cambio de código lo más simple posible. Evita cambios masivos o complejos. Cada cambio debe afectar el menor código posible. Todo se trata de simplicidad.
-7. Finalmente, agrega una sección de revisión en ("relevant_name").md con un resumen de los cambios y cualquier información relevante.
-8. NO SEAS PEREZOSO. NUNCA SEAS PEREZOSO. SI HAY UN BUG, ENCUENTRA LA CAUSA RAÍZ Y ARRÉGLALO. NO HAGAS PARCHES TEMPORALES. ERES UN DESARROLLADOR SENIOR. NUNCA SEAS PEREZOSO.
-9. HAZ TODOS LOS ARREGLOS Y CAMBIOS DE CÓDIGO LO MÁS SIMPLES POSIBLE. SOLO DEBEN IMPACTAR EL CÓDIGO NECESARIO RELEVANTE A LA TAREA Y NADA MÁS. DEBE IMPACTAR LA MENOR CANTIDAD DE CÓDIGO POSIBLE. TU OBJETIVO ES NO INTRODUCIR NINGÚN BUG. TODO SE TRATA DE SIMPLICIDAD.
