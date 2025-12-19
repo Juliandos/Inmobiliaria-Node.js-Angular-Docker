@@ -629,6 +629,9 @@ openssl rand -base64 32
 
 ### 8.2 Construir Imágenes Docker
 
+**⚠️ NOTA:** Los comandos en esta sección están escritos para **EC2** (usa `docker-compose` con guion).
+Si estás en **local con WSL/Docker Desktop**, reemplaza `docker-compose` por `docker compose` (sin guion).
+
 ```bash
 cd ~/inmobiliaria
 
@@ -674,6 +677,8 @@ docker-compose ps
 ```
 
 ### 8.5 Verificar Logs
+
+**⚠️ NOTA:** Comandos para **EC2**. En local (WSL), usa `docker compose` (sin guion).
 
 ```bash
 # Ver logs de todos los servicios
@@ -879,10 +884,30 @@ inmobiliaria-propiedades/
 }
 ```
 
-**Instalar en contenedor:**
+**⚠️ IMPORTANTE: Diferencia entre Docker Compose V1 y V2**
+
+- **Docker Compose V1:** `docker-compose` (con guion) - Usado en **EC2**
+- **Docker Compose V2:** `docker compose` (sin guion) - Usado en **WSL/Docker Desktop**
+
+**💡 Flujo Recomendado (Trabajar desde Local):**
+
+1. **Editar código en LOCAL** (modificar `package.json`, agregar código, etc.)
+2. **Commit y push desde LOCAL** a GitHub
+3. **Pull en EC2** para obtener los cambios
+4. **Instalar dependencias en EC2** (donde se ejecuta la aplicación)
+
+**Instalar dependencias en EC2 (después de hacer pull):**
 ```bash
 cd ~/inmobiliaria
-docker-compose exec api npm install
+git pull origin main  # Obtener cambios de GitHub
+docker-compose exec api npm install  # Instalar nuevas dependencias
+docker-compose restart api  # Reiniciar para aplicar cambios
+```
+
+**Si quieres probar en local primero (WSL - opcional):**
+```bash
+# Reemplaza docker-compose por docker compose
+docker compose exec api npm install
 ```
 
 ### 10.5 Configurar Variables de Entorno

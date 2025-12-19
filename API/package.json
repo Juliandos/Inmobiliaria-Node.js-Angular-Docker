@@ -45,7 +45,13 @@
     "mysql2": "^3.14.5",
     "sequelize": "^6.37.7",
     "sequelize-auto": "^0.8.8",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "@langchain/openai": "^0.0.6",
+    "@langchain/community": "^0.0.29",
+    "langchain": "^0.1.13",
+    "chromadb": "^1.8.1",
+    "pdf-parse": "^1.1.1",
+    "openai": "^4.20.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
