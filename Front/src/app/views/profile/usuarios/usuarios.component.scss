@@ -1,13 +1,13 @@
 // Estilos para la tabla de usuarios
 table {
   width: 100%;
-  
+
   th.mat-header-cell {
     font-weight: 600;
     font-size: 14px;
     color: #333;
   }
-  
+
   td.mat-cell {
     font-size: 13px;
   }
@@ -18,6 +18,37 @@ table {
   font-size: 12px;
   padding: 4px 8px;
   border-radius: 4px;
+}
+
+// Botones con iconos - Mejora de alineación
+button[mat-raised-button],
+button[mat-button],
+button[mat-icon-button] {
+  mat-icon {
+    vertical-align: middle;
+    line-height: 1;
+  }
+
+  // Espaciado consistente entre ícono y texto
+  &.d-flex mat-icon.me-2 {
+    margin-right: 8px !important;
+  }
+}
+
+// Alineación de botones en headers y formularios
+.d-flex.gap-2 {
+  align-items: center;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    mat-icon {
+      margin: 0 !important;
+    }
+  }
 }
 
 // Animación de carga
@@ -34,12 +65,22 @@ table {
   animation: spin 1s linear infinite;
 }
 
+// Loading section
+.text-center {
+  mat-icon.spin {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    margin-bottom: 8px;
+  }
+}
+
 // Responsive
 @media (max-width: 768px) {
   .d-flex.gap-2 {
     flex-direction: column;
     gap: 0.5rem !important;
-    
+
     button {
       width: 100%;
     }
@@ -61,5 +102,25 @@ tr.mat-row:hover {
 mat-paginator {
   background-color: #fafafa;
   border-top: 1px solid #e0e0e0;
+}
+
+// Iconos en estado vacío
+.text-muted {
+  mat-icon {
+    vertical-align: middle;
+  }
+}
+
+// Alineación de acciones en la tabla
+td.mat-cell {
+  .d-flex.gap-1 {
+    button[mat-icon-button] {
+      mat-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
 }
 

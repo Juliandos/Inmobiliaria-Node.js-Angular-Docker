@@ -13,8 +13,8 @@
       color="accent" 
       (click)="exportToCSV()"
       [disabled]="loading || dataSource.data.length === 0"
-      class="d-flex align-items-center">
-      <mat-icon class="me-2">download</mat-icon>
+      >
+      <mat-icon>download</mat-icon>
       Exportar CSV
     </button>
     <button 
@@ -24,7 +24,7 @@
       [disabled]="loading"
       class="d-flex align-items-center"
       *hasPermission="{ modulo: 'roles', operacion: 'c' }">
-      <mat-icon class="me-2">add</mat-icon>
+      <mat-icon>add</mat-icon>
       {{ showCreateForm ? 'Cancelar' : 'Nuevo Rol' }}
     </button>
   </div>
@@ -57,7 +57,7 @@
           color="primary" 
           type="submit"
           [disabled]="createForm.invalid">
-          <mat-icon class="me-2">save</mat-icon>
+          <mat-icon>save</mat-icon>
           Crear Rol
         </button>
         <button 
@@ -92,7 +92,7 @@
           color="primary" 
           type="submit"
           [disabled]="editForm.invalid">
-          <mat-icon class="me-2">update</mat-icon>
+          <mat-icon>update</mat-icon>
           Actualizar Rol
         </button>
         <button 
@@ -183,7 +183,7 @@
       mat-raised-button 
       color="primary" 
       (click)="toggleCreateForm()">
-      <mat-icon class="me-2">add</mat-icon>
+      <mat-icon>add</mat-icon>
       Crear primer rol
     </button>
   </div>

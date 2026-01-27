@@ -8,24 +8,22 @@
     </p>
   </div>
   <div class="d-flex gap-2">
-    <button 
-      mat-raised-button 
-      color="accent" 
+    <button
+      mat-raised-button
+      color="accent"
       (click)="exportToCSV()"
-      [disabled]="loading || dataSource.data.length === 0"
-      class="d-flex align-items-center">
-      <mat-icon class="me-2">download</mat-icon>
-      Exportar CSV
+      [disabled]="loading || dataSource.data.length === 0">
+      <mat-icon>download</mat-icon>
+      <span>Exportar CSV</span>
     </button>
-    <button 
-      mat-raised-button 
-      color="primary" 
+    <button
+      mat-raised-button
+      color="primary"
       (click)="toggleCreateForm()"
       [disabled]="loading"
-      class="d-flex align-items-center"
       *hasPermission="{ modulo: 'operacion', operacion: 'c' }">
-      <mat-icon class="me-2">add</mat-icon>
-      {{ showCreateForm ? 'Cancelar' : 'Nueva Operación' }}
+      <mat-icon>add</mat-icon>
+      <span>{{ showCreateForm ? 'Cancelar' : 'Nueva Operación' }}</span>
     </button>
   </div>
 </div>
@@ -52,8 +50,8 @@
       </mat-form-field>
       <div class="d-flex gap-2">
         <button mat-raised-button color="primary" type="submit" [disabled]="createForm.invalid">
-          <mat-icon class="me-2">save</mat-icon>
-          Crear Operación
+          <mat-icon>save</mat-icon>
+          <span>Crear Operación</span>
         </button>
         <button mat-button type="button" (click)="toggleCreateForm()">Cancelar</button>
       </div>
@@ -77,8 +75,8 @@
       </mat-form-field>
       <div class="d-flex gap-2">
         <button mat-raised-button color="primary" type="submit" [disabled]="editForm.invalid">
-          <mat-icon class="me-2">update</mat-icon>
-          Actualizar Operación
+          <mat-icon>update</mat-icon>
+          <span>Actualizar Operación</span>
         </button>
         <button mat-button type="button" (click)="cancelEdit()">Cancelar</button>
       </div>
@@ -160,13 +158,13 @@
   <div *ngIf="dataSource.data.length === 0 && !loading" class="text-center p-4">
     <mat-icon class="text-muted" style="font-size: 48px;">business_center</mat-icon>
     <p class="text-muted mt-2">No se encontraron operaciones</p>
-    <button 
+    <button
       *ngIf="!showCreateForm"
-      mat-raised-button 
-      color="primary" 
+      mat-raised-button
+      color="primary"
       (click)="toggleCreateForm()">
-      <mat-icon class="me-2">add</mat-icon>
-      Crear primera operación
+      <mat-icon>add</mat-icon>
+      <span>Crear primera operación</span>
     </button>
   </div>
 </div>

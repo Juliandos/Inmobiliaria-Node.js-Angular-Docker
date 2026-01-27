@@ -1093,6 +1093,157 @@ Authorization: Bearer <token>
 
 **⚠️ NOTA:** Los endpoints de listado están creados pero retornan arrays vacíos. Se pueden implementar más adelante para listar desde S3 o desde una tabla en la base de datos.
 
+### 10.7 Documentos Recomendados para Avalúos Precisos (Popayán, Cauca, Colombia)
+
+Para obtener avalúos certeros basados en precios por área y tendencias de valorización/desvalorización en **Popayán, Cauca, Colombia**, se recomienda subir los siguientes documentos oficiales a la carpeta `documentos-ciudad/`:
+
+#### 📋 Documentos Esenciales de la Alcaldía de Popayán
+
+**1. Plan de Ordenamiento Territorial (POT)**
+- **Descripción:** Define políticas de desarrollo urbano, uso del suelo y zonas de expansión
+- **Dónde obtenerlo:** Secretaría de Planeación Municipal de Popayán
+- **URL:** https://tramites.popayan.gov.co
+- **Importancia:** Identifica áreas con potencial de valorización por proyectos planificados
+- **Nombre sugerido:** `POT_Popayan_2024.pdf` o `POT_Popayan_[año].pdf`
+
+**2. Acuerdos y Normativas del POT**
+- **Descripción:** Acuerdos municipales que modifican o complementan el POT
+- **Ejemplo:** `acuerdo_06_2002_normas_POT.pdf` (que ya subiste)
+- **Dónde obtenerlo:** Secretaría de Planeación o Concejo Municipal
+- **Importancia:** Actualizaciones normativas que afectan valorización de zonas
+
+**3. Estudios de Valorización**
+- **Descripción:** Documentos de la Oficina de Valorización sobre proyectos de infraestructura
+- **Dónde obtenerlo:** Oficina de Valorización - Secretaría de Infraestructura
+- **URL:** https://www.popayan.gov.co/SecretariasyEntidades/secinfraestructura/Paginas/Oficina-de-Valorizacion.aspx
+- **Importancia:** Identifica zonas que se valorizarán por obras de infraestructura (vías, servicios públicos)
+- **Nombre sugerido:** `Valorizacion_Popayan_[año].pdf`
+
+**4. Certificados de Estratificación Socioeconómica (Referencia)**
+- **Descripción:** Información sobre estratificación oficial por zonas
+- **Dónde obtenerlo:** Alcaldía Municipal
+- **URL:** https://www.colombiaagil.gov.co/tramites/intervenciones/certificado-de-estratificacion-en-popayan
+- **Importancia:** El estrato influye directamente en el valor de las propiedades
+- **Nombre sugerido:** `Estratificacion_Popayan_[año].pdf`
+
+**5. Planes Parciales y Macroproyectos**
+- **Descripción:** Documentos sobre proyectos de desarrollo urbano planificados
+- **Dónde obtenerlo:** Secretaría de Planeación
+- **Importancia:** Identifica áreas con mayor potencial de valorización futura
+- **Nombre sugerido:** `Planes_Parciales_Popayan_[año].pdf`
+
+#### 🗺️ Documentos del IGAC (Instituto Geográfico Agustín Codazzi)
+
+**6. Actualización Catastral**
+- **Descripción:** Informes de actualización catastral que reflejan cambios en avalúos
+- **Dónde obtenerlo:** IGAC - Oficina Regional
+- **URL:** https://www.igac.gov.co
+- **Importancia:** Muestra tendencias de valorización/desvalorización por zonas
+- **Nombre sugerido:** `Actualizacion_Catastral_Popayan_[año].pdf`
+
+**7. Mapas Catastrales y Zonificación**
+- **Descripción:** Mapas que muestran zonas, usos del suelo y valores catastrales
+- **Dónde obtenerlo:** IGAC
+- **Importancia:** Contexto geográfico para entender precios por área
+- **Nombre sugerido:** `Mapas_Catastrales_Popayan_[año].pdf`
+
+#### 🏗️ Documentos de Infraestructura y Desarrollo
+
+**8. Planes de Desarrollo Municipal**
+- **Descripción:** Planes de desarrollo que incluyen proyectos de infraestructura
+- **Dónde obtenerlo:** Alcaldía Municipal - Secretaría de Planeación
+- **Importancia:** Identifica inversiones futuras que afectarán valorización
+- **Nombre sugerido:** `Plan_Desarrollo_Popayan_[periodo].pdf`
+
+**9. Estudios de Zonificación Geomecánica**
+- **Descripción:** Estudios del Servicio Geológico Colombiano sobre estabilidad del suelo
+- **Dónde obtenerlo:** Servicio Geológico Colombiano (SGC)
+- **URL:** https://catalogo.sgc.gov.co
+- **Importancia:** Identifica áreas con riesgos que pueden desvalorizar propiedades
+- **Nombre sugerido:** `Zonificacion_Geomecanica_Popayan.pdf`
+
+**10. Informes de Mercado Inmobiliario**
+- **Descripción:** Estudios de la Lonja de Propiedad Raíz del Cauca sobre precios
+- **Dónde obtenerlo:** Lonja de Propiedad Raíz del Cauca
+- **URL:** https://www.lonjadelcauca.com
+- **Importancia:** Datos reales de transacciones y precios por zona
+- **Nombre sugerido:** `Informe_Mercado_Inmobiliario_Popayan_[año].pdf`
+
+#### 📊 Documentos de Análisis de Precios
+
+**11. Tablas de Valores Unitarios por Zona**
+- **Descripción:** Documentos con valores de referencia por m² por zona/barrio
+- **Dónde obtenerlo:** IGAC, Lonja de Propiedad Raíz, o estudios privados
+- **Importancia:** Base de datos de precios por área para comparación
+- **Nombre sugerido:** `Valores_Unitarios_Popayan_[año].pdf`
+
+**12. Estudios de Impacto de Obras Públicas**
+- **Descripción:** Documentos sobre impacto de obras en valorización
+- **Dónde obtenerlo:** Oficina de Valorización
+- **Importancia:** Identifica zonas específicas que se valorizarán por obras
+- **Nombre sugerido:** `Impacto_Obras_Publicas_Popayan_[año].pdf`
+
+#### 🎯 Cómo la IA Utiliza Estos Documentos
+
+Cuando subas estos documentos a `documentos-ciudad/`, el sistema de IA podrá:
+
+1. **Identificar zonas de valorización:**
+   - Analizar el POT para encontrar áreas de expansión urbana
+   - Revisar planes de desarrollo para identificar proyectos futuros
+   - Consultar estudios de valorización para obras en curso
+
+2. **Identificar zonas de desvalorización:**
+   - Revisar estudios geomecánicos para áreas de riesgo
+   - Analizar actualizaciones catastrales para tendencias negativas
+   - Consultar informes de mercado para zonas en declive
+
+3. **Calcular precios por área:**
+   - Comparar valores unitarios de diferentes zonas
+   - Analizar transacciones recientes del mercado
+   - Ajustar según estratificación y ubicación
+
+4. **Proporcionar contexto específico:**
+   - Referenciar normativas específicas de Popayán
+   - Considerar proyectos locales de infraestructura
+   - Aplicar factores de valorización/desvalorización según zona
+
+#### 📝 Ejemplo de Uso
+
+```bash
+# Subir POT de Popayán
+curl -X POST http://54.147.61.191/api/avaluos/documentos-ciudad \
+  -H "Authorization: Bearer TU_TOKEN" \
+  -F "file=@POT_Popayan_2024.pdf" \
+  -F "nombre=POT_Popayan_2024" \
+  -F "descripcion=Plan de Ordenamiento Territorial de Popayán 2024"
+
+# Subir actualización catastral
+curl -X POST http://54.147.61.191/api/avaluos/documentos-ciudad \
+  -H "Authorization: Bearer TU_TOKEN" \
+  -F "file=@Actualizacion_Catastral_Popayan_2024.pdf" \
+  -F "nombre=Actualizacion_Catastral_2024" \
+  -F "descripcion=Actualización catastral IGAC Popayán 2024 con valores por zona"
+
+# Subir estudio de valorización
+curl -X POST http://54.147.61.191/api/avaluos/documentos-ciudad \
+  -H "Authorization: Bearer TU_TOKEN" \
+  -F "file=@Valorizacion_Popayan_2024.pdf" \
+  -F "nombre=Valorizacion_2024" \
+  -F "descripcion=Proyectos de valorización y obras de infraestructura 2024"
+```
+
+#### ⚠️ Recomendaciones Importantes
+
+1. **Actualizar documentos regularmente:** Los POT y estudios catastrales se actualizan periódicamente. Mantén versiones actualizadas.
+
+2. **Priorizar documentos oficiales:** Los documentos de la Alcaldía, IGAC y entidades oficiales tienen mayor peso en los avalúos.
+
+3. **Incluir metadatos descriptivos:** Usa el campo `descripcion` para ayudar a la IA a entender el contexto del documento.
+
+4. **Organizar por año:** Usa nombres descriptivos que incluyan el año para facilitar la gestión.
+
+5. **Verificar fuentes:** Asegúrate de que los documentos sean oficiales y estén vigentes.
+
 **3. Conversar con IA para Avalúo**
 
 ```typescript
