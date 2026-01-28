@@ -153,9 +153,9 @@ services:
       args:
         # Para usar con Nginx como reverse proxy (recomendado en producción)
         # Usa ruta relativa: Nginx redirigirá /api al backend
-        API_URL: /api
+        # API_URL: /api
         # Si NO usas Nginx, descomenta esta línea y comenta la anterior:
-        # API_URL: http://52.87.245.94:3000/api
+        API_URL: http://54.147.61.191:3000/api
     
     container_name: inmobiliaria-front
     
