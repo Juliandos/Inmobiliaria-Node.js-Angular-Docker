@@ -45,7 +45,7 @@ RUN echo "// Environment configuration for production" > src/environments/enviro
 # Compilar la aplicación Angular
 # ng build: Compila Angular y genera archivos en /app/dist
 # --configuration production: Compilación optimizada para producción
-RUN npm run build
+RUN npx ng build --configuration production
 
 # ============================================
 # STAGE 2: PRODUCTION (Servir archivos estáticos)
