@@ -54,12 +54,13 @@
 .logo-link {
   display: flex;
   align-items: center;
+  justify-content: center;
   text-decoration: none;
   transition: transform $transition-normal, opacity $transition-normal;
 
   &:hover {
     opacity: 0.9;
-    transform: scale(1.08);
+    transform: scale(1.05);
   }
 }
 
@@ -67,6 +68,7 @@
   height: 40px;
   width: auto;
   object-fit: contain;
+  display: block;
   transition: $transition-all;
 }
 
@@ -436,6 +438,17 @@
   from {
     opacity: 0;
     transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
   to {
     opacity: 1;

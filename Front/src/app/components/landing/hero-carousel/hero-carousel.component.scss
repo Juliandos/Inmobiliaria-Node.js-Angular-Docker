@@ -316,17 +316,20 @@
   transition: background-color $transition-normal, color $transition-normal, transform $transition-normal, box-shadow $transition-normal, border-color $transition-normal;
   border: 2px solid transparent;
   overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background-color: $color-red-transparent-80;
     color: $text-color-on-red;
     border-color: $color-primary-red;
     box-shadow: 0 0 20px $color-red-transparent-50, $shadow-red;
-    transform: translateY(-50%) scale(1.15);
+    transform: translateY(-50%) scale(1.1);
   }
 
   &:active {
-    transform: translateY(-50%) scale(1.05);
+    transform: translateY(-50%) scale(1.02);
   }
 
   mat-icon {
@@ -335,6 +338,9 @@
     height: 32px;
     position: relative;
     z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: transform $transition-normal;
   }
 }
@@ -424,8 +430,8 @@
   }
 
   .carousel-nav {
-    padding: 4px;
-    
+    padding: 8px;
+
     mat-icon {
       font-size: 24px;
       width: 24px;
